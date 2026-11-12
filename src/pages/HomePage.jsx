@@ -10,7 +10,7 @@ export default function HomePage({ onOpenQuote, onOpenQuoteWithProduct }) {
   return (
     <main className="w-full">
       {/* 1. Cinematic Animated Hero */}
-      <HeroCinematic onOpenQuote={onOpenQuote} />
+      <HeroCinematic onOpenQuote={onOpenQuote} onOpenQuoteWithProduct={onOpenQuoteWithProduct} />
 
       {/* 2. Short Intro & Agricultural Heritage */}
       <IntroSection onOpenQuote={onOpenQuote} />

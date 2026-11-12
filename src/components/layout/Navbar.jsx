@@ -46,7 +46,7 @@ export default function Navbar({ onOpenQuote }) {
               <img
                 src="/brand/logo-full.png"
                 alt="Modular Traders and Brokerage"
-                className="h-7 sm:h-8 w-auto object-contain transition-transform group-hover:scale-[1.02]"
+                className="h-9 sm:h-11 w-auto object-contain transition-transform group-hover:scale-[1.02]"
               />
             </Link>
 

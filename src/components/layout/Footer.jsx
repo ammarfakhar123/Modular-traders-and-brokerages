@@ -14,7 +14,7 @@ export default function Footer({ onOpenQuote }) {
               <img
                 src="/brand/logo-full.png"
                 alt="Modular Traders and Brokerage"
-                className="h-10 w-auto object-contain"
+                className="h-12 w-auto object-contain"
               />
             </Link>
 
