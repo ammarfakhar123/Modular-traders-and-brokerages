@@ -15,6 +15,7 @@ import {
   Compass,
   FileText,
   BadgeCheck,
+  Wheat,
 } from 'lucide-react';
 import { useProductBySlug } from '@/repositories/productRepository';
 import { siteConfig } from '@/config/site';
@@ -193,6 +194,139 @@ export default function ProductDetailPage({ onOpenQuoteWithProduct }) {
               <div className="p-4 rounded-2xl bg-[#FAF8F3] border border-[#EADBBD] text-xs text-[#072B1F] flex items-center gap-3">
                 <BadgeCheck className="w-5 h-5 text-[#CFA744] flex-shrink-0" />
                 <span className="font-semibold italic">&ldquo;{product.tagline}&rdquo;</span>
+              </div>
+            </div>
+
+            {/* Available Processing Types */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#D5E5DC] shadow-sm">
+              <div className="flex items-center gap-2 mb-3 pb-3 border-b border-[#D5E5DC]">
+                <Wheat className="w-5 h-5 text-[#155437]" />
+                <h3 className="font-sans text-lg font-bold text-[#072B1F]">
+                  Available Processing Types
+                </h3>
+              </div>
+              <p className="text-xs text-slate-500 mb-4">
+                This variety is processed and supplied across three core industrial processing forms to meet specific culinary and commercial requirements:
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="p-4 rounded-2xl bg-[#FAF8F3] border border-[#D5E5DC] flex flex-col justify-between">
+                  <div>
+                    <span className="inline-block px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-white text-[#072B1F] border border-slate-200 mb-2">
+                      Raw Milled
+                    </span>
+                    <h4 className="font-sans text-sm font-bold text-[#072B1F] mb-1">
+                      White (Raw)
+                    </h4>
+                    <p className="text-[11px] text-slate-600 leading-relaxed">
+                      Naturally milled, silky polished white rice preserving authentic fragrance and traditional fluffy tenderness.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-[#FAF8F3] border border-[#D5E5DC] flex flex-col justify-between">
+                  <div>
+                    <span className="inline-block px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-[#EAF5EF] text-[#155437] border border-[#BDE3CF] mb-2">
+                      Hydro-Cured
+                    </span>
+                    <h4 className="font-sans text-sm font-bold text-[#072B1F] mb-1">
+                      Parboiled (Sella)
+                    </h4>
+                    <p className="text-[11px] text-slate-600 leading-relaxed">
+                      Hydro-thermally steam-cured (Golden &amp; White/Creamy Sella) with ultra-hard kernels that resist breakage during heavy cooking.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-4 rounded-2xl bg-[#FAF8F3] border border-[#D5E5DC] flex flex-col justify-between">
+                  <div>
+                    <span className="inline-block px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-[#FAF0D9] text-[#8B6508] border border-[#EADBBD] mb-2">
+                      Steam Cured
+                    </span>
+                    <h4 className="font-sans text-sm font-bold text-[#072B1F] mb-1">
+                      Steamed
+                    </h4>
+                    <p className="text-[11px] text-slate-600 leading-relaxed">
+                      High-pressure steam-cured before milling to lock in starch structure and deliver maximum post-cooking length.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Export Quality Parameters Table */}
+            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#D5E5DC] shadow-sm">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[#D5E5DC]">
+                <FileText className="w-5 h-5 text-[#155437]" />
+                <h3 className="font-sans text-lg font-bold text-[#072B1F]">
+                  Export Quality Parameters &amp; Lab Standards
+                </h3>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 font-mono text-xs mb-4">
+                <div className="p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
+                  <span className="text-slate-400 block text-[10px] uppercase font-sans">Avg. Grain Length (AGL)</span>
+                  <span className="font-bold text-[#072B1F] text-sm">{product.grainLength || 'Standard Export'}</span>
+                </div>
+
+                <div className="p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
+                  <span className="text-slate-400 block text-[10px] uppercase font-sans">Moisture Content</span>
+                  <span className="font-bold text-slate-800 text-sm">{product.moisture || 'Max 12.5%'}</span>
+                </div>
+
+                <div className="p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
+                  <span className="text-slate-400 block text-[10px] uppercase font-sans">Broken Ratio</span>
+                  <span className="font-bold text-slate-800 text-sm">{product.brokenRatio || 'Max 2.0%'}</span>
+                </div>
+
+                <div className="p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
+                  <span className="text-slate-400 block text-[10px] uppercase font-sans">Purity &amp; Sortex</span>
+                  <span className="font-bold text-slate-800 text-sm">{product.purity || '95% Min, 100% Sortex'}</span>
+                </div>
+
+                <div className="p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
+                  <span className="text-slate-400 block text-[10px] uppercase font-sans">Crop Year / Harvest</span>
+                  <span className="font-bold text-slate-800 text-sm">{product.cropYear || 'Fresh 2025 / 2026'}</span>
+                </div>
+
+                <div className="p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
+                  <span className="text-slate-400 block text-[10px] uppercase font-sans">Milling Grade</span>
+                  <span className="font-bold text-[#155437] text-sm">Silky Sortex Clean</span>
+                </div>
+              </div>
+
+              {product.exportQuality && (
+                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700">
+                  <strong className="text-slate-900 block mb-1">Quality Tolerances:</strong>
+                  <span>{product.exportQuality}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Pesticide Wash & Food Safety Assurance Card */}
+            <div className="bg-[#EAF5EF] rounded-3xl p-6 sm:p-8 border border-[#BDE3CF] shadow-xs space-y-3">
+              <div className="flex items-center gap-2.5">
+                <ShieldCheck className="w-6 h-6 text-[#155437]" />
+                <h3 className="font-sans text-lg font-bold text-[#072B1F]">
+                  Pesticide-Washed &amp; Residue-Tested Processing
+                </h3>
+              </div>
+
+              <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+                {product.pesticideWash ||
+                  'All rice consignments undergo high-pressure hygienic water polishing, double-stage optical color sorting, and verified laboratory testing to ensure zero chemical taints and full compliance with international Maximum Residue Limits (MRL) for the European Union, GCC, and US FDA standards.'}
+              </p>
+
+              <div className="flex flex-wrap items-center gap-2 pt-2 text-[11px] font-bold text-[#155437]">
+                <span className="px-3 py-1 rounded-full bg-white border border-[#BDE3CF] shadow-2xs">
+                  &bull; 100% Optical Sortex Cleaned
+                </span>
+                <span className="px-3 py-1 rounded-full bg-white border border-[#BDE3CF] shadow-2xs">
+                  &bull; EU / GCC / FDA MRL Compliant
+                </span>
+                <span className="px-3 py-1 rounded-full bg-white border border-[#BDE3CF] shadow-2xs">
+                  &bull; Pre-Shipment Inspection (SGS / Bureau Veritas)
+                </span>
               </div>
             </div>
 

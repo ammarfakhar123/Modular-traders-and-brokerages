@@ -7,14 +7,11 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
   const { products, loading } = useProducts(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  // Categories matching official business table
+  // Two Primary Export Categories: Basmati Rice & Non-Basmati Rice
   const categories = [
     'All',
     'Basmati Rice',
-    'White Rice',
-    'Long Grain Rice',
     'Non-Basmati Rice',
-    'Parboiled Rice',
   ];
 
   // Separate rice commodities from the brokerage service
@@ -44,7 +41,7 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
             </h2>
 
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed mt-3 font-normal">
-              Six signature Pakistani rice grades paired with transparent cross-border sourcing connecting international buyers directly with verified mills.
+              Signature Pakistani Basmati and Non-Basmati export grades &mdash; each offered across <strong>White (Raw), Parboiled (Sella), and Steamed</strong> processing &mdash; paired with verified pesticide residue washing and Karachi port export dispatch.
             </p>
           </div>
 
@@ -113,9 +110,22 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
                     {product.name}
                   </h3>
 
-                  <p className="text-xs text-slate-600 leading-relaxed mb-4 line-clamp-3">
+                  <p className="text-xs text-slate-600 leading-relaxed mb-3 line-clamp-2">
                     {product.shortDescription}
                   </p>
+
+                  {/* Processing Types Badge */}
+                  <div className="flex flex-wrap gap-1 mb-3 text-[10px] font-bold">
+                    <span className="px-2 py-0.5 rounded bg-[#FAF8F3] text-slate-700 border border-slate-200">
+                      White
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-[#EAF5EF] text-[#155437] border border-[#BDE3CF]">
+                      Sella
+                    </span>
+                    <span className="px-2 py-0.5 rounded bg-[#FAF0D9] text-[#8B6508] border border-[#EADBBD]">
+                      Steamed
+                    </span>
+                  </div>
 
                   {/* Verified Characteristics List */}
                   <div className="space-y-1.5 pt-2 border-t border-slate-100 text-xs text-slate-700">

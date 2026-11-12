@@ -25,14 +25,11 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
   const [searchQuery, setSearchQuery] = useState('');
   const { products, loading } = useProducts(true);
 
-  // Exact categories matching the uploaded business table
+  // Two Core Categories: Basmati Rice & Non-Basmati Rice
   const categories = [
     'All',
     'Basmati Rice',
-    'White Rice',
-    'Long Grain Rice',
     'Non-Basmati Rice',
-    'Parboiled Rice',
   ];
 
   // Separate the 6 rice products from the brokerage service
@@ -238,6 +235,22 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                       <p className="text-slate-600 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-4">
                         {product.shortDescription}
                       </p>
+
+                      {/* Processing Types Available & Pesticide Wash */}
+                      <div className="mb-3 flex flex-wrap gap-1.5 text-[10px] font-bold">
+                        <span className="px-2 py-0.5 rounded-md bg-[#FAF8F3] text-slate-700 border border-slate-200">
+                          White (Raw)
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-[#EAF5EF] text-[#155437] border border-[#BDE3CF]">
+                          Parboiled (Sella)
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-[#FAF0D9] text-[#8B6508] border border-[#EADBBD]">
+                          Steamed
+                        </span>
+                        <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
+                          Pesticide-Washed
+                        </span>
+                      </div>
 
                       {/* Verified Key Characteristics */}
                       <div className="mb-4 space-y-1.5 p-3.5 rounded-2xl bg-[#FAF8F3] border border-[#EADBBD]">

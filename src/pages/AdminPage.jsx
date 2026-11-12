@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Shield,
+  ShieldCheck,
+  Compass,
   Plus,
   Edit2,
   Trash2,
@@ -165,21 +167,26 @@ export default function AdminPage() {
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
-    category: 'Basmati',
-    grainLength: '',
-    aroma: '',
-    cropYear: '2025 / 2026 Harvest',
-    origin: 'Sindh, Pakistan',
+    category: 'Basmati Rice',
+    badge: 'Export Selection',
     tagline: '',
     shortDescription: '',
     fullDescription: '',
-    image: '',
-    active: true,
-    badge: 'Grade A',
-    brokenRatio: 'Max 2%',
+    grainLength: '',
     moisture: 'Max 12.5%',
-    purity: '95% Minimum',
-    packagingOptions: '25 kg PP Bags, 50 kg Export Sacks, Bulk Jumbo Bags',
+    brokenRatio: 'Max 2.0%',
+    purity: '95% Minimum, 100% Sortex',
+    cropYear: 'Fresh 2025 / 2026 Harvest',
+    processingTypes: 'White (Raw), Parboiled (Sella), Steamed',
+    pesticideWash: 'Pesticide Residue-Washed & Tested (100% Sortex Cleaned, EU & GCC MRL Compliant)',
+    exportQuality: 'Export Grade A / Silky Polished, Chalky < 2.0%, Damaged < 0.5%, Foreign Matter Nil',
+    characteristics: '',
+    targetMarkets: '',
+    packagingOptions: '10 kg, 25 kg, 50 kg PP Bags, 1-Ton Jumbo Bags',
+    origin: 'Pakistan (Punjab & Sindh Basins)',
+    dispatchPorts: 'Karachi Port (KPT) & Port Muhammad Bin Qasim (PQ), Karachi, Pakistan',
+    image: '/images/products/super-kernel.jpg',
+    active: true,
   });
 
   // Handle Real Login
@@ -206,21 +213,26 @@ export default function AdminPage() {
     setFormData({
       name: '',
       slug: '',
-      category: 'Basmati',
-      grainLength: '7.2 mm',
-      aroma: 'Natural Floral Aroma',
-      cropYear: '2025 / 2026 Harvest',
-      origin: 'Sindh, Pakistan',
-      tagline: 'Premium Export Selection',
-      shortDescription: 'High quality sortex cleaned rice grain.',
-      fullDescription: 'Export grade certified rice lot sourced directly from vetted Sindh mills.',
+      category: 'Basmati Rice',
+      badge: 'Export Selection',
+      tagline: 'Premium Pakistani Export Rice Variety',
+      shortDescription: 'High quality sortex cleaned export grain with dependable cooking properties.',
+      fullDescription: 'Export grade certified rice lot sourced directly from vetted Pakistan mills with SGS inspection compliance.',
+      grainLength: '7.2 – 7.4 mm avg',
+      moisture: 'Max 12.5%',
+      brokenRatio: 'Max 2.0%',
+      purity: '95% Minimum, 100% Optical Sortex',
+      cropYear: 'Fresh 2025 / 2026 Harvest',
+      processingTypes: 'White (Raw), Parboiled (Sella), Steamed',
+      pesticideWash: 'Pesticide Residue-Washed & Tested (100% Sortex Cleaned, compliant with EU, GCC & US FDA MRL standards)',
+      exportQuality: 'Export Grade A / Silky Polished, Chalky < 2.0%, Damaged < 0.5%, Foreign Matter Nil',
+      characteristics: "Slender grain elongation\nNatural fragrance & tenderness\nPesticide residue-washed & sortex cleaned\nDry, separate fluffy grains",
+      targetMarkets: 'Middle East, Africa, Europe, and Global Foodservice',
+      packagingOptions: '10 kg, 20 kg, 25 kg, 50 kg PP / Jute Sacks',
+      origin: 'Pakistan (Punjab & Sindh Basins)',
+      dispatchPorts: 'Karachi Port (KPT) & Port Muhammad Bin Qasim (PQ), Karachi, Pakistan',
       image: '/images/products/super-kernel.jpg',
       active: true,
-      badge: 'Grade A',
-      brokenRatio: 'Max 2.0%',
-      moisture: 'Max 12.5%',
-      purity: '96% Minimum',
-      packagingOptions: '25 kg PP Bags, 50 kg Export Sacks',
     });
     setIsEditModalOpen(true);
   };
@@ -232,23 +244,32 @@ export default function AdminPage() {
     setFormData({
       name: product.name || '',
       slug: product.slug || '',
-      category: product.category || 'Basmati',
-      grainLength: product.grainLength || '',
-      aroma: product.aroma || '',
-      cropYear: product.cropYear || '2025 / 2026 Harvest',
-      origin: product.origin || 'Sindh, Pakistan',
+      category: product.category || 'Basmati Rice',
+      badge: product.badge || '',
       tagline: product.tagline || '',
       shortDescription: product.shortDescription || '',
       fullDescription: product.fullDescription || '',
-      image: product.image || '',
-      active: product.active !== false,
-      badge: product.badge || 'Grade A',
-      brokenRatio: product.brokenRatio || 'Max 2.0%',
+      grainLength: product.grainLength || '',
       moisture: product.moisture || 'Max 12.5%',
+      brokenRatio: product.brokenRatio || 'Max 2.0%',
       purity: product.purity || '95% Minimum',
+      cropYear: product.cropYear || 'Fresh 2025 / 2026 Harvest',
+      processingTypes: Array.isArray(product.processingTypes)
+        ? product.processingTypes.join(', ')
+        : (product.processingTypes || 'White (Raw), Parboiled (Sella), Steamed'),
+      pesticideWash: product.pesticideWash || '',
+      exportQuality: product.exportQuality || '',
+      characteristics: Array.isArray(product.characteristics)
+        ? product.characteristics.join('\n')
+        : (product.characteristics || ''),
+      targetMarkets: product.targetMarkets || '',
       packagingOptions: Array.isArray(product.packagingOptions)
         ? product.packagingOptions.join(', ')
         : (product.packagingOptions || ''),
+      origin: product.origin || 'Pakistan',
+      dispatchPorts: product.dispatchPorts || 'Karachi Port (KPT) & Port Muhammad Bin Qasim (PQ), Karachi, Pakistan',
+      image: product.image || '/images/products/super-kernel.jpg',
+      active: product.active !== false,
     });
     setIsEditModalOpen(true);
   };
@@ -260,9 +281,14 @@ export default function AdminPage() {
       const payload = {
         ...formData,
         packagingOptions: formData.packagingOptions
-          .split(',')
-          .map((s) => s.trim())
-          .filter(Boolean),
+          ? formData.packagingOptions.split(',').map((s) => s.trim()).filter(Boolean)
+          : [],
+        processingTypes: formData.processingTypes
+          ? formData.processingTypes.split(',').map((s) => s.trim()).filter(Boolean)
+          : ['White (Raw)', 'Parboiled (Sella)', 'Steamed'],
+        characteristics: formData.characteristics
+          ? formData.characteristics.split('\n').map((s) => s.trim()).filter(Boolean)
+          : [],
       };
 
       if (isCreating) {
@@ -692,10 +718,8 @@ export default function AdminPage() {
                   className="bg-white border border-[#D5E5DC] rounded-xl px-3 py-2 text-xs outline-none cursor-pointer"
                 >
                   <option value="All">All Categories</option>
-                  <option value="Basmati">Basmati</option>
-                  <option value="Non-Basmati">Non-Basmati</option>
-                  <option value="Parboiled">Parboiled</option>
-                  <option value="Brokerage">Brokerage</option>
+                  <option value="Basmati Rice">Basmati Rice</option>
+                  <option value="Non-Basmati Rice">Non-Basmati Rice</option>
                 </select>
               </div>
 
@@ -705,7 +729,7 @@ export default function AdminPage() {
                   className="bg-white hover:bg-slate-50 border border-[#D5E5DC] text-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition"
                 >
                   <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Reset Initial 7</span>
+                  <span>Reset Catalog (12 Varieties)</span>
                 </button>
 
                 <button
@@ -1291,134 +1315,323 @@ export default function AdminPage() {
       )}
 
       {/* ========================================================
-          MODAL: PRODUCT CREATE / EDIT
+          MODAL: PRODUCT CREATE / EDIT (FULL FIELD CONFIGURATION)
          ======================================================== */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl border border-[#D5E5DC] my-8 relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border border-[#D5E5DC] my-8 relative max-h-[92vh] flex flex-col">
             <button
               onClick={() => setIsEditModalOpen(false)}
-              className="absolute top-5 right-5 p-1 rounded-full text-slate-400 hover:text-black bg-slate-100"
+              className="absolute top-5 right-5 p-1.5 rounded-full text-slate-400 hover:text-black bg-slate-100 transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="font-sans text-2xl font-bold text-[#072B1F] mb-1">
-              {isCreating ? 'Add New Rice Variety' : 'Edit Variety Details'}
-            </h3>
-            <p className="text-xs text-slate-500 mb-6">
-              Update technical laboratory parameters and export catalog information.
-            </p>
+            <div className="border-b border-slate-100 pb-4 mb-4 pr-10">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#B8860B] block">
+                Export Variety Specification Editor
+              </span>
+              <h3 className="font-sans text-xl sm:text-2xl font-extrabold text-[#072B1F]">
+                {isCreating ? 'Add New Rice Variety' : `Edit: ${formData.name || 'Variety'}`}
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                All parameters, processing types, pesticide wash details, and descriptions configured here update across the public website and single product pages immediately.
+              </p>
+            </div>
 
-            <form onSubmit={handleSaveProduct} className="space-y-4 text-xs">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Variety Name *</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none focus:border-[#CFA744]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Category *</label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none cursor-pointer"
-                  >
-                    <option value="Basmati Rice">Basmati Rice</option>
-                    <option value="White Rice">White Rice</option>
-                    <option value="Long Grain Rice">Long Grain Rice</option>
-                    <option value="Non-Basmati Rice">Non-Basmati Rice</option>
-                    <option value="Parboiled Rice">Parboiled Rice</option>
-                    <option value="Trading & Brokerage Service">Trading &amp; Brokerage Service</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 font-mono">
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Grain Length</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. 7.4 mm"
-                    value={formData.grainLength}
-                    onChange={(e) => setFormData({ ...formData, grainLength: e.target.value })}
-                    className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Broken Tolerance</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Max 2.0%"
-                    value={formData.brokenRatio}
-                    onChange={(e) => setFormData({ ...formData, brokenRatio: e.target.value })}
-                    className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="block font-bold text-slate-700 mb-1">Moisture Max</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Max 12.0%"
-                    value={formData.moisture}
-                    onChange={(e) => setFormData({ ...formData, moisture: e.target.value })}
-                    className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
-                  />
-                </div>
-              </div>
-
+            <form onSubmit={handleSaveProduct} className="space-y-6 text-xs overflow-y-auto pr-1 flex-1">
+              {/* SECTION 1: IDENTITY & CATEGORY */}
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Image URL / Storage Path</label>
-                <input
-                  type="text"
-                  placeholder="https://..."
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                  className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none font-mono"
-                />
+                <h4 className="font-bold text-[#072B1F] uppercase tracking-wider text-[11px] mb-3 pb-1 border-b border-slate-100 flex items-center gap-1.5">
+                  <Package className="w-3.5 h-3.5 text-[#155437]" />
+                  <span>1. Identity &amp; Categorization</span>
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div className="sm:col-span-2">
+                    <label className="block font-bold text-slate-700 mb-1">Variety Name *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. 1121 Basmati Rice"
+                      value={formData.name}
+                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none focus:border-[#CFA744]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Category *</label>
+                    <select
+                      value={formData.category}
+                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none cursor-pointer font-bold text-[#072B1F]"
+                    >
+                      <option value="Basmati Rice">Basmati Rice</option>
+                      <option value="Non-Basmati Rice">Non-Basmati Rice</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Badge / Display Tag</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Flagship Basmati, Volume Staple, World's Longest Grain"
+                      value={formData.badge}
+                      onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Commercial Tagline</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. The Historic Benchmark in Premium Pakistani Basmati"
+                      value={formData.tagline}
+                      onChange={(e) => setFormData({ ...formData, tagline: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
+                    />
+                  </div>
+                </div>
               </div>
 
+              {/* SECTION 2: DESCRIPTIONS */}
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Short Description</label>
-                <textarea
-                  rows={2}
-                  value={formData.shortDescription}
-                  onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
-                  className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none resize-none"
-                />
+                <h4 className="font-bold text-[#072B1F] uppercase tracking-wider text-[11px] mb-3 pb-1 border-b border-slate-100 flex items-center gap-1.5">
+                  <FileText className="w-3.5 h-3.5 text-[#155437]" />
+                  <span>2. Product Narrative &amp; Dossier</span>
+                </h4>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Short Summary (Shown on Cards &amp; Previews)</label>
+                    <textarea
+                      rows={2}
+                      placeholder="Concise overview of the grain length, aroma, and commercial utility..."
+                      value={formData.shortDescription}
+                      onChange={(e) => setFormData({ ...formData, shortDescription: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none resize-none leading-relaxed"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Full Detailed Dossier (Single Product Page Main Text)</label>
+                    <textarea
+                      rows={4}
+                      placeholder="In-depth variety background, culinary elongation, agricultural provenance, and dining performance..."
+                      value={formData.fullDescription}
+                      onChange={(e) => setFormData({ ...formData, fullDescription: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none resize-none leading-relaxed"
+                    />
+                  </div>
+                </div>
               </div>
 
+              {/* SECTION 3: TECHNICAL LAB & EXPORT SPECIFICATIONS */}
               <div>
-                <label className="block font-bold text-slate-700 mb-1">Packaging Options (comma separated)</label>
-                <input
-                  type="text"
-                  value={formData.packagingOptions}
-                  onChange={(e) => setFormData({ ...formData, packagingOptions: e.target.value })}
-                  className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
-                />
+                <h4 className="font-bold text-[#072B1F] uppercase tracking-wider text-[11px] mb-3 pb-1 border-b border-slate-100 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#155437]" />
+                  <span>3. Export Quality Parameters &amp; Lab Standards</span>
+                </h4>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 font-mono">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1 font-sans">Avg. Grain Length (AGL) *</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. 8.4 mm avg or 6.0 mm"
+                      value={formData.grainLength}
+                      onChange={(e) => setFormData({ ...formData, grainLength: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none font-bold text-[#072B1F]"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1 font-sans">Broken Tolerance</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Max 2.0% or 5% broken"
+                      value={formData.brokenRatio}
+                      onChange={(e) => setFormData({ ...formData, brokenRatio: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1 font-sans">Moisture Max</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Max 12.5%"
+                      value={formData.moisture}
+                      onChange={(e) => setFormData({ ...formData, moisture: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1 font-sans">Purity &amp; Sortex %</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. 96% Min, 100% Sortex"
+                      value={formData.purity}
+                      onChange={(e) => setFormData({ ...formData, purity: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1 font-sans">Crop Year / Harvest</label>
+                    <input
+                      type="text"
+                      placeholder="e.g. Fresh 2025 / 2026 Harvest"
+                      value={formData.cropYear}
+                      onChange={(e) => setFormData({ ...formData, cropYear: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1 font-sans">Image URL / Path</label>
+                    <input
+                      type="text"
+                      placeholder="/images/products/super-kernel.jpg"
+                      value={formData.image}
+                      onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none text-[11px]"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-3">
+                  <label className="block font-bold text-slate-700 mb-1">Quality Tolerances &amp; Lab Limits (Chalky, Damaged, Foreign Matter)</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Export Grade A / Silky Polished, Chalky < 2.0%, Damaged < 0.5%, Foreign Matter Nil"
+                    value={formData.exportQuality}
+                    onChange={(e) => setFormData({ ...formData, exportQuality: e.target.value })}
+                    className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none font-mono"
+                  />
+                </div>
               </div>
 
-              <div className="pt-4 flex justify-end gap-3">
+              {/* SECTION 4: PROCESSING TYPES & PESTICIDE WASH */}
+              <div>
+                <h4 className="font-bold text-[#072B1F] uppercase tracking-wider text-[11px] mb-3 pb-1 border-b border-slate-100 flex items-center gap-1.5">
+                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>4. Processing Types &amp; Pesticide Wash Compliance</span>
+                </h4>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Processing Types Available (comma-separated)</label>
+                    <input
+                      type="text"
+                      placeholder="White (Raw), Parboiled (Sella), Steamed"
+                      value={formData.processingTypes}
+                      onChange={(e) => setFormData({ ...formData, processingTypes: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none font-bold text-[#072B1F]"
+                    />
+                    <span className="text-[10px] text-slate-500 mt-0.5 block">
+                      Standard: White (Raw), Parboiled (Sella), Steamed
+                    </span>
+                  </div>
+
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Pesticide Wash &amp; Food Safety Statement</label>
+                    <textarea
+                      rows={2}
+                      placeholder="e.g. Pesticide Residue-Washed & Tested (100% Sortex Cleaned, high-pressure water polished, compliant with EU, GCC & US FDA MRL standards)."
+                      value={formData.pesticideWash}
+                      onChange={(e) => setFormData({ ...formData, pesticideWash: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none resize-none leading-relaxed"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* SECTION 5: TRADE, SOURCING & LOGISTICS */}
+              <div>
+                <h4 className="font-bold text-[#072B1F] uppercase tracking-wider text-[11px] mb-3 pb-1 border-b border-slate-100 flex items-center gap-1.5">
+                  <Compass className="w-3.5 h-3.5 text-[#155437]" />
+                  <span>5. Trade, Provenance &amp; Packaging</span>
+                </h4>
+                <div className="space-y-3">
+                  <div>
+                    <label className="block font-bold text-slate-700 mb-1">Key Characteristics (One point per line)</label>
+                    <textarea
+                      rows={4}
+                      placeholder="World's longest raw kernel (8.35 – 8.4 mm avg)&#10;Exceptional post-cooking elongation&#10;Pesticide residue-washed and optical Sortex cleaned&#10;Non-sticky dry fluffy texture"
+                      value={formData.characteristics}
+                      onChange={(e) => setFormData({ ...formData, characteristics: e.target.value })}
+                      className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none resize-none leading-relaxed font-mono"
+                    />
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block font-bold text-slate-700 mb-1">Target Export Markets (Regions / Countries)</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. Africa, Middle East, Europe"
+                        value={formData.targetMarkets}
+                        onChange={(e) => setFormData({ ...formData, targetMarkets: e.target.value })}
+                        className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-slate-700 mb-1">Export Packaging Options (comma separated)</label>
+                      <input
+                        type="text"
+                        placeholder="e.g. 5 kg, 10 kg, 25 kg, 50 kg PP Sacks, 1-Ton Jumbo Bags"
+                        value={formData.packagingOptions}
+                        onChange={(e) => setFormData({ ...formData, packagingOptions: e.target.value })}
+                        className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                      <label className="block font-bold text-slate-700 mb-1">Sourcing Origin</label>
+                      <input
+                        type="text"
+                        placeholder="Pakistan (Punjab & Sindh Basins)"
+                        value={formData.origin}
+                        onChange={(e) => setFormData({ ...formData, origin: e.target.value })}
+                        className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="block font-bold text-slate-700 mb-1">Dispatch Seaports</label>
+                      <input
+                        type="text"
+                        placeholder="Karachi Port (KPT) & Port Muhammad Bin Qasim (PQ), Karachi, Pakistan"
+                        value={formData.dispatchPorts}
+                        onChange={(e) => setFormData({ ...formData, dispatchPorts: e.target.value })}
+                        className="w-full bg-[#FAF8F3] border border-[#D5E5DC] rounded-xl px-3 py-2 outline-none"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* ACTION BUTTONS */}
+              <div className="pt-4 border-t border-slate-100 flex items-center justify-end gap-3 sticky bottom-0 bg-white py-2">
                 <button
                   type="button"
                   onClick={() => setIsEditModalOpen(false)}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-slate-100 hover:bg-slate-200 text-slate-700 transition cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="px-6 py-2.5 rounded-xl text-xs font-bold bg-[#072B1F] hover:bg-[#155437] text-white shadow-sm"
+                  className="px-6 py-2.5 rounded-xl text-xs font-bold bg-[#072B1F] hover:bg-[#155437] text-white shadow-sm transition flex items-center gap-1.5 cursor-pointer"
                 >
-                  Save Product
+                  <Check className="w-4 h-4 text-[#CFA744]" />
+                  <span>Save Product Details</span>
                 </button>
               </div>
             </form>

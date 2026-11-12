@@ -383,14 +383,26 @@ export default function ContactPage() {
                         onChange={(e) => setFormData({ ...formData, productOfInterest: e.target.value })}
                         className="w-full bg-[#FAF8F3] border border-[#D5E5DC] focus:border-[#CFA744] rounded-xl px-3.5 py-2.5 text-xs text-slate-800 outline-none transition"
                       >
-                        <option value="Super Kernel Basmati Rice">Super Kernel Basmati Rice</option>
-                        <option value="IRRI-6 Long Grain White Rice">IRRI-6 Long Grain White Rice</option>
-                        <option value="IRRI-9 Long Grain Rice">IRRI-9 Long Grain Rice</option>
-                        <option value="PK-348 Long Grain Rice">PK-348 Long Grain Rice</option>
-                        <option value="Sindh Basmati / D-98 Rice">Sindh Basmati / D-98 Rice</option>
-                        <option value="IRRI-6 / PK Parboiled (Sella) Rice">IRRI-6 / PK Parboiled (Sella) Rice</option>
-                        <option value="Global Cross-Border Sourcing & Brokerage">Global Cross-Border Sourcing & Brokerage</option>
-                        <option value="Other Agricultural Commodities">Other Agricultural Commodities</option>
+                        <optgroup label="Basmati Rice Varieties">
+                          <option value="1121 Basmati Rice">1121 Basmati Rice</option>
+                          <option value="Super Kernel Basmati Rice">Super Kernel Basmati Rice</option>
+                          <option value="Super Basmati Rice">Super Basmati Rice</option>
+                          <option value="PK-385 Basmati Rice">PK-385 Basmati Rice</option>
+                          <option value="PK-515 Basmati Rice">PK-515 Basmati Rice</option>
+                          <option value="Basmati 1692 Rice">Basmati 1692 Rice</option>
+                          <option value="Basmati 1718 Rice">Basmati 1718 Rice</option>
+                          <option value="Basmati 1509 Rice">Basmati 1509 Rice</option>
+                        </optgroup>
+                        <optgroup label="Non-Basmati Rice Varieties">
+                          <option value="IRRI-6 Long Grain White Rice">IRRI-6 Long Grain White Rice</option>
+                          <option value="IRRI-9 / C9 Long Grain Rice">IRRI-9 / C9 Long Grain Rice</option>
+                          <option value="PK-386 Long Grain White Rice">PK-386 Long Grain White Rice</option>
+                          <option value="KS-282 Long Grain Rice">KS-282 Long Grain Rice</option>
+                        </optgroup>
+                        <optgroup label="Brokerage & Custom Inquiries">
+                          <option value="Global Cross-Border Sourcing & Brokerage">Global Cross-Border Sourcing &amp; Brokerage</option>
+                          <option value="Other Agricultural Commodities">Other Agricultural Commodities</option>
+                        </optgroup>
                       </select>
                     </div>
 

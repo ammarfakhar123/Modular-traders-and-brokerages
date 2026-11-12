@@ -87,9 +87,14 @@ function saveStoredInquiries(inquiries) {
 async function dispatchInquiryEmail(inquiry, targetEmail) {
   if (!targetEmail || !targetEmail.includes('@')) return { ok: false, reason: 'Invalid target email' };
 
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timer = controller ? setTimeout(() => controller.abort(), 8000) : null;
+
   try {
     const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
       method: 'POST',
+      keepalive: true,
+      signal: controller ? controller.signal : undefined,
       headers: {
         'Content-Type': 'application/json',
         Accept: 'application/json',
@@ -116,6 +121,8 @@ async function dispatchInquiryEmail(inquiry, targetEmail) {
   } catch (err) {
     console.warn('Email dispatch error:', err);
     return { ok: false, error: err.message };
+  } finally {
+    if (timer) clearTimeout(timer);
   }
 }
 
@@ -133,7 +140,7 @@ export const inquiryRepository = {
   },
 
   /**
-   * Submit and save a new inquiry + optionally forward to Admin Email
+   * Submit and save a new inquiry + optionally forward to Admin Email (non-blocking for instant UI)
    */
   async create(inquiryData) {
     const settings = settingsRepository.get();
@@ -151,16 +158,16 @@ export const inquiryRepository = {
     const updated = [newInquiry, ...all];
     saveStoredInquiries(updated);
 
-    // Attempt saving via Supabase client asynchronously
-    try {
-      await supabase.from('inquiries').insert(newInquiry);
-    } catch (e) {
-      // Graceful fallback already handled
-    }
+    // Sync via Supabase client in background without blocking form confirmation
+    Promise.resolve()
+      .then(() => supabase.from('inquiries').insert(newInquiry))
+      .catch(() => {
+        // Graceful fallback already handled via localStorage
+      });
 
-    // Forward to Admin Receiving Email if enabled in Admin Settings
+    // Forward to Admin Receiving Email in background without blocking form confirmation
     if (shouldEmail) {
-      await dispatchInquiryEmail(newInquiry, settings.inquiryNotificationEmail);
+      dispatchInquiryEmail(newInquiry, settings.inquiryNotificationEmail).catch(() => {});
     }
 
     return newInquiry;
