@@ -15,9 +15,9 @@ export default function HeroCinematic({ onOpenQuote }) {
   };
 
   return (
-    <section className="px-3 sm:px-6 pt-24 sm:pt-28 pb-6 sm:pb-10 max-w-[1440px] mx-auto select-none">
-      {/* Main Hero Card with Unobstructed Rice Harvest Crop & Grain Visuals */}
-      <div className="relative rounded-3xl sm:rounded-[2.5rem] overflow-hidden min-h-[540px] sm:min-h-[600px] lg:min-h-[640px] flex flex-col justify-between text-slate-800 border border-[#D5E5DC] bg-[#FAF8F3] shadow-[0_20px_50px_rgba(7,43,31,0.08)]">
+    <section className="px-3 sm:px-6 pt-20 sm:pt-24 pb-4 sm:pb-6 max-w-[1440px] mx-auto select-none">
+      {/* Main Hero Card Sized Cleanly to Fit Above the Fold on Standard Laptop & Desktop Screens */}
+      <div className="relative rounded-3xl sm:rounded-[2.25rem] overflow-hidden min-h-[440px] sm:min-h-[490px] lg:min-h-[520px] flex flex-col justify-between text-slate-800 border border-[#D5E5DC] bg-[#FAF8F3] shadow-[0_20px_50px_rgba(7,43,31,0.08)]">
         {/* Full-Bleed Rice Crop Field & Harvest Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-right sm:bg-center pointer-events-none"
@@ -31,7 +31,7 @@ export default function HeroCinematic({ onOpenQuote }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
 
         {/* Left Column Text Content (Clean, Balanced, Uncluttered) */}
-        <div className="relative z-10 max-w-2xl p-6 sm:p-12 lg:p-16 my-auto space-y-5">
+        <div className="relative z-10 max-w-2xl p-6 sm:p-10 lg:p-12 my-auto space-y-4">
           <div className="flex items-center gap-2.5">
             <span className="w-6 h-[2px] bg-[#B8860B]" />
             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] text-[#072B1F]">
@@ -39,7 +39,7 @@ export default function HeroCinematic({ onOpenQuote }) {
             </span>
           </div>
 
-          <h1 className="font-sans text-3xl sm:text-5xl lg:text-[3.4rem] font-extrabold tracking-[-0.03em] text-[#072B1F] leading-[1.08]">
+          <h1 className="font-sans text-3xl sm:text-4xl lg:text-[3.1rem] font-extrabold tracking-[-0.03em] text-[#072B1F] leading-[1.08]">
             PAKISTAN&apos;S FINEST RICE <br />
             <span className="text-[#155437]">GROWN WITH INTEGRITY</span>
           </h1>
@@ -52,7 +52,7 @@ export default function HeroCinematic({ onOpenQuote }) {
           <div className="pt-1 flex flex-wrap items-center gap-3.5">
             <Link
               to="/products"
-              className="bg-[#072B1F] hover:bg-[#155437] text-white px-7 py-3.5 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
+              className="bg-[#072B1F] hover:bg-[#155437] text-white px-6 py-3 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider transition-all duration-200 shadow-sm hover:shadow-md flex items-center gap-2"
             >
               <span>Explore Our Rice</span>
               <ArrowRight className="w-4 h-4 text-[#CFA744]" />
@@ -60,14 +60,14 @@ export default function HeroCinematic({ onOpenQuote }) {
 
             <button
               onClick={onOpenQuote}
-              className="bg-white/95 hover:bg-white text-[#072B1F] border border-[#D5E5DC] px-6 py-3.5 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider transition shadow-2xs cursor-pointer"
+              className="bg-white/95 hover:bg-white text-[#072B1F] border border-[#D5E5DC] px-6 py-3 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider transition shadow-2xs cursor-pointer"
             >
               Request a Quote
             </button>
           </div>
 
           {/* Concise Rice-Focused Trust Line */}
-          <div className="pt-3 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-[#072B1F] font-semibold">
+          <div className="pt-2 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-[#072B1F] font-semibold">
             <span className="flex items-center gap-1.5">
               <CheckCircle2 className="w-4 h-4 text-[#155437]" />
               Aged Basmati &amp; Long Grain
@@ -83,7 +83,7 @@ export default function HeroCinematic({ onOpenQuote }) {
         </div>
 
         {/* Bottom Docked Strip: Direct Quick Links to All 6 Rice Varieties & Brokerage */}
-        <div className="relative z-10 bg-[#072B1F]/95 border-t border-[#155437] px-4 sm:px-8 py-3.5 flex flex-col lg:flex-row items-center justify-between gap-3 text-white">
+        <div className="relative z-10 bg-[#072B1F]/95 border-t border-[#155437] px-4 sm:px-8 py-3 flex flex-col lg:flex-row items-center justify-between gap-2.5 text-white">
           <div className="text-[11px] font-bold uppercase tracking-wider text-[#CFA744] shrink-0">
             OUR RICE COLLECTION:
           </div>
