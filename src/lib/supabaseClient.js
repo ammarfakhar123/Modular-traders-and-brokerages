@@ -28,8 +28,8 @@ export const isSupabaseConfigured = Boolean(
 
 // LocalStorage Keys for local fallback
 const STORAGE_KEYS = {
-  PRODUCTS: 'modular_supabase_products_v2',
-  INQUIRIES: 'modular_supabase_inquiries_v2',
+  PRODUCTS: 'modular_supabase_products_v3',
+  INQUIRIES: 'modular_supabase_inquiries_v3',
   SETTINGS: 'modular_supabase_settings_v2',
   AUTH: 'modular_supabase_auth_session_v2',
 };
@@ -37,6 +37,8 @@ const STORAGE_KEYS = {
 // Seed LocalStorage with initial products if empty
 function initializeLocalStorage() {
   if (typeof window === 'undefined') return;
+  localStorage.removeItem('modular_supabase_products_v2');
+  localStorage.removeItem('modular_supabase_inquiries_v2');
   if (!localStorage.getItem(STORAGE_KEYS.PRODUCTS)) {
     localStorage.setItem(STORAGE_KEYS.PRODUCTS, JSON.stringify(initialProducts));
   }

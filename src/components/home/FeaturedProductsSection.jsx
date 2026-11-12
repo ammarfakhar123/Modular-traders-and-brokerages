@@ -34,17 +34,17 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
             <div className="flex items-center gap-2.5 mb-3">
               <span className="w-6 h-[2px] bg-[#B8860B]" />
               <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#072B1F]">
-                Verified Export Portfolio &bull; Karachi Dispatch
+                Verified Rice Collection
               </span>
             </div>
 
-            <h2 className="font-sans text-3xl sm:text-5xl font-extrabold tracking-[-0.03em] text-[#072B1F] leading-[1.14]">
+            <h2 className="font-sans text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-[-0.03em] text-[#072B1F] leading-[1.14]">
               Pakistani Rice Varieties &amp; <br />
-              <span className="text-[#155437]">Cross-Border Brokerage</span>
+              <span className="text-[#155437]">Agricultural Brokerage</span>
             </h2>
 
             <p className="text-slate-600 text-sm sm:text-base leading-relaxed mt-3 font-normal">
-              Direct mill allocations and professional agritrade brokerage connecting international buyers with vetted Pakistani suppliers. Shipments coordinated directly from Karachi Port (KPT) and Port Muhammad Bin Qasim (PQ).
+              Six signature Pakistani rice grades paired with transparent cross-border sourcing connecting international buyers directly with verified mills.
             </p>
           </div>
 
@@ -85,7 +85,7 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
                 {/* Product Image */}
                 <div className="relative h-52 overflow-hidden bg-slate-100">
                   <img
-                    src={product.image || '/images/rice-pour.png'}
+                    src={product.image || '/images/products/super-kernel.jpg'}
                     alt={product.name}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
@@ -156,21 +156,21 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
             <div className="max-w-2xl space-y-3">
               <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#CFA744]">
                 <Compass className="w-4 h-4" />
-                <span>Service #7 &bull; Agricultural Commodity Brokerage</span>
+                <span>Agricultural Commodity Brokerage</span>
               </div>
 
               <h3 className="font-sans text-2xl sm:text-3xl font-extrabold text-white">
-                Global Cross-Border Sourcing &amp; Trade Brokerage
+                Global Cross-Border Sourcing &amp; Brokerage
               </h3>
 
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed font-normal">
-                Beyond direct varietal allocations, Modular Traders acts as an independent trade brokerage firm connecting international importers, wholesalers, and food brands directly with vetted Pakistani rice millers and agricultural commodity producers. We manage commercial negotiations, buyer requirement matching, and port dispatch from Karachi.
+                Modular Traders bridges local Pakistani agricultural producers and rice millers with international buyers, wholesalers, and food distributors — ensuring transparent negotiations and quality-focused grain sourcing.
               </p>
 
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 pt-2 text-xs text-slate-300">
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-[#CFA744]" />
-                  <span>Vetted Miller Connections</span>
+                  <span>Direct Miller Connections</span>
                 </div>
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-[#CFA744]" />
@@ -178,7 +178,7 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
                 </div>
                 <div className="flex items-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-[#CFA744]" />
-                  <span>Karachi Port Loading Coordination</span>
+                  <span>Quality Grain Matching</span>
                 </div>
               </div>
             </div>

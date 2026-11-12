@@ -540,7 +540,7 @@ export default function AdminPage() {
                           <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
                               <img
-                                src={p.image || '/images/rice-pour.png'}
+                                src={p.image || '/images/products/super-kernel.jpg'}
                                 alt=""
                                 className="w-full h-full object-cover"
                               />

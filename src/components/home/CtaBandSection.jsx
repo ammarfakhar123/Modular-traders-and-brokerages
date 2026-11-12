@@ -1,34 +1,33 @@
 import React from 'react';
-import { ArrowRight, MessageSquare, MapPin, Building2, ShieldCheck } from 'lucide-react';
+import { MessageSquare, MapPin, ShieldCheck } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 
 export default function CtaBandSection({ onOpenQuote }) {
   return (
     <section className="py-16 sm:py-24 bg-[#FAF8F3] border-b border-[#D5E5DC]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl p-8 sm:p-14 lg:p-16 bg-[#072B1F] text-white relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-10 shadow-xl border border-[#155437]">
+        <div className="rounded-3xl p-8 sm:p-12 lg:p-14 bg-[#072B1F] text-white flex flex-col lg:flex-row items-center justify-between gap-10 shadow-xl border border-[#155437]">
           {/* Left Text */}
-          <div className="max-w-2xl text-center lg:text-left space-y-4">
-            <div className="flex items-center justify-center lg:justify-start gap-2 text-xs font-bold uppercase tracking-wider text-[#CFA744]">
-              <Building2 className="w-4 h-4" />
-              <span>Modular Traders and Brokerage &bull; Karachi, Pakistan</span>
-            </div>
+          <div className="max-w-xl text-center lg:text-left space-y-4">
+            <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#CFA744] block">
+              Modular Traders and Brokerage &bull; Karachi, Pakistan
+            </span>
 
-            <h2 className="font-sans text-3xl sm:text-5xl font-extrabold tracking-[-0.03em] text-white leading-tight">
-              Ready to Discuss Sourcing or Export Brokerage?
+            <h2 className="font-sans text-3xl sm:text-4xl font-extrabold tracking-[-0.02em] text-white leading-tight">
+              Source Premium Pakistani Rice With Confidence
             </h2>
 
             <p className="text-slate-300 text-sm sm:text-base font-normal leading-relaxed">
-              Whether you are an international buyer seeking containerized FCL rice shipments or a supplier discussing commercial representation, our Karachi trade desk provides professional, transparent guidance tailored to your specific market requirements.
+              Connect with our team in Karachi to discuss Super Kernel Basmati, IRRI-6, IRRI-9, PK-348, Sindh D-98, and Parboiled Sella sourcing tailored to your commercial requirements.
             </p>
 
             <div className="pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-4 text-xs text-slate-300">
               <span className="flex items-center gap-1.5">
-                <MapPin className="w-4 h-4 text-[#CFA744]" /> DHA Phase 6, Karachi Headquarters
+                <MapPin className="w-4 h-4 text-[#CFA744]" /> DHA Phase 6, Karachi HQ
               </span>
               <span className="text-slate-500">&bull;</span>
               <span className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" /> Sourcing via KPT &amp; Port Qasim
+                <ShieldCheck className="w-4 h-4 text-emerald-400" /> Cultivating Trust
               </span>
             </div>
           </div>
@@ -49,7 +48,7 @@ export default function CtaBandSection({ onOpenQuote }) {
               className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-8 py-4 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider flex items-center justify-center gap-2 transition text-center"
             >
               <MessageSquare className="w-4 h-4 text-emerald-400" />
-              <span>WhatsApp Trade Desk</span>
+              <span>Chat on WhatsApp</span>
             </a>
           </div>
         </div>

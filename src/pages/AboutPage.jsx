@@ -109,9 +109,9 @@ export default function AboutPage({ onOpenQuote }) {
               {/* Right Column: High-Resolution Agricultural Showcase Card */}
               <div className="lg:col-span-5 flex justify-center">
                 <div className="relative w-full max-w-md rounded-3xl overflow-hidden border border-[#D5E5DC] shadow-[0_15px_40px_rgba(7,43,31,0.12)] bg-[#072B1F]">
-                  {/* High-Resolution Agricultural Harvest Image */}
+                  {/* High-Resolution Pakistani Rice Cultivation Image */}
                   <img
-                    src="/images/about-harvest.jpg"
+                    src="/images/products/sindh-basmati.jpg"
                     alt="Pakistani Rice Cultivation & Harvest"
                     className="w-full h-[420px] sm:h-[460px] object-cover"
                   />

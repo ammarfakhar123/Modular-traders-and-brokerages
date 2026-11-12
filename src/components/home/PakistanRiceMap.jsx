@@ -143,15 +143,15 @@ export default function PakistanRiceMap({ activeBeltId, onSelectBelt }) {
             );
           })}
 
-          {/* Karachi Port & Maritime Dispatch Node */}
+          {/* Karachi Trade Hub Node */}
           <g
             className="cursor-pointer"
             onClick={() => onSelectBelt && onSelectBelt('karachi-milling')}
           >
             <circle cx="330" cy="820" r="7" fill="#CFA744" stroke="#FFFFFF" strokeWidth="2" />
-            <rect x="250" y="834" width="160" height="24" rx="4" fill="#072B1F" stroke="#CFA744" strokeWidth="1" />
+            <rect x="255" y="834" width="150" height="24" rx="4" fill="#072B1F" stroke="#CFA744" strokeWidth="1" />
             <text x="330" y="850" textAnchor="middle" fill="#FFFFFF" fontSize="12" fontWeight="bold" fontFamily="sans-serif">
-              Karachi Ports (KPT / PQ)
+              Karachi Rice Desk
             </text>
           </g>
         </svg>
@@ -159,8 +159,8 @@ export default function PakistanRiceMap({ activeBeltId, onSelectBelt }) {
 
       {/* Bottom Summary Bar */}
       <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600 font-medium z-10">
-        <span>Major Basins: Punjab &bull; Sindh</span>
-        <span className="text-[#072B1F] font-bold">Maritime Exit: Karachi</span>
+        <span>Rice Belts: Punjab &bull; Sindh</span>
+        <span className="text-[#072B1F] font-bold">Karachi Headquarters</span>
       </div>
     </div>
   );

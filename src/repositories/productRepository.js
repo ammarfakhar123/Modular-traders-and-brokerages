@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { initialProducts } from '@/data/products';
 import { supabase } from '@/lib/supabaseClient';
 
-const STORAGE_KEY = 'modular_traders_products_v1';
+const STORAGE_KEY = 'modular_traders_products_v3';
 
 /**
  * Storage Helper for Local Storage persistence with initial fallback
@@ -10,6 +10,9 @@ const STORAGE_KEY = 'modular_traders_products_v1';
 function getStoredProducts() {
   if (typeof window === 'undefined') return initialProducts;
   try {
+    // Clean up legacy cached product catalogs
+    localStorage.removeItem('modular_traders_products_v1');
+    localStorage.removeItem('modular_traders_products_v2');
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(initialProducts));
