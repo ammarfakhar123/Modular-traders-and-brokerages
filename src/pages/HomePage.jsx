@@ -3,7 +3,6 @@ import HeroCinematic from '@/components/home/HeroCinematic';
 import IntroSection from '@/components/home/IntroSection';
 import CoreValuesSection from '@/components/home/CoreValuesSection';
 import FeaturedProductsSection from '@/components/home/FeaturedProductsSection';
-import GlobalReachSection from '@/components/home/GlobalReachSection';
 import CtaBandSection from '@/components/home/CtaBandSection';
 
 export default function HomePage({ onOpenQuote, onOpenQuoteWithProduct }) {
@@ -21,10 +20,7 @@ export default function HomePage({ onOpenQuote, onOpenQuoteWithProduct }) {
       {/* 4. Featured Products Grid (All 7) */}
       <FeaturedProductsSection onOpenQuote={onOpenQuote} onOpenQuoteWithProduct={onOpenQuoteWithProduct} />
 
-      {/* 5. Global Reach & Maritime Logistics */}
-      <GlobalReachSection onOpenQuote={onOpenQuote} />
-
-      {/* 6. Strong CTA Band */}
+      {/* 5. Strong CTA Band */}
       <CtaBandSection onOpenQuote={onOpenQuote} />
     </main>
   );

@@ -25,7 +25,6 @@ export default function Navbar({ onOpenQuote }) {
     { name: 'Home', href: '/' },
     { name: 'About', href: '/about' },
     { name: 'Rice Varieties', href: '/products' },
-    { name: 'Rice Quality', href: '/#rice-standards' },
     { name: 'Contact', href: '/contact' },
   ];
 
