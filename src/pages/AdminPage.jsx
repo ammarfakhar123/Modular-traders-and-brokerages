@@ -34,6 +34,7 @@ import {
   Send,
   Bell,
   Loader2,
+  Download,
 } from 'lucide-react';
 import { productRepository, useProducts } from '@/repositories/productRepository';
 import { inquiryRepository, useInquiries } from '@/repositories/inquiryRepository';
@@ -63,6 +64,7 @@ export default function AdminPage() {
   const [inquirySearch, setInquirySearch] = useState('');
   const [inquiryStatusFilter, setInquiryStatusFilter] = useState('All');
   const [selectedInquiry, setSelectedInquiry] = useState(null);
+  const [selectedInquiryIds, setSelectedInquiryIds] = useState([]);
 
   // Admin Email & Inquiry Notification Settings
   const { settings, refresh: refreshSettings } = useAdminSettings();
@@ -362,6 +364,135 @@ export default function AdminPage() {
       inq.destinationPort?.toLowerCase().includes(inquirySearch.toLowerCase());
     return matchesStatus && matchesSearch;
   });
+
+  // Bulk Select & Delete Handlers for Inquiries
+  const allFilteredSelected =
+    filteredInquiries.length > 0 &&
+    filteredInquiries.every((inq) => selectedInquiryIds.includes(inq.id));
+
+  const toggleSelectInquiry = (id) => {
+    setSelectedInquiryIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAllInquiries = () => {
+    if (allFilteredSelected) {
+      const visibleSet = new Set(filteredInquiries.map((inq) => inq.id));
+      setSelectedInquiryIds((prev) => prev.filter((id) => !visibleSet.has(id)));
+    } else {
+      const merged = new Set([
+        ...selectedInquiryIds,
+        ...filteredInquiries.map((inq) => inq.id),
+      ]);
+      setSelectedInquiryIds(Array.from(merged));
+    }
+  };
+
+  const handleBulkDeleteInquiries = async () => {
+    if (selectedInquiryIds.length === 0) return;
+    if (
+      !window.confirm(
+        `Delete ${selectedInquiryIds.length} selected inquiry(ies) permanently?`
+      )
+    ) {
+      return;
+    }
+
+    await inquiryRepository.bulkDelete(selectedInquiryIds);
+    setSelectedInquiryIds([]);
+    if (selectedInquiry && selectedInquiryIds.includes(selectedInquiry.id)) {
+      setSelectedInquiry(null);
+    }
+    refreshInquiries();
+    setStatusMessage(`Deleted ${selectedInquiryIds.length} inquiry(ies).`);
+    setTimeout(() => setStatusMessage(''), 3000);
+  };
+
+  const handleDeleteSingleInquiry = async (id) => {
+    if (!window.confirm('Delete this inquiry permanently?')) return;
+    await inquiryRepository.delete(id);
+    setSelectedInquiryIds((prev) => prev.filter((item) => item !== id));
+    if (selectedInquiry?.id === id) setSelectedInquiry(null);
+    refreshInquiries();
+    setStatusMessage('Inquiry deleted.');
+    setTimeout(() => setStatusMessage(''), 3000);
+  };
+
+  // Export Inquiries to Excel-compatible UTF-8 BOM CSV
+  const handleExportInquiriesExcel = () => {
+    const recordsToExport =
+      selectedInquiryIds.length > 0
+        ? inquiries.filter((inq) => selectedInquiryIds.includes(inq.id))
+        : filteredInquiries;
+
+    if (recordsToExport.length === 0) {
+      setStatusMessage('No inquiries available to export.');
+      setTimeout(() => setStatusMessage(''), 3000);
+      return;
+    }
+
+    const escapeCsv = (val) => {
+      const str = val === null || val === undefined ? '' : String(val);
+      return `"${str.replace(/"/g, '""')}"`;
+    };
+
+    const headers = [
+      'Inquiry ID',
+      'Date',
+      'Status',
+      'Full Name',
+      'Company Name',
+      'Email',
+      'Phone / WhatsApp',
+      'Country',
+      'Destination Port',
+      'Product / Variety',
+      'Quantity (MT)',
+      'Incoterms',
+      'Packaging',
+      'Email Notification',
+      'Message / Notes',
+    ];
+
+    const rows = recordsToExport.map((inq) => [
+      inq.id,
+      inq.created_at ? new Date(inq.created_at).toLocaleString() : '',
+      inq.status || 'New',
+      inq.fullName || '',
+      inq.companyName || '',
+      inq.email || '',
+      inq.phone || '',
+      inq.country || '',
+      inq.destinationPort || '',
+      inq.productName || '',
+      inq.volumeMT || '',
+      inq.incoterms || '',
+      inq.packaging || '',
+      inq.emailForwardedTo || 'Admin Panel',
+      inq.notes || '',
+    ]);
+
+    const csvContent =
+      '\uFEFF' +
+      [headers.map(escapeCsv).join(','), ...rows.map((r) => r.map(escapeCsv).join(','))].join(
+        '\r\n'
+      );
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    const dateStamp = new Date().toISOString().slice(0, 10);
+    link.href = url;
+    link.setAttribute('download', `modular-traders-inquiries-${dateStamp}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    setStatusMessage(`Downloaded ${recordsToExport.length} inquiry(ies) for Excel.`);
+    setTimeout(() => setStatusMessage(''), 3500);
+  };
 
   // -------------------------------------------------------------
   // VIEW: NOT AUTHENTICATED (LOGIN SCREEN)
@@ -719,9 +850,9 @@ export default function AdminPage() {
            ======================================================== */}
         {activeTab === 'inquiries' && (
           <div>
-            {/* Filter Bar */}
-            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 mb-6">
-              <div className="flex items-center gap-2">
+            {/* Filter & Bulk Action Bar */}
+            <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 mb-6">
+              <div className="flex flex-wrap items-center gap-2">
                 <div className="relative flex-1 sm:w-72">
                   <input
                     type="text"
@@ -746,8 +877,39 @@ export default function AdminPage() {
                 </select>
               </div>
 
-              <div className="text-xs font-mono text-slate-500">
-                Total Inquiries: <strong className="text-[#072B1F]">{inquiries.length}</strong>
+              {/* Action Buttons: Excel Download + Bulk Delete */}
+              <div className="flex flex-wrap items-center justify-between lg:justify-end gap-2.5">
+                <span className="text-xs font-mono text-slate-500 mr-1">
+                  Total: <strong className="text-[#072B1F]">{inquiries.length}</strong>
+                  {selectedInquiryIds.length > 0 && (
+                    <span className="ml-2 text-[#155437] font-bold">
+                      ({selectedInquiryIds.length} selected)
+                    </span>
+                  )}
+                </span>
+
+                {selectedInquiryIds.length > 0 && (
+                  <button
+                    onClick={handleBulkDeleteInquiries}
+                    className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-xs cursor-pointer"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Delete Selected ({selectedInquiryIds.length})</span>
+                  </button>
+                )}
+
+                <button
+                  onClick={handleExportInquiriesExcel}
+                  disabled={filteredInquiries.length === 0 && selectedInquiryIds.length === 0}
+                  className="bg-[#072B1F] hover:bg-[#155437] disabled:opacity-50 text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-xs cursor-pointer"
+                >
+                  <Download className="w-3.5 h-3.5 text-[#CFA744]" />
+                  <span>
+                    {selectedInquiryIds.length > 0
+                      ? `Download Excel (${selectedInquiryIds.length})`
+                      : 'Download Excel (.csv)'}
+                  </span>
+                </button>
               </div>
             </div>
 
@@ -757,6 +919,15 @@ export default function AdminPage() {
                 <table className="w-full text-left text-xs">
                   <thead className="bg-[#FAF8F3] text-slate-600 font-mono uppercase text-[11px] border-b border-[#D5E5DC]">
                     <tr>
+                      <th className="py-3.5 pl-4 pr-2 w-10">
+                        <input
+                          type="checkbox"
+                          checked={allFilteredSelected}
+                          onChange={toggleSelectAllInquiries}
+                          aria-label="Select all visible inquiries"
+                          className="w-4 h-4 rounded border-slate-300 text-[#072B1F] focus:ring-[#CFA744] cursor-pointer accent-[#072B1F]"
+                        />
+                      </th>
                       <th className="py-3.5 px-4 font-bold">Date</th>
                       <th className="py-3.5 px-4 font-bold">Buyer &amp; Company</th>
                       <th className="py-3.5 px-4 font-bold">Variety &amp; Volume</th>
@@ -768,74 +939,101 @@ export default function AdminPage() {
                   <tbody className="divide-y divide-slate-100">
                     {filteredInquiries.length === 0 ? (
                       <tr>
-                        <td colSpan={6} className="py-12 text-center text-slate-400">
+                        <td colSpan={7} className="py-12 text-center text-slate-400">
                           No inquiries match the current filter.
                         </td>
                       </tr>
                     ) : (
-                      filteredInquiries.map((inq) => (
-                        <tr key={inq.id} className="hover:bg-slate-50/80 transition">
-                          <td className="py-4 px-4 font-mono text-[11px] text-slate-500 whitespace-nowrap">
-                            {new Date(inq.created_at).toLocaleDateString()}
-                          </td>
+                      filteredInquiries.map((inq) => {
+                        const isChecked = selectedInquiryIds.includes(inq.id);
+                        return (
+                          <tr
+                            key={inq.id}
+                            className={`transition ${
+                              isChecked ? 'bg-[#EAF5EF]/50' : 'hover:bg-slate-50/80'
+                            }`}
+                          >
+                            <td className="py-4 pl-4 pr-2">
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={() => toggleSelectInquiry(inq.id)}
+                                aria-label={`Select inquiry from ${inq.fullName}`}
+                                className="w-4 h-4 rounded border-slate-300 text-[#072B1F] focus:ring-[#CFA744] cursor-pointer accent-[#072B1F]"
+                              />
+                            </td>
 
-                          <td className="py-4 px-4">
-                            <div className="font-bold text-[#072B1F]">
-                              {inq.fullName}
-                            </div>
-                            <div className="text-slate-500 text-[11px]">
-                              {inq.companyName}
-                            </div>
-                            <div className="text-slate-400 font-mono text-[10px]">
-                              {inq.email} &bull; {inq.phone}
-                            </div>
-                          </td>
+                            <td className="py-4 px-4 font-mono text-[11px] text-slate-500 whitespace-nowrap">
+                              {new Date(inq.created_at).toLocaleDateString()}
+                            </td>
 
-                          <td className="py-4 px-4">
-                            <div className="font-bold text-[#155437]">
-                              {inq.productName}
-                            </div>
-                            <div className="font-mono text-xs font-semibold text-[#B8860B]">
-                              {inq.volumeMT} MT
-                            </div>
-                          </td>
+                            <td className="py-4 px-4">
+                              <div className="font-bold text-[#072B1F]">
+                                {inq.fullName}
+                              </div>
+                              <div className="text-slate-500 text-[11px]">
+                                {inq.companyName}
+                              </div>
+                              <div className="text-slate-400 font-mono text-[10px]">
+                                {inq.email} &bull; {inq.phone}
+                              </div>
+                            </td>
 
-                          <td className="py-4 px-4 font-mono text-[11px]">
-                            <div className="text-slate-800 font-bold">{inq.destinationPort}</div>
-                            <div className="text-slate-500">{inq.incoterms}</div>
-                          </td>
+                            <td className="py-4 px-4">
+                              <div className="font-bold text-[#155437]">
+                                {inq.productName}
+                              </div>
+                              <div className="font-mono text-xs font-semibold text-[#B8860B]">
+                                {inq.volumeMT} MT
+                              </div>
+                            </td>
 
-                          <td className="py-4 px-4">
-                            <select
-                              value={inq.status || 'New'}
-                              onChange={(e) => handleUpdateInquiryStatus(inq.id, e.target.value)}
-                              className={`text-[11px] font-bold rounded-full px-2.5 py-1 border outline-none cursor-pointer ${
-                                inq.status === 'New'
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                  : inq.status === 'Quoted'
-                                  ? 'bg-amber-50 text-amber-800 border-amber-300'
-                                  : inq.status === 'Contacted'
-                                  ? 'bg-blue-50 text-blue-800 border-blue-300'
-                                  : 'bg-slate-100 text-slate-600 border-slate-300'
-                              }`}
-                            >
-                              <option value="New">New</option>
-                              <option value="Contacted">Contacted</option>
-                              <option value="Quoted">Quoted</option>
-                              <option value="Closed">Closed</option>
-                            </select>
-                          </td>
+                            <td className="py-4 px-4 font-mono text-[11px]">
+                              <div className="text-slate-800 font-bold">{inq.destinationPort}</div>
+                              <div className="text-slate-500">{inq.incoterms}</div>
+                            </td>
 
-                          <td className="py-4 px-4 text-right">
-                            <button
-                              onClick={() => setSelectedInquiry(inq)}
-                              className="px-3 py-1.5 rounded-lg bg-[#EAF5EF] hover:bg-[#D5E5DC] text-[#072B1F] font-bold text-xs transition"
-                            >
-                              View Notes
-                            </button>
-                          </td>
-                        </tr>
-                      ))
+                            <td className="py-4 px-4">
+                              <select
+                                value={inq.status || 'New'}
+                                onChange={(e) => handleUpdateInquiryStatus(inq.id, e.target.value)}
+                                className={`text-[11px] font-bold rounded-full px-2.5 py-1 border outline-none cursor-pointer ${
+                                  inq.status === 'New'
+                                    ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                    : inq.status === 'Quoted'
+                                    ? 'bg-amber-50 text-amber-800 border-amber-300'
+                                    : inq.status === 'Contacted'
+                                    ? 'bg-blue-50 text-blue-800 border-blue-300'
+                                    : 'bg-slate-100 text-slate-600 border-slate-300'
+                                }`}
+                              >
+                                <option value="New">New</option>
+                                <option value="Contacted">Contacted</option>
+                                <option value="Quoted">Quoted</option>
+                                <option value="Closed">Closed</option>
+                              </select>
+                            </td>
+
+                            <td className="py-4 px-4 text-right">
+                              <div className="flex items-center justify-end gap-1.5">
+                                <button
+                                  onClick={() => setSelectedInquiry(inq)}
+                                  className="px-3 py-1.5 rounded-lg bg-[#EAF5EF] hover:bg-[#D5E5DC] text-[#072B1F] font-bold text-xs transition cursor-pointer"
+                                >
+                                  View Notes
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteSingleInquiry(inq.id)}
+                                  title="Delete inquiry"
+                                  className="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })
                     )}
                   </tbody>
                 </table>

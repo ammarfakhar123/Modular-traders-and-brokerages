@@ -64,7 +64,7 @@ function getStoredInquiries() {
       return initialDemoInquiries;
     }
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) && parsed.length > 0 ? parsed : initialDemoInquiries;
+    return Array.isArray(parsed) ? parsed : initialDemoInquiries;
   } catch (err) {
     console.error('Failed to read inquiries from localStorage:', err);
     return initialDemoInquiries;
@@ -206,12 +206,30 @@ export const inquiryRepository = {
   },
 
   /**
-   * Delete inquiry
+   * Delete a single inquiry
    */
   async delete(id) {
+    return this.bulkDelete([id]);
+  },
+
+  /**
+   * Bulk delete multiple inquiries by ID
+   */
+  async bulkDelete(ids) {
+    const idSet = new Set(ids || []);
     const all = await this.getAll();
-    const filtered = all.filter((item) => item.id !== id);
+    const filtered = all.filter((item) => !idSet.has(item.id));
     saveStoredInquiries(filtered);
+
+    // Attempt deletion via Supabase client silently if configured
+    for (const id of idSet) {
+      try {
+        await supabase.from('inquiries').delete().eq('id', id);
+      } catch {
+        // Fallback already handled in localStorage
+      }
+    }
+
     return true;
   },
 };
