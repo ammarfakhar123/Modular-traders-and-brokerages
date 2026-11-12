@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import { settingsRepository } from '@/repositories/settingsRepository';
 
 const STORAGE_KEY = 'modular_traders_inquiries_v2';
 
@@ -81,6 +82,44 @@ function saveStoredInquiries(inquiries) {
 }
 
 /**
+ * Dispatch trade inquiry via email to the active Admin Receiving Email
+ */
+async function dispatchInquiryEmail(inquiry, targetEmail) {
+  if (!targetEmail || !targetEmail.includes('@')) return { ok: false, reason: 'Invalid target email' };
+
+  try {
+    const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
+      body: JSON.stringify({
+        _subject: `New Rice Trade Inquiry: ${inquiry.productName || 'General Inquiry'} (${inquiry.companyName || inquiry.fullName})`,
+        _template: 'table',
+        _captcha: 'false',
+        _replyto: inquiry.email || targetEmail,
+        'Full Name': inquiry.fullName || 'N/A',
+        'Company Name': inquiry.companyName || 'N/A',
+        'Buyer Email': inquiry.email || 'N/A',
+        'Phone / WhatsApp': inquiry.phone || 'N/A',
+        'Country / Destination': inquiry.country || inquiry.destinationPort || 'N/A',
+        'Product / Service': inquiry.productName || 'N/A',
+        'Estimated Quantity': inquiry.volumeMT || 'Not Specified',
+        'Commercial Terms': inquiry.incoterms || 'Standard',
+        'Packaging': inquiry.packaging || 'Standard',
+        'Requirements / Message': inquiry.notes || 'No message provided',
+      }),
+    });
+    const data = await res.json();
+    return { ok: res.ok, data };
+  } catch (err) {
+    console.warn('Email dispatch error:', err);
+    return { ok: false, error: err.message };
+  }
+}
+
+/**
  * Decoupled B2B Inquiry Repository
  * Handles all trade inquiries from Contact Page, Modal, and Catalog details.
  */
@@ -94,28 +133,58 @@ export const inquiryRepository = {
   },
 
   /**
-   * Submit and save a new inquiry
+   * Submit and save a new inquiry + optionally forward to Admin Email
    */
   async create(inquiryData) {
+    const settings = settingsRepository.get();
+    const shouldEmail = Boolean(settings.receiveInquiriesByEmail && settings.inquiryNotificationEmail);
+
     const all = await this.getAll();
     const newInquiry = {
       id: `inq-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       created_at: new Date().toISOString(),
       status: 'New',
+      emailForwardedTo: shouldEmail ? settings.inquiryNotificationEmail : 'Disabled',
       ...inquiryData,
     };
 
     const updated = [newInquiry, ...all];
     saveStoredInquiries(updated);
 
-    // Also attempt saving via Supabase client asynchronously
+    // Attempt saving via Supabase client asynchronously
     try {
       await supabase.from('inquiries').insert(newInquiry);
     } catch (e) {
       // Graceful fallback already handled
     }
 
+    // Forward to Admin Receiving Email if enabled in Admin Settings
+    if (shouldEmail) {
+      await dispatchInquiryEmail(newInquiry, settings.inquiryNotificationEmail);
+    }
+
     return newInquiry;
+  },
+
+  /**
+   * Send a test notification email from Admin Settings
+   */
+  async sendTestNotification(targetEmail) {
+    return dispatchInquiryEmail(
+      {
+        fullName: 'Modular Traders System Verification',
+        companyName: 'Modular Traders and Brokerage (Karachi HQ)',
+        email: targetEmail,
+        phone: '+92 3144447656',
+        country: 'Pakistan',
+        productName: 'Email Notification Test (Super Kernel Basmati & Portfolio)',
+        volumeMT: 'Test Verification',
+        incoterms: 'N/A',
+        packaging: 'N/A',
+        notes: `This is a test verification confirming that customer inquiries from Modular Traders website will be delivered to: ${targetEmail}`,
+      },
+      targetEmail
+    );
   },
 
   /**
