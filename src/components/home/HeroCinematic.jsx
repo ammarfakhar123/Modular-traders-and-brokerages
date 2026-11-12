@@ -15,9 +15,9 @@ export default function HeroCinematic({ onOpenQuote }) {
   };
 
   return (
-    <section className="px-3 sm:px-6 pt-20 sm:pt-[88px] pb-6 sm:pb-8 max-w-[1440px] mx-auto select-none">
-      {/* Main Hero Card Sized Cleanly with Breathing Room Below on Standard Screens */}
-      <div className="relative rounded-3xl sm:rounded-[2.25rem] overflow-hidden min-h-[395px] sm:min-h-[445px] lg:min-h-[475px] flex flex-col justify-between text-slate-800 border border-[#D5E5DC] bg-[#FAF8F3] shadow-[0_20px_50px_rgba(7,43,31,0.08)]">
+    <section className="px-3 sm:px-6 pt-[104px] sm:pt-[116px] pb-6 sm:pb-8 max-w-[1440px] mx-auto select-none">
+      {/* Main Hero Card with Clean Gap Below Navbar */}
+      <div className="relative rounded-3xl sm:rounded-[2.25rem] overflow-hidden min-h-[440px] sm:min-h-[490px] lg:min-h-[520px] flex flex-col justify-between text-slate-800 border border-[#D5E5DC] bg-[#FAF8F3] shadow-[0_20px_50px_rgba(7,43,31,0.08)]">
         {/* Full-Bleed Rice Crop Field & Harvest Background Image */}
         <div
           className="absolute inset-0 bg-cover bg-right sm:bg-center pointer-events-none"
@@ -31,7 +31,7 @@ export default function HeroCinematic({ onOpenQuote }) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
 
         {/* Left Column Text Content (Clean, Balanced, Uncluttered) */}
-        <div className="relative z-10 max-w-2xl p-6 sm:p-8 lg:p-9 my-auto space-y-3.5">
+        <div className="relative z-10 max-w-2xl p-6 sm:p-10 lg:p-11 my-auto space-y-4">
           <div className="flex items-center gap-2.5">
             <span className="w-6 h-[2px] bg-[#B8860B]" />
             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] text-[#072B1F]">
