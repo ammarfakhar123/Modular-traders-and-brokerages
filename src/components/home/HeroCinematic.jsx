@@ -1,23 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2 } from 'lucide-react';
-import { initialProducts } from '@/data/products';
+import { ArrowRight, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 
 export default function HeroCinematic({ onOpenQuote }) {
-  const shortLabels = {
-    '1121-basmati-rice': '1121 Basmati',
-    'super-kernel-basmati-rice': 'Super Kernel',
-    'super-basmati-rice': 'Super Basmati',
-    'pk-385-basmati-rice': 'PK-385',
-    'pk-515-basmati-rice': 'PK-515',
-    'basmati-1692-rice': 'Basmati 1692',
-    'basmati-1718-rice': 'Basmati 1718',
-    'basmati-1509-rice': 'Basmati 1509',
-    'irri-6-long-grain-white-rice': 'IRRI-6 White',
-    'irri-9-c9-long-grain-rice': 'IRRI-9 / C9',
-    'pk-386-long-grain-white-rice': 'PK-386',
-    'ks-282-long-grain-rice': 'KS-282',
-  };
 
   return (
     <section className="px-3 sm:px-6 pt-[90px] xs:pt-[96px] sm:pt-[116px] pb-6 sm:pb-8 max-w-[1440px] mx-auto select-none">
@@ -87,22 +72,35 @@ export default function HeroCinematic({ onOpenQuote }) {
           </div>
         </div>
 
-        {/* Bottom Docked Strip: Horizontally Swipeable on Mobile, Wrapped on Desktop */}
-        <div className="relative z-10 bg-[#072B1F]/95 border-t border-[#155437] px-3.5 sm:px-8 py-2.5 sm:py-3 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-2 text-white">
-          <div className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#CFA744] shrink-0">
-            OUR 12 EXPORT VARIETIES:
+        {/* Bottom Docked Strip: Exactly 2 Core Export Categories */}
+        <div className="relative z-10 bg-[#072B1F]/95 border-t border-[#155437] px-4 sm:px-8 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-white">
+          <div className="flex items-center gap-2 text-[10px] sm:text-xs font-bold uppercase tracking-wider text-[#CFA744] shrink-0">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#CFA744]" />
+            <span>EXPORT RICE CATEGORIES:</span>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto scrollbar-none py-1 w-full flex-nowrap lg:flex-wrap">
-            {initialProducts.map((item) => (
-              <Link
-                key={item.id}
-                to={`/products/${item.slug}`}
-                className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs font-medium bg-white/10 hover:bg-white hover:text-[#072B1F] text-slate-100 transition-colors whitespace-nowrap shrink-0"
-              >
-                {shortLabels[item.slug] || item.name}
-              </Link>
-            ))}
+          <div className="flex items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
+            <Link
+              to="/products?category=Basmati+Rice"
+              className="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold bg-[#FAF8F3] text-[#072B1F] hover:bg-white transition-all shadow-xs flex items-center justify-center gap-2 group"
+            >
+              <span>Basmati Rice</span>
+              <span className="text-[10px] font-mono text-[#8B6508] bg-[#FAF0D9] px-2 py-0.5 rounded-md font-semibold">
+                8 Varieties
+              </span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#072B1F] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </Link>
+
+            <Link
+              to="/products?category=Non-Basmati+Rice"
+              className="flex-1 sm:flex-none px-4 py-2 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all flex items-center justify-center gap-2 group"
+            >
+              <span>Non-Basmati Rice</span>
+              <span className="text-[10px] font-mono text-emerald-200 bg-white/10 px-2 py-0.5 rounded-md font-semibold">
+                4 Varieties
+              </span>
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#CFA744] group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+            </Link>
           </div>
         </div>
       </div>
