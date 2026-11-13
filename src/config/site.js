@@ -212,9 +212,9 @@ export const siteConfig = {
       whatsappDisplay: "+92 314 4447656",
     },
     emails: {
-      inquiries: "To be confirmed by the client",
-      display: "To be confirmed by the client",
-      inquiryPlaceholder: "inquiries@modulartraders.com",
+      inquiries: "info@modularagro.com",
+      display: "info@modularagro.com",
+      inquiryPlaceholder: "info@modularagro.com",
     },
     socials: {
       whatsapp: "https://wa.me/923144447656",

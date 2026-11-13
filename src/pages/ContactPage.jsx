@@ -164,12 +164,14 @@ export default function ContactPage() {
                   <MessageSquare className="w-4 h-4 text-emerald-600 flex-shrink-0 mt-0.5" />
                   <div>
                     <span className="font-bold text-slate-800 block mb-0.5">WhatsApp:</span>
-                    <span className="font-mono text-slate-700 font-bold block">
+                    <a
+                      href={`https://wa.me/${siteConfig.contact.phones.whatsappClean}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-mono text-slate-800 font-bold hover:text-emerald-700 transition"
+                    >
                       {siteConfig.contact.phones.whatsapp}
-                    </span>
-                    <span className="text-[11px] text-slate-500 italic">
-                      (subject to confirmation that WhatsApp is active on this number)
-                    </span>
+                    </a>
                   </div>
                 </div>
 
@@ -177,21 +179,13 @@ export default function ContactPage() {
                 <div className="flex items-start gap-3">
                   <Mail className="w-4 h-4 text-[#155437] flex-shrink-0 mt-0.5" />
                   <div>
-                    <span className="font-bold text-slate-800 block mb-0.5">Email Address:</span>
-                    <span className="text-slate-600 font-mono italic">
-                      {siteConfig.contact.emails.inquiries}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Working Hours */}
-                <div className="flex items-start gap-3">
-                  <Clock className="w-4 h-4 text-[#B8860B] flex-shrink-0 mt-0.5" />
-                  <div>
-                    <span className="font-bold text-slate-800 block mb-0.5">Working Hours:</span>
-                    <span className="text-slate-600 font-mono italic">
-                      {siteConfig.workingHours.display}
-                    </span>
+                    <span className="font-bold text-slate-800 block mb-0.5">Official Email:</span>
+                    <a
+                      href="mailto:info@modularagro.com"
+                      className="text-[#155437] font-mono font-bold hover:underline"
+                    >
+                      info@modularagro.com
+                    </a>
                   </div>
                 </div>
               </div>
@@ -221,9 +215,6 @@ export default function ContactPage() {
                 </div>
                 <ArrowUpRight className="w-4 h-4 transition-transform group-hover:rotate-45" />
               </button>
-              <p className="text-[10px] text-slate-500 italic text-center">
-                * WhatsApp messaging is subject to active status confirmation on +92 3144447656.
-              </p>
             </div>
 
             {/* Maritime Dispatch Seaports */}

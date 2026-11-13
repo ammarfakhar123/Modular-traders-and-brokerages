@@ -1,17 +1,19 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 
-const SETTINGS_STORAGE_KEY = 'modular_admin_settings_v1';
+const SETTINGS_STORAGE_KEY = 'modular_admin_settings_v3';
 
 export const defaultAdminSettings = {
   receiveInquiriesByEmail: true,
-  inquiryNotificationEmail: 'muhammadammarfakhar@gmail.com',
-  savedEmails: ['muhammadammarfakhar@gmail.com'],
+  inquiryNotificationEmail: 'info@modularagro.com',
+  savedEmails: ['info@modularagro.com', 'muhammadammarfakhar@gmail.com'],
 };
 
 function getStoredSettings() {
   if (typeof window === 'undefined') return defaultAdminSettings;
   try {
+    localStorage.removeItem('modular_admin_settings_v1');
+    localStorage.removeItem('modular_admin_settings_v2');
     const raw = localStorage.getItem(SETTINGS_STORAGE_KEY);
     if (!raw) {
       localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(defaultAdminSettings));

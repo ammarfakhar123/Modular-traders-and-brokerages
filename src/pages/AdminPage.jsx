@@ -51,7 +51,7 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState('products'); // 'products' | 'inquiries' | 'settings'
 
   // Login Form States
-  const [loginEmail, setLoginEmail] = useState('admin@modulartraders.com');
+  const [loginEmail, setLoginEmail] = useState('admin@modularagro.com');
   const [loginPassword, setLoginPassword] = useState('admin2026');
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -1138,7 +1138,7 @@ export default function AdminPage() {
                         type="email"
                         required={receiveInquiriesByEmail}
                         disabled={!receiveInquiriesByEmail}
-                        placeholder="muhammadammarfakhar@gmail.com"
+                        placeholder="info@modularagro.com"
                         value={adminReceivingEmail}
                         onChange={(e) => setAdminReceivingEmail(e.target.value)}
                         className="w-full bg-[#FAF8F3] disabled:opacity-60 border border-[#D5E5DC] focus:border-[#CFA744] rounded-xl pl-10 pr-4 py-2.5 text-xs font-semibold text-slate-800 outline-none transition"

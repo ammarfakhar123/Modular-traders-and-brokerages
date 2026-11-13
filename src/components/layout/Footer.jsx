@@ -81,8 +81,18 @@ export default function Footer({ onOpenQuote }) {
             </h4>
             <ul className="space-y-2.5 text-xs text-slate-600 font-medium">
               <li>
+                <Link to="/products/1121-basmati-rice" className="hover:text-[#072B1F] transition">
+                  1121 Basmati Rice
+                </Link>
+              </li>
+              <li>
                 <Link to="/products/super-kernel-basmati-rice" className="hover:text-[#072B1F] transition">
                   Super Kernel Basmati Rice
+                </Link>
+              </li>
+              <li>
+                <Link to="/products/pk-385-basmati-rice" className="hover:text-[#072B1F] transition">
+                  PK-385 Basmati Rice
                 </Link>
               </li>
               <li>
@@ -91,46 +101,28 @@ export default function Footer({ onOpenQuote }) {
                 </Link>
               </li>
               <li>
-                <Link to="/products/irri-9-long-grain-rice" className="hover:text-[#072B1F] transition">
-                  IRRI-9 Long Grain Rice
+                <Link to="/products/irri-9-c9-long-grain-rice" className="hover:text-[#072B1F] transition">
+                  IRRI-9 / C9 Long Grain Rice
                 </Link>
               </li>
               <li>
-                <Link to="/products/pk-348-long-grain-rice" className="hover:text-[#072B1F] transition">
-                  PK-348 Long Grain Rice
+                <Link to="/products/pk-386-long-grain-white-rice" className="hover:text-[#072B1F] transition">
+                  PK-386 Long Grain White Rice
                 </Link>
               </li>
               <li>
-                <Link to="/products/sindh-basmati-d-98-rice" className="hover:text-[#072B1F] transition">
-                  Sindh Basmati / D-98 Rice
-                </Link>
-              </li>
-              <li>
-                <Link to="/products/irri-6-pk-parboiled-sella-rice" className="hover:text-[#072B1F] transition">
-                  IRRI-6 / PK Parboiled (Sella)
-                </Link>
-              </li>
-              <li>
-                <Link to="/products/global-cross-border-sourcing-brokerage" className="text-[#155437] font-semibold hover:text-[#072B1F] transition">
-                  Cross-Border Sourcing &amp; Brokerage
+                <Link to="/products" className="text-[#155437] font-semibold hover:text-[#072B1F] transition">
+                  View All 12 Export Varieties &rarr;
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Centralized Working Hours & Contact */}
+          {/* Centralized Headquarters & Direct Contact */}
           <div className="space-y-3.5">
             <h4 className="font-sans text-xs font-bold text-[#072B1F] tracking-wider uppercase mb-4 border-b border-[#D5E5DC] pb-2">
               Trading Desk
             </h4>
-
-            <div className="text-xs text-slate-600 flex items-start gap-2">
-              <Clock className="w-4 h-4 text-[#CFA744] mt-0.5 flex-shrink-0" />
-              <div>
-                <span className="text-[#072B1F] font-bold block">Trading Hours:</span>
-                <span>{siteConfig.workingHours.fullDisplay}</span>
-              </div>
-            </div>
 
             <div className="text-xs text-slate-600 flex items-start gap-2">
               <MapPin className="w-4 h-4 text-[#155437] mt-0.5 flex-shrink-0" />
@@ -144,7 +136,12 @@ export default function Footer({ onOpenQuote }) {
               <Phone className="w-4 h-4 text-[#155437] mt-0.5 flex-shrink-0" />
               <div>
                 <span className="text-[#072B1F] font-bold block">Desk Direct:</span>
-                <span>{siteConfig.contact.phones.primary}</span>
+                <a
+                  href={`tel:${siteConfig.contact.phones.whatsappClean}`}
+                  className="font-mono text-slate-800 hover:text-[#155437] font-semibold"
+                >
+                  {siteConfig.contact.phones.primary}
+                </a>
               </div>
             </div>
 
@@ -152,7 +149,12 @@ export default function Footer({ onOpenQuote }) {
               <Mail className="w-4 h-4 text-[#155437] mt-0.5 flex-shrink-0" />
               <div>
                 <span className="text-[#072B1F] font-bold block">Trade Email:</span>
-                <span>{siteConfig.contact.emails.inquiries}</span>
+                <a
+                  href="mailto:info@modularagro.com"
+                  className="font-mono text-slate-800 hover:text-[#155437] font-semibold"
+                >
+                  info@modularagro.com
+                </a>
               </div>
             </div>
 

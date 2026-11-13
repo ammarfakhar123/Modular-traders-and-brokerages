@@ -40,10 +40,11 @@ export const authRepository = {
       if (error) throw error;
     } catch (e) {
       // Fallback to default administrator credentials
-      if (email === 'admin@modulartraders.com' && password === 'admin2026') {
+      const validAdminEmails = ['admin@modulartraders.com', 'admin@modularagro.com', 'info@modularagro.com'];
+      if (validAdminEmails.includes(email.trim().toLowerCase()) && password === 'admin2026') {
         const session = {
           user: {
-            email: 'admin@modulartraders.com',
+            email: email.trim().toLowerCase(),
             role: 'Super Administrator',
             name: 'Commodity Desk Lead',
           },
@@ -54,7 +55,7 @@ export const authRepository = {
         window.dispatchEvent(new Event('modular_auth_changed'));
         return { success: true, session };
       }
-      return { success: false, error: 'Invalid credentials. Use admin@modulartraders.com / admin2026' };
+      return { success: false, error: 'Invalid credentials. Use admin@modularagro.com / admin2026' };
     }
   },
 
