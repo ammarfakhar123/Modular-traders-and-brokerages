@@ -232,7 +232,7 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                   onScroll={handleMobileProductScroll}
                   className="flex overflow-x-auto snap-x snap-mandatory gap-3.5 pb-2 -mx-4 px-4 scrollbar-none scroll-smooth"
                 >
-                  {filteredRiceProducts.map((product) => (
+                  {filteredRiceProducts.map((product, idx) => (
                     <div
                       key={product.id}
                       className="w-[85vw] max-w-[340px] shrink-0 snap-center bg-white rounded-2xl border border-[#D5E5DC] overflow-hidden shadow-sm flex flex-col justify-between"
@@ -243,7 +243,8 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                           src={product.image}
                           alt={product.name}
                           className="w-full h-full object-cover"
-                          loading="lazy"
+                          loading={idx < 3 ? "eager" : "lazy"}
+                          fetchpriority={idx === 0 ? "high" : "auto"}
                           decoding="async"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
@@ -350,7 +351,8 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                         src={product.image}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95 group-hover:opacity-100"
-                        loading="lazy"
+                        loading={idx < 4 ? "eager" : "lazy"}
+                        fetchpriority={idx < 2 ? "high" : "auto"}
                         decoding="async"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />

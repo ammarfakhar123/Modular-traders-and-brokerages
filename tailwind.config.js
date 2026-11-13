@@ -52,8 +52,8 @@ export default {
         ivory: '#F9F7F2',
       },
       fontFamily: {
-        serif: ['"Playfair Display"', 'Georgia', 'serif'],
-        sans: ['"Outfit"', 'system-ui', '-apple-system', 'sans-serif'],
+        serif: ['"Cinzel"', '"Playfair Display"', 'Georgia', 'serif'],
+        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
       },
       boxShadow: {
         'luxury': '0 10px 40px -10px rgba(14, 53, 40, 0.08)',

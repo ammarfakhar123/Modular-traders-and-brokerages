@@ -51,25 +51,25 @@ export default function AboutPage({ onOpenQuote }) {
     {
       title: 'Pakistani Agri Focus',
       desc: "Dedicated specifically to representing Pakistan's finest agricultural yield with verifiable regional provenance.",
-      icon: Sprout,
+      icon: Wheat,
       color: '#155437',
     },
     {
       title: 'International Reach',
       desc: 'Connecting domestic suppliers with verified buyers across the Middle East, Africa, Southeast Asia, and Europe.',
-      icon: Send,
+      icon: Globe2,
       color: '#CFA744',
     },
     {
       title: 'Ethical Brokerage',
       desc: 'Transparent commercial negotiations, clear agency terms, and absolute integrity across every transaction.',
-      icon: BadgeCheck,
+      icon: Scale,
       color: '#155437',
     },
     {
       title: 'Karachi Port Gateway',
       desc: 'Direct access to export loading berths at Karachi Port (KPT) and Port Muhammad Bin Qasim (PQ).',
-      icon: Anchor,
+      icon: Ship,
       color: '#CFA744',
     },
   ];

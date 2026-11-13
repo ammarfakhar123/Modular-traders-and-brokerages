@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, MessageSquare, ShieldCheck, Ship, Sparkles, CheckCircle2, Award, Anchor, BadgeCheck, Gem } from 'lucide-react';
+import { ArrowRight, MessageSquare, ShieldCheck, Ship, Sparkles, Award } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 
 export default function RiceVideoShowcaseSection({ onOpenQuote }) {
@@ -8,17 +8,17 @@ export default function RiceVideoShowcaseSection({ onOpenQuote }) {
     {
       label: 'Sortex Clean',
       value: '100% Optical Cleaning',
-      icon: Gem,
+      icon: Sparkles,
     },
     {
       label: 'Food Safety',
       value: 'EU & GCC MRL Residue-Free',
-      icon: BadgeCheck,
+      icon: ShieldCheck,
     },
     {
       label: 'Logistics',
       value: 'Karachi Port (KPT) & PQ Dispatches',
-      icon: Anchor,
+      icon: Ship,
     },
     {
       label: 'Integrity',
@@ -29,15 +29,20 @@ export default function RiceVideoShowcaseSection({ onOpenQuote }) {
 
   return (
     <section className="relative w-full py-20 sm:py-28 lg:py-36 bg-[#072B1F] overflow-hidden my-10 sm:my-14 shadow-2xl border-y border-[#155437]">
-      {/* Background Cinematic Banner Image (Full Cover - Ultra-Fast Instant Load) */}
+      {/* Background Cinematic Video Cover (Contained in this banner only - with instant poster fallback) */}
       <div className="absolute inset-0 w-full h-full overflow-hidden">
-        <img
-          src="/images/showcase-banner.jpg"
-          alt="Pakistani Rice Belt Agricultural Harvest"
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 w-full h-full object-cover object-center scale-105 hover:scale-100 transition-transform duration-1000"
-        />
+        <video
+          autoPlay
+          loop
+          muted
+          defaultMuted
+          playsInline
+          preload="metadata"
+          poster="/images/showcase-banner.jpg"
+          className="absolute inset-0 w-full h-full object-cover object-center"
+        >
+          <source src="/videos/rice-showcase.mp4" type="video/mp4" />
+        </video>
 
         {/* Cinematic Dual-Gradient Overlays for Deep Contrast & Vibrant Visibility */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#07241A] via-black/55 to-[#07241A]/90 pointer-events-none" />

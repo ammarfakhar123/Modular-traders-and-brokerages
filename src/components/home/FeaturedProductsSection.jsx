@@ -118,7 +118,7 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
             onScroll={handleScroll}
             className="flex overflow-x-auto snap-x snap-mandatory gap-3.5 pb-2 -mx-4 px-4 scrollbar-none scroll-smooth"
           >
-            {filteredRice.map((product) => (
+            {filteredRice.map((product, idx) => (
               <div
                 key={product.id}
                 className="w-[85vw] max-w-[330px] shrink-0 snap-center bg-white rounded-2xl border border-[#D5E5DC] overflow-hidden shadow-xs flex flex-col justify-between"
@@ -128,7 +128,8 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
                     <img
                       src={product.image || '/images/products/super-kernel.jpg'}
                       alt={product.name}
-                      loading="lazy"
+                      loading={idx < 3 ? "eager" : "lazy"}
+                      fetchpriority={idx === 0 ? "high" : "auto"}
                       decoding="async"
                       className="w-full h-full object-cover"
                     />
@@ -206,7 +207,7 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
 
         {/* 2. LAPTOP / DESKTOP PRODUCTS GRID (hidden md:grid) — Completely Untouched */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12">
-          {filteredRice.map((product) => (
+          {filteredRice.map((product, idx) => (
             <div
               key={product.id}
               className="bg-white rounded-2xl border border-[#D5E5DC] overflow-hidden shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group"
@@ -217,7 +218,8 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
                   <img
                     src={product.image || '/images/products/super-kernel.jpg'}
                     alt={product.name}
-                    loading="lazy"
+                    loading={idx < 4 ? "eager" : "lazy"}
+                    fetchpriority={idx < 2 ? "high" : "auto"}
                     decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
