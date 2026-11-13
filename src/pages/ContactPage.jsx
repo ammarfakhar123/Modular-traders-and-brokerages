@@ -242,12 +242,12 @@ export default function ContactPage() {
               3. CONTACT FORM (Right 7 Cols)
              ======================================================== */}
           <div className="lg:col-span-7">
-            <div className="bg-white rounded-3xl p-8 sm:p-12 border border-[#D5E5DC] shadow-sm relative overflow-hidden">
-              <div className="mb-8">
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#B8860B] block mb-1">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-5 xs:p-6 sm:p-10 lg:p-12 border border-[#D5E5DC] shadow-sm relative overflow-hidden">
+              <div className="mb-6 sm:mb-8">
+                <span className="text-[10px] xs:text-xs font-mono font-bold uppercase tracking-wider text-[#B8860B] block mb-1">
                   Official Trade Inquiry Form
                 </span>
-                <h2 className="font-sans text-2xl sm:text-3xl font-extrabold text-[#072B1F]">
+                <h2 className="font-sans text-xl xs:text-2xl sm:text-3xl font-extrabold text-[#072B1F]">
                   Send Your Sourcing Inquiry
                 </h2>
                 <p className="text-slate-500 text-xs sm:text-sm mt-1">

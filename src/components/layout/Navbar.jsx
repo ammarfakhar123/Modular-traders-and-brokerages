@@ -41,11 +41,11 @@ export default function Navbar({ onOpenQuote }) {
             }`}
           >
             {/* Left: Brand Logo */}
-            <Link to="/" className="flex items-center gap-2.5 group">
+            <Link to="/" className="flex items-center gap-2 group shrink-0">
               <img
                 src="/brand/logo-full.png"
                 alt="Modular Traders and Brokerage"
-                className="h-9 sm:h-11 w-auto object-contain transition-transform group-hover:scale-[1.02]"
+                className="h-7 xs:h-8 sm:h-11 max-w-[145px] xs:max-w-[180px] sm:max-w-none w-auto object-contain transition-transform group-hover:scale-[1.02]"
               />
             </Link>
 
@@ -116,51 +116,73 @@ export default function Navbar({ onOpenQuote }) {
         </div>
       </header>
 
-      {/* Mobile Drawer Menu */}
+      {/* Mobile Drawer Menu & Backdrop */}
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="fixed top-20 left-4 right-4 z-[490] bg-white rounded-3xl shadow-2xl border border-[#D5E5DC] p-6 md:hidden"
-          >
-            <div className="flex flex-col space-y-3">
-              <div className="flex justify-center pb-3 border-b border-slate-100">
-                <img src="/brand/logo-full.png" alt="Modular Traders" className="h-8 w-auto object-contain" />
-              </div>
+          <>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 z-[480] bg-black/40 backdrop-blur-xs md:hidden"
+            />
+            <motion.div
+              initial={{ opacity: 0, y: -12, scale: 0.98 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -12, scale: 0.98 }}
+              className="fixed top-[68px] sm:top-20 left-3 right-3 sm:left-4 sm:right-4 z-[490] bg-white rounded-3xl shadow-2xl border border-[#D5E5DC] p-5 sm:p-6 md:hidden max-h-[85vh] overflow-y-auto"
+            >
+              <div className="flex flex-col space-y-3">
+                <div className="flex justify-center pb-3 border-b border-slate-100">
+                  <img src="/brand/logo-full.png" alt="Modular Traders" className="h-8 w-auto object-contain" />
+                </div>
 
-              {navLinks.map((link) => (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="text-base font-semibold text-slate-900 py-2 px-3 rounded-xl hover:bg-slate-50 flex items-center justify-between"
-                >
-                  <span>{link.name}</span>
-                  <ArrowUpRight className="w-4 h-4 text-slate-400" />
-                </Link>
-              ))}
+                {navLinks.map((link) => (
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-sm sm:text-base font-semibold text-slate-900 py-2.5 px-3 rounded-xl hover:bg-slate-50 flex items-center justify-between transition"
+                  >
+                    <span>{link.name}</span>
+                    <ArrowUpRight className="w-4 h-4 text-slate-400" />
+                  </Link>
+                ))}
 
-              <div className="pt-2 flex flex-col gap-2">
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    onOpenQuote();
-                  }}
-                  className="w-full bg-[#072B1F] text-white font-bold py-3 px-4 rounded-full text-xs flex items-center justify-center gap-2"
-                >
-                  <span>Request a Quote</span>
-                  <ArrowUpRight className="w-4 h-4 text-[#CFA744]" />
-                </button>
+                <div className="pt-2 flex flex-col gap-2.5">
+                  <button
+                    onClick={() => {
+                      setMobileMenuOpen(false);
+                      onOpenQuote();
+                    }}
+                    className="w-full bg-[#072B1F] hover:bg-[#155437] text-white font-bold py-3.5 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm transition active:scale-98"
+                  >
+                    <span>Request a Quote</span>
+                    <ArrowUpRight className="w-4 h-4 text-[#CFA744]" />
+                  </button>
 
-                <div className="p-3 rounded-2xl bg-slate-50 text-[11px] text-slate-600 flex items-center gap-2 border border-slate-200/60">
-                  <PhoneCall className="w-3.5 h-3.5 text-[#CFA744] flex-shrink-0" />
-                  <span>Karachi Trade Desk: {siteConfig.contact.phones.primary}</span>
+                  <a
+                    href={`https://wa.me/${siteConfig.contact.phones.whatsappClean}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full bg-[#EAF5EF] hover:bg-[#D5E5DC] text-[#072B1F] border border-[#BDE3CF] font-bold py-3 px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition"
+                  >
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>WhatsApp: {siteConfig.contact.phones.primary}</span>
+                  </a>
+
+                  <Link
+                    to="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="text-center text-[11px] font-semibold text-slate-500 hover:text-[#072B1F] py-1"
+                  >
+                    Admin Portal Login &rarr;
+                  </Link>
                 </div>
               </div>
-            </div>
-          </motion.div>
+            </motion.div>
+          </>
         )}
       </AnimatePresence>
     </>

@@ -35,32 +35,32 @@ export default function AboutPage({ onOpenQuote }) {
   const workProcess = siteConfig.workProcess;
 
   return (
-    <div className="pt-24 sm:pt-28 pb-20 bg-[#FAF8F3] text-slate-800">
+    <div className="pt-20 sm:pt-28 pb-16 sm:pb-20 bg-[#FAF8F3] text-slate-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* ========================================================
             SECTION 1: About Us – Company Introduction
            ======================================================== */}
-        <section className="mb-16 sm:mb-24">
-          <div className="relative rounded-[2.5rem] overflow-hidden bg-white border border-[#D5E5DC] p-8 sm:p-12 lg:p-14 shadow-[0_15px_45px_rgba(7,43,31,0.06)]">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12 items-center">
+        <section className="mb-12 sm:mb-24">
+          <div className="relative rounded-2xl xs:rounded-3xl sm:rounded-[2.5rem] overflow-hidden bg-white border border-[#D5E5DC] p-5 xs:p-6 sm:p-12 lg:p-14 shadow-[0_15px_45px_rgba(7,43,31,0.06)]">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
               {/* Left Column: Authentic Business Introduction */}
-              <div className="lg:col-span-7 space-y-6">
+              <div className="lg:col-span-7 space-y-4 sm:space-y-6">
                 {/* Eyebrow Label */}
                 <div className="flex items-center gap-2.5">
-                  <span className="w-6 h-[2px] bg-[#B8860B]" />
-                  <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#072B1F]">
+                  <span className="w-5 sm:w-6 h-[2px] bg-[#B8860B]" />
+                  <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#072B1F]">
                     About Us &bull; Modular Traders and Brokerage
                   </span>
                 </div>
 
-                <h1 className="font-sans text-3xl sm:text-5xl lg:text-[3.25rem] font-extrabold text-[#072B1F] tracking-tight leading-[1.12]">
+                <h1 className="font-sans text-2xl xs:text-3xl sm:text-5xl lg:text-[3.25rem] font-extrabold text-[#072B1F] tracking-tight leading-[1.14]">
                   Agricultural Commodity Trading &amp; <br />
                   <span className="text-[#155437]">
                     International Rice Exports
                   </span>
                 </h1>
 
-                <div className="space-y-4 text-sm sm:text-base text-slate-700 font-normal leading-relaxed">
+                <div className="space-y-3 sm:space-y-4 text-xs sm:text-base text-slate-700 font-normal leading-relaxed">
                   <p>
                     <strong>Modular Traders and Brokerage</strong> is an agricultural commodity trading and brokerage company
                     based in <strong>Karachi, Pakistan</strong>. We specialize in premium Pakistani rice sourcing, agricultural
@@ -77,7 +77,7 @@ export default function AboutPage({ onOpenQuote }) {
                 <div className="space-y-2 pt-1 text-xs text-slate-700 font-medium">
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-[#155437] mt-0.5 shrink-0" />
-                    <span>Specializing in Pakistani Basmati, IRRI-6, IRRI-9, PK-348, Sindh D-98 &amp; Sella varieties</span>
+                    <span>Specializing in Pakistani Basmati, IRRI-6, IRRI-9, PK-386, KS-282 &amp; Sella varieties</span>
                   </div>
                   <div className="flex items-start gap-2">
                     <CheckCircle2 className="w-4 h-4 text-[#155437] mt-0.5 shrink-0" />
@@ -90,17 +90,17 @@ export default function AboutPage({ onOpenQuote }) {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-wrap items-center gap-4 pt-2">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 pt-2">
                   <button
                     onClick={onOpenQuote}
-                    className="bg-[#072B1F] hover:bg-[#155437] text-white font-bold px-7 py-3.5 rounded-xl text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2.5 transition shadow-sm cursor-pointer"
+                    className="w-full sm:w-auto justify-center bg-[#072B1F] hover:bg-[#155437] text-white font-bold px-7 py-3.5 rounded-xl text-xs sm:text-sm uppercase tracking-wider flex items-center gap-2.5 transition shadow-sm cursor-pointer"
                   >
                     <span>Request a Trade Quote</span>
                     <ArrowRight className="w-4 h-4 text-[#CFA744]" />
                   </button>
 
-                  <div className="flex items-center gap-2 text-xs font-semibold text-[#155437] bg-[#EAF5EF] px-4 py-3 rounded-xl border border-[#BDE3CF]">
-                    <MapPin className="w-4 h-4 text-[#B8860B]" />
+                  <div className="w-full sm:w-auto justify-center flex items-center gap-2 text-xs font-semibold text-[#155437] bg-[#EAF5EF] px-4 py-3.5 rounded-xl border border-[#BDE3CF] text-center">
+                    <MapPin className="w-4 h-4 text-[#B8860B] shrink-0" />
                     <span>Karachi, Pakistan &bull; &ldquo;{siteConfig.tagline}&rdquo;</span>
                   </div>
                 </div>
@@ -108,12 +108,12 @@ export default function AboutPage({ onOpenQuote }) {
 
               {/* Right Column: High-Resolution Agricultural Showcase Card */}
               <div className="lg:col-span-5 flex justify-center">
-                <div className="relative w-full max-w-md rounded-3xl overflow-hidden border border-[#D5E5DC] shadow-[0_15px_40px_rgba(7,43,31,0.12)] bg-[#072B1F]">
+                <div className="relative w-full max-w-md rounded-2xl sm:rounded-3xl overflow-hidden border border-[#D5E5DC] shadow-[0_15px_40px_rgba(7,43,31,0.12)] bg-[#072B1F]">
                   {/* High-Resolution Pakistani Rice Cultivation Image */}
                   <img
                     src="/images/products/sindh-basmati.jpg"
                     alt="Pakistani Rice Cultivation & Harvest"
-                    className="w-full h-[420px] sm:h-[460px] object-cover"
+                    className="w-full h-[280px] xs:h-[340px] sm:h-[460px] object-cover"
                   />
 
                   {/* Gradient Overlay for Text Readability */}
@@ -164,23 +164,23 @@ export default function AboutPage({ onOpenQuote }) {
         {/* ========================================================
             SECTION 2: Who We Are
            ======================================================== */}
-        <section className="mb-20 sm:mb-28">
-          <div className="bg-white rounded-[2.5rem] p-8 sm:p-12 lg:p-16 border border-[#D5E5DC] shadow-sm">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-              <div className="lg:col-span-6 space-y-4">
-                <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#B8860B]">
+        <section className="mb-14 sm:mb-24">
+          <div className="bg-white rounded-2xl xs:rounded-3xl sm:rounded-[2.5rem] p-5 xs:p-6 sm:p-12 lg:p-16 border border-[#D5E5DC] shadow-sm">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center">
+              <div className="lg:col-span-6 space-y-3.5 sm:space-y-4">
+                <span className="text-[10px] xs:text-xs font-mono font-bold uppercase tracking-wider text-[#B8860B]">
                   Business Identity
                 </span>
-                <h2 className="font-sans text-2xl sm:text-4xl font-extrabold text-[#072B1F] leading-tight">
+                <h2 className="font-sans text-xl xs:text-2xl sm:text-4xl font-extrabold text-[#072B1F] leading-tight">
                   Who We Are
                 </h2>
-                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+                <p className="text-xs sm:text-base text-slate-600 leading-relaxed">
                   Modular Traders and Brokerage is an independent agritrade brokerage and commercial intermediation house
                   headquartered in Karachi, Pakistan&apos;s primary commercial and maritime center. Our core business identity
                   is grounded in serving as a professional, trustworthy facilitator between Pakistan&apos;s vast agricultural
                   production base and global commodity demand.
                 </p>
-                <p className="text-sm sm:text-base text-slate-600 leading-relaxed">
+                <p className="text-xs sm:text-base text-slate-600 leading-relaxed">
                   We are deeply committed to connecting Pakistan&apos;s agricultural sector &mdash; particularly its world-renowned
                   basmati and non-basmati rice crops grown across the Indus and Punjab river basins &mdash; with international
                   markets. Through our disciplined, professional approach to sourcing, market evaluation, commercial brokerage,
@@ -189,8 +189,8 @@ export default function AboutPage({ onOpenQuote }) {
                 </p>
               </div>
 
-              <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div className="bg-[#FAF8F3] p-6 rounded-2xl border border-[#EADBBD] space-y-2">
+              <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="bg-[#FAF8F3] p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-[#EADBBD] space-y-2">
                   <div className="w-10 h-10 rounded-xl bg-[#EAF5EF] text-[#155437] flex items-center justify-center font-bold">
                     <Wheat className="w-5 h-5 text-[#155437]" />
                   </div>

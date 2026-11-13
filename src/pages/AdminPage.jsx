@@ -642,10 +642,10 @@ export default function AdminPage() {
         </div>
 
         {/* Tab Navigation */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-4 border-t border-slate-100">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-4 sm:gap-6 border-t border-slate-100 overflow-x-auto scrollbar-none whitespace-nowrap">
           <button
             onClick={() => setActiveTab('products')}
-            className={`py-3 text-xs font-bold flex items-center gap-2 border-b-2 transition ${
+            className={`py-3 text-xs font-bold flex items-center gap-2 border-b-2 transition shrink-0 cursor-pointer ${
               activeTab === 'products'
                 ? 'border-[#072B1F] text-[#072B1F]'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -657,7 +657,7 @@ export default function AdminPage() {
 
           <button
             onClick={() => setActiveTab('inquiries')}
-            className={`py-3 text-xs font-bold flex items-center gap-2 border-b-2 transition ${
+            className={`py-3 text-xs font-bold flex items-center gap-2 border-b-2 transition shrink-0 cursor-pointer ${
               activeTab === 'inquiries'
                 ? 'border-[#072B1F] text-[#072B1F]'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -672,7 +672,7 @@ export default function AdminPage() {
 
           <button
             onClick={() => setActiveTab('settings')}
-            className={`py-3 text-xs font-bold flex items-center gap-2 border-b-2 transition ${
+            className={`py-3 text-xs font-bold flex items-center gap-2 border-b-2 transition shrink-0 cursor-pointer ${
               activeTab === 'settings'
                 ? 'border-[#072B1F] text-[#072B1F]'
                 : 'border-transparent text-slate-500 hover:text-slate-800'
@@ -723,18 +723,18 @@ export default function AdminPage() {
                 </select>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                 <button
                   onClick={handleResetDefaults}
-                  className="bg-white hover:bg-slate-50 border border-[#D5E5DC] text-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition"
+                  className="bg-white hover:bg-slate-50 border border-[#D5E5DC] text-slate-700 px-3.5 py-2 rounded-xl text-xs font-semibold flex items-center gap-1.5 transition cursor-pointer"
                 >
                   <RotateCcw className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Reset Catalog (12 Varieties)</span>
+                  <span>Reset (12 Varieties)</span>
                 </button>
 
                 <button
                   onClick={handleOpenCreate}
-                  className="bg-[#072B1F] hover:bg-[#155437] text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition shadow-sm"
+                  className="bg-[#072B1F] hover:bg-[#155437] text-white px-4 py-2 rounded-xl text-xs font-bold flex items-center justify-center gap-1.5 transition shadow-sm cursor-pointer flex-1 sm:flex-initial"
                 >
                   <Plus className="w-4 h-4 text-[#CFA744]" />
                   <span>Add Product</span>
@@ -1318,13 +1318,13 @@ export default function AdminPage() {
           MODAL: PRODUCT CREATE / EDIT (FULL FIELD CONFIGURATION)
          ======================================================== */}
       {isEditModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm overflow-y-auto">
-          <div className="bg-white rounded-3xl max-w-3xl w-full p-6 sm:p-8 shadow-2xl border border-[#D5E5DC] my-8 relative max-h-[92vh] flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 xs:p-4 sm:p-6 bg-black/60 backdrop-blur-sm overflow-y-auto">
+          <div className="bg-white rounded-2xl sm:rounded-3xl max-w-3xl w-full p-4 xs:p-6 sm:p-8 shadow-2xl border border-[#D5E5DC] my-auto relative max-h-[92vh] flex flex-col">
             <button
               onClick={() => setIsEditModalOpen(false)}
-              className="absolute top-5 right-5 p-1.5 rounded-full text-slate-400 hover:text-black bg-slate-100 transition cursor-pointer"
+              className="absolute top-4 right-4 sm:top-5 sm:right-5 p-1.5 rounded-full text-slate-400 hover:text-black bg-slate-100 transition cursor-pointer z-10"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
 
             <div className="border-b border-slate-100 pb-4 mb-4 pr-10">

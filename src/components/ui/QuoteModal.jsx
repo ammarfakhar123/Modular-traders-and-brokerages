@@ -80,7 +80,7 @@ export default function QuoteModal({ isOpen, onClose, preselectedProduct = null 
 
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 z-[9990] flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+      <div className="fixed inset-0 z-[9990] flex items-center justify-center p-3 xs:p-4 sm:p-6 overflow-y-auto">
         {/* Backdrop */}
         <motion.div
           initial={{ opacity: 0 }}
@@ -95,14 +95,14 @@ export default function QuoteModal({ isOpen, onClose, preselectedProduct = null 
           initial={{ scale: 0.95, opacity: 0, y: 15 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           exit={{ scale: 0.95, opacity: 0, y: 15 }}
-          className="relative w-full max-w-2xl bg-white border border-[#D5E5DC] rounded-3xl shadow-2xl p-6 sm:p-8 text-slate-800 z-10 my-8 overflow-hidden"
+          className="relative w-full max-w-2xl bg-white border border-[#D5E5DC] rounded-2xl sm:rounded-3xl shadow-2xl p-5 xs:p-6 sm:p-8 text-slate-800 z-10 my-auto max-h-[92vh] overflow-y-auto"
         >
           {/* Close button */}
           <button
             onClick={handleReset}
-            className="absolute top-5 right-5 text-slate-400 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-colors"
+            className="absolute top-4 right-4 sm:top-5 sm:right-5 text-slate-400 hover:text-slate-800 bg-slate-100 hover:bg-slate-200 p-2 rounded-full transition-colors cursor-pointer z-10"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4 sm:w-5 sm:h-5" />
           </button>
 
           {!submitted ? (

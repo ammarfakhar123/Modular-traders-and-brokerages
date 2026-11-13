@@ -65,27 +65,27 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
   };
 
   return (
-    <div className="pt-24 pb-24 bg-[#FAF8F3] min-h-screen text-slate-800">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-24 bg-[#FAF8F3] min-h-screen text-slate-800">
       {/* ========================================================
           1. PRODUCTS HERO BANNER
          ======================================================== */}
-      <section className="bg-white py-16 sm:py-20 mb-12 relative overflow-hidden border-b border-[#D5E5DC]">
+      <section className="bg-white py-12 sm:py-16 lg:py-20 mb-8 sm:mb-12 relative overflow-hidden border-b border-[#D5E5DC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="flex items-center justify-center gap-2.5 mb-4">
-            <span className="w-6 h-[2px] bg-[#B8860B]" />
-            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#072B1F]">
+          <div className="flex items-center justify-center gap-2.5 mb-3 sm:mb-4">
+            <span className="w-5 sm:w-6 h-[2px] bg-[#B8860B]" />
+            <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#072B1F]">
               Export Catalog &bull; Modular Traders and Brokerage
             </span>
           </div>
 
-          <h1 className="font-sans text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#072B1F] tracking-tight mb-4">
+          <h1 className="font-sans text-2xl xs:text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#072B1F] tracking-tight mb-3 sm:mb-4 leading-tight">
             Pakistani Rice Export Portfolio &amp; <br />
             <span className="text-[#155437]">
               Commodity Brokerage
             </span>
           </h1>
 
-          <p className="text-slate-600 text-sm sm:text-base max-w-3xl mx-auto leading-relaxed">
+          <p className="text-slate-600 text-xs sm:text-base max-w-3xl mx-auto leading-relaxed">
             Headquartered in <strong>Karachi, Pakistan</strong>, Modular Traders and Brokerage connects international
             rice buyers, wholesalers, and distributors with verified agricultural producers and licensed rice millers.
             Explore our core collection of premium Pakistani rice varieties and global cross-border sourcing services.
@@ -98,13 +98,13 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
         {/* ========================================================
             2. INTRODUCTION TO OUR RICE COLLECTION & FILTER CONTROLS
            ======================================================== */}
-        <section className="mb-10">
-          <div className="bg-white p-6 sm:p-8 rounded-3xl border border-[#D5E5DC] shadow-sm mb-8">
-            <div className="max-w-3xl mb-6">
-              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#B8860B] block mb-1">
+        <section className="mb-8 sm:mb-10">
+          <div className="bg-white p-4 xs:p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-[#D5E5DC] shadow-sm mb-6 sm:mb-8">
+            <div className="max-w-3xl mb-5 sm:mb-6">
+              <span className="text-[10px] xs:text-xs font-mono font-bold uppercase tracking-wider text-[#B8860B] block mb-1">
                 Verified Varietal Collection
               </span>
-              <h2 className="font-sans text-2xl sm:text-3xl font-extrabold text-[#072B1F] mb-2">
+              <h2 className="font-sans text-xl xs:text-2xl sm:text-3xl font-extrabold text-[#072B1F] mb-2">
                 Introduction to Our Rice Collection
               </h2>
               <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
@@ -116,14 +116,14 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
             </div>
 
             {/* Controls: Search and Categories */}
-            <div className="flex flex-col md:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-100">
+            <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3 sm:gap-4 pt-3 sm:pt-4 border-t border-slate-100">
               {/* Category Tabs */}
-              <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none">
+              <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none -mx-2 px-2 sm:mx-0 sm:px-0">
                 {categories.map((cat) => (
                   <button
                     key={cat}
                     onClick={() => handleCategoryChange(cat)}
-                    className={`px-4 py-2 rounded-full text-xs font-bold tracking-wider transition-all duration-200 flex-shrink-0 cursor-pointer ${
+                    className={`px-3.5 sm:px-4 py-2 rounded-full text-xs font-bold tracking-wider transition-all duration-200 flex-shrink-0 cursor-pointer ${
                       activeCategory === cat
                         ? 'bg-[#072B1F] text-white shadow-sm'
                         : 'bg-[#FAF8F3] text-slate-700 hover:bg-slate-100 border border-[#D5E5DC]'
@@ -149,7 +149,7 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
           </div>
 
           {/* Results Summary */}
-          <div className="flex items-center justify-between text-xs text-slate-500 mb-6 font-mono font-medium px-2">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1 text-[11px] sm:text-xs text-slate-500 mb-6 font-mono font-medium px-1 sm:px-2">
             <span>Showing {filteredRiceProducts.length} of {riceProducts.length} verified rice products</span>
             <span>Export Loading: Karachi Port (KPT) &amp; Port Qasim (PQ)</span>
           </div>
@@ -179,7 +179,7 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {filteredRiceProducts.map((product, idx) => (
                 <motion.div
                   key={product.id}
@@ -187,10 +187,10 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.05 }}
-                  className="group bg-white rounded-3xl border border-[#D5E5DC] hover:border-[#CFA744] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                  className="group bg-white rounded-2xl sm:rounded-3xl border border-[#D5E5DC] hover:border-[#CFA744] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
                 >
                   {/* Image */}
-                  <div className="relative h-56 w-full overflow-hidden bg-[#072B1F]">
+                  <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-[#072B1F]">
                     <img
                       src={product.image}
                       alt={product.name}
@@ -199,45 +199,45 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
 
-                    <div className="absolute top-4 left-4 flex gap-2">
-                      <span className="px-3 py-1 rounded-md text-[11px] font-bold tracking-wider bg-white/95 text-[#072B1F] border border-[#D5E5DC] shadow-xs">
+                    <div className="absolute top-3.5 left-3.5 sm:top-4 sm:left-4 flex gap-2">
+                      <span className="px-2.5 sm:px-3 py-1 rounded-md text-[10px] sm:text-[11px] font-bold tracking-wider bg-white/95 text-[#072B1F] border border-[#D5E5DC] shadow-xs">
                         {product.category}
                       </span>
                     </div>
 
                     {product.badge && (
-                      <div className="absolute top-4 right-4">
-                        <span className="px-2.5 py-1 rounded-md text-[10px] uppercase tracking-wider bg-[#CFA744] text-[#072B1F] font-bold shadow-xs">
+                      <div className="absolute top-3.5 right-3.5 sm:top-4 sm:right-4">
+                        <span className="px-2 sm:px-2.5 py-1 rounded-md text-[9px] sm:text-[10px] uppercase tracking-wider bg-[#CFA744] text-[#072B1F] font-bold shadow-xs">
                           {product.badge}
                         </span>
                       </div>
                     )}
 
-                    <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between text-xs text-white">
-                      <span className="bg-[#072B1F]/90 px-2.5 py-1 rounded-md border border-[#155437] font-bold font-mono">
+                    <div className="absolute bottom-2.5 left-3 right-3 sm:bottom-3 sm:left-4 sm:right-4 flex items-center justify-between text-[11px] sm:text-xs text-white">
+                      <span className="bg-[#072B1F]/90 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-[#155437] font-bold font-mono text-[10px] sm:text-xs">
                         Length: <strong className="text-[#CFA744]">{product.grainLength}</strong>
                       </span>
-                      <span className="text-[11px] text-slate-200 bg-[#072B1F]/90 px-2 py-0.5 rounded border border-[#155437]">
+                      <span className="text-[10px] sm:text-[11px] text-slate-200 bg-[#072B1F]/90 px-2 py-0.5 rounded border border-[#155437]">
                         Pakistan Origin
                       </span>
                     </div>
                   </div>
 
                   {/* Content */}
-                  <div className="p-6 flex-1 flex flex-col justify-between space-y-4">
+                  <div className="p-4 xs:p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-3.5 sm:space-y-4">
                     <div>
-                      <h3 className="font-sans text-lg font-bold text-[#072B1F] group-hover:text-[#155437] transition mb-2">
+                      <h3 className="font-sans text-base sm:text-lg font-bold text-[#072B1F] group-hover:text-[#155437] transition mb-1.5 sm:mb-2">
                         <Link to={`/products/${product.slug}`}>
                           {product.name}
                         </Link>
                       </h3>
 
-                      <p className="text-slate-600 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-4">
+                      <p className="text-slate-600 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-3 sm:mb-4">
                         {product.shortDescription}
                       </p>
 
                       {/* Processing Types Available & Pesticide Wash */}
-                      <div className="mb-3 flex flex-wrap gap-1.5 text-[10px] font-bold">
+                      <div className="mb-3 flex flex-wrap gap-1 sm:gap-1.5 text-[9px] xs:text-[10px] font-bold">
                         <span className="px-2 py-0.5 rounded-md bg-[#FAF8F3] text-slate-700 border border-slate-200">
                           White (Raw)
                         </span>
@@ -253,12 +253,12 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                       </div>
 
                       {/* Verified Key Characteristics */}
-                      <div className="mb-4 space-y-1.5 p-3.5 rounded-2xl bg-[#FAF8F3] border border-[#EADBBD]">
-                        <span className="text-[10px] font-mono uppercase tracking-wider text-[#B8860B] font-bold block mb-1">
+                      <div className="mb-3.5 sm:mb-4 space-y-1 sm:space-y-1.5 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-[#FAF8F3] border border-[#EADBBD]">
+                        <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-[#B8860B] font-bold block mb-1">
                           Key Verified Characteristics:
                         </span>
                         {(product.characteristics || []).slice(0, 3).map((char, cIdx) => (
-                          <div key={cIdx} className="flex items-start gap-2 text-xs text-slate-700">
+                          <div key={cIdx} className="flex items-start gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-700">
                             <CheckCircle2 className="w-3.5 h-3.5 text-[#155437] flex-shrink-0 mt-0.5" />
                             <span className="line-clamp-1">{char}</span>
                           </div>
@@ -267,20 +267,20 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
 
                       {/* Target Buyers / Markets */}
                       <div className="text-xs text-slate-500">
-                        <strong className="text-slate-700 block text-[11px] font-mono uppercase mb-0.5">
+                        <strong className="text-slate-700 block text-[10px] sm:text-[11px] font-mono uppercase mb-0.5">
                           Suitable Target Buyers &amp; Markets:
                         </strong>
-                        <p className="line-clamp-2 text-slate-600 leading-relaxed text-[11px]">
+                        <p className="line-clamp-2 text-slate-600 leading-relaxed text-[10px] sm:text-[11px]">
                           {product.targetMarkets}
                         </p>
                       </div>
                     </div>
 
                     {/* Actions */}
-                    <div className="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                    <div className="pt-3.5 sm:pt-4 border-t border-slate-100 flex items-center justify-between gap-2 sm:gap-3">
                       <Link
                         to={`/products/${product.slug}`}
-                        className="text-xs font-bold text-[#155437] hover:text-[#072B1F] transition flex items-center gap-1 uppercase tracking-wider"
+                        className="text-[11px] sm:text-xs font-bold text-[#155437] hover:text-[#072B1F] transition flex items-center gap-1 uppercase tracking-wider"
                       >
                         <span>Specifications</span>
                         <ArrowUpRight className="w-3.5 h-3.5" />
@@ -288,9 +288,9 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
 
                       <button
                         onClick={() => onOpenQuoteWithProduct(product)}
-                        className="bg-[#072B1F] hover:bg-[#155437] text-white px-4 py-2 rounded-xl text-xs font-bold tracking-wider transition shadow-xs flex items-center gap-1.5 cursor-pointer"
+                        className="bg-[#072B1F] hover:bg-[#155437] text-white px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-bold tracking-wider transition shadow-xs flex items-center gap-1.5 cursor-pointer"
                       >
-                        <span>Request a Quote</span>
+                        <span>Request Quote</span>
                       </button>
                     </div>
                   </div>
@@ -303,74 +303,74 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
         {/* ========================================================
             4. GLOBAL CROSS-BORDER SOURCING & BROKERAGE (Dedicated Section)
            ======================================================== */}
-        <section className="mb-20 sm:mb-28">
-          <div className="bg-gradient-to-br from-[#072B1F] via-[#0D3828] to-[#155437] rounded-[2.5rem] p-8 sm:p-14 text-white shadow-xl relative overflow-hidden">
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center relative z-10">
+        <section className="mb-14 sm:mb-24">
+          <div className="bg-gradient-to-br from-[#072B1F] via-[#0D3828] to-[#155437] rounded-2xl sm:rounded-[2.5rem] p-6 sm:p-10 lg:p-14 text-white shadow-xl relative overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-center relative z-10">
               <div className="lg:col-span-7 space-y-4">
-                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider text-[#CFA744] bg-white/10 border border-white/20">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-[10px] sm:text-xs font-mono font-bold uppercase tracking-wider text-[#CFA744] bg-white/10 border border-white/20">
                   <Scale className="w-3.5 h-3.5" />
                   <span>Category: Trading &amp; Brokerage Service</span>
                 </div>
 
-                <h2 className="font-sans text-2xl sm:text-4xl font-extrabold text-white leading-tight">
+                <h2 className="font-sans text-xl xs:text-2xl sm:text-4xl font-extrabold text-white leading-tight">
                   Global Cross-Border Sourcing &amp; Brokerage
                 </h2>
 
-                <p className="text-slate-200 text-sm sm:text-base leading-relaxed">
+                <p className="text-slate-200 text-xs sm:text-base leading-relaxed">
                   Beyond our standardized rice portfolio, Modular Traders and Brokerage acts as an independent commercial
                   brokerage desk in Karachi, Pakistan. Our primary role is connecting international buyers with vetted agricultural
                   commodity producers, licensed rice millers, and established local suppliers.
                 </p>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-                  <div className="bg-white/10 rounded-2xl p-4 border border-white/15">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-3.5 pt-2">
+                  <div className="bg-white/10 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 border border-white/15">
                     <h4 className="font-bold text-white text-xs sm:text-sm mb-1 flex items-center gap-1.5">
                       <CheckCircle2 className="w-4 h-4 text-[#CFA744]" /> Buyer-Supplier Alignment
                     </h4>
-                    <p className="text-xs text-slate-300 leading-relaxed">
+                    <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
                       Matching specific buyer varietal demands, target quality specs, and delivery schedules with verified Pakistani suppliers.
                     </p>
                   </div>
 
-                  <div className="bg-white/10 rounded-2xl p-4 border border-white/15">
+                  <div className="bg-white/10 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 border border-white/15">
                     <h4 className="font-bold text-white text-xs sm:text-sm mb-1 flex items-center gap-1.5">
                       <CheckCircle2 className="w-4 h-4 text-[#CFA744]" /> Commercial Structuring
                     </h4>
-                    <p className="text-xs text-slate-300 leading-relaxed">
+                    <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
                       Coordinating transparent price negotiations, clear contractual discussions, and mutually agreed commercial terms.
                     </p>
                   </div>
 
-                  <div className="bg-white/10 rounded-2xl p-4 border border-white/15">
+                  <div className="bg-white/10 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 border border-white/15">
                     <h4 className="font-bold text-white text-xs sm:text-sm mb-1 flex items-center gap-1.5">
                       <CheckCircle2 className="w-4 h-4 text-[#CFA744]" /> Trade &amp; Logistics Support
                     </h4>
-                    <p className="text-xs text-slate-300 leading-relaxed">
+                    <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
                       Assisting with export documentation, container stuffing, and maritime coordination through Karachi Port &amp; Port Qasim.
                     </p>
                   </div>
 
-                  <div className="bg-white/10 rounded-2xl p-4 border border-white/15">
+                  <div className="bg-white/10 rounded-xl sm:rounded-2xl p-3.5 sm:p-4 border border-white/15">
                     <h4 className="font-bold text-white text-xs sm:text-sm mb-1 flex items-center gap-1.5">
                       <CheckCircle2 className="w-4 h-4 text-[#CFA744]" /> Relationship Management
                     </h4>
-                    <p className="text-xs text-slate-300 leading-relaxed">
+                    <p className="text-[11px] sm:text-xs text-slate-300 leading-relaxed">
                       Fostering professional, dependable communication between buyers and suppliers for sustainable ongoing trade.
                     </p>
                   </div>
                 </div>
 
-                <div className="pt-4 flex flex-wrap items-center gap-3">
+                <div className="pt-3 sm:pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
                   <button
                     onClick={() =>
                       brokerageService
                         ? onOpenQuoteWithProduct(brokerageService)
                         : onOpenQuoteWithProduct({ name: 'Global Cross-Border Sourcing & Brokerage' })
                     }
-                    className="group bg-white hover:bg-[#FAF8F3] text-[#072B1F] font-bold pl-6 pr-2 py-3 rounded-full text-xs sm:text-sm flex items-center gap-3 transition shadow-md active:scale-95 cursor-pointer"
+                    className="w-full sm:w-auto justify-center group bg-white hover:bg-[#FAF8F3] text-[#072B1F] font-bold px-5 sm:pl-6 sm:pr-2 py-3 rounded-xl sm:rounded-full text-xs sm:text-sm flex items-center gap-3 transition shadow-md active:scale-95 cursor-pointer"
                   >
                     <span>Request Brokerage Sourcing</span>
-                    <span className="w-7 h-7 rounded-full bg-[#CFA744] text-[#072B1F] flex items-center justify-center transition-transform group-hover:rotate-45 font-bold">
+                    <span className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-[#CFA744] text-[#072B1F] flex items-center justify-center transition-transform group-hover:rotate-45 font-bold shrink-0">
                       <ArrowUpRight className="w-3.5 h-3.5" />
                     </span>
                   </button>
@@ -381,7 +381,7 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                     )}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="bg-white/10 hover:bg-white/20 text-white border border-white/20 px-5 py-3 rounded-full text-xs font-semibold flex items-center gap-2 transition"
+                    className="w-full sm:w-auto justify-center bg-white/10 hover:bg-white/20 text-white border border-white/20 px-5 py-3 rounded-xl sm:rounded-full text-xs font-semibold flex items-center gap-2 transition text-center"
                   >
                     <MessageSquare className="w-4 h-4 text-emerald-300" />
                     <span>WhatsApp Broker Desk</span>

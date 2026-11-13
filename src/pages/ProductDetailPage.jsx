@@ -58,25 +58,25 @@ export default function ProductDetailPage({ onOpenQuoteWithProduct }) {
   };
 
   return (
-    <div className="pt-24 pb-24 bg-[#FAF8F3] min-h-screen text-slate-800">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-24 bg-[#FAF8F3] min-h-screen text-slate-800">
       {/* Breadcrumb Header */}
-      <div className="bg-white border-b border-[#D5E5DC] py-4 mb-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between text-xs text-slate-500">
-          <div className="flex items-center gap-2">
+      <div className="bg-white border-b border-[#D5E5DC] py-3.5 mb-6 sm:mb-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2 text-xs text-slate-500">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
             <Link to="/" className="hover:text-[#072B1F] transition font-medium">
               Home
             </Link>
             <span>/</span>
             <Link to="/products" className="hover:text-[#072B1F] transition font-medium">
-              Products &amp; Services
+              Products
             </Link>
             <span>/</span>
-            <span className="text-[#072B1F] font-bold truncate max-w-xs">{product.name}</span>
+            <span className="text-[#072B1F] font-bold truncate max-w-[200px] xs:max-w-xs">{product.name}</span>
           </div>
 
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center gap-1.5 text-[#072B1F] hover:text-[#155437] font-bold text-xs transition"
+            className="flex items-center gap-1.5 text-[#072B1F] hover:text-[#155437] font-bold text-xs transition cursor-pointer"
           >
             <ArrowLeft className="w-3.5 h-3.5" /> Back to Products
           </button>
@@ -84,30 +84,30 @@ export default function ProductDetailPage({ onOpenQuoteWithProduct }) {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12">
           {/* Left Column: Imagery & Core Logistics */}
-          <div className="lg:col-span-5 space-y-6">
-            <div className="relative rounded-3xl overflow-hidden bg-[#072B1F] border border-[#D5E5DC] shadow-md">
+          <div className="lg:col-span-5 space-y-5 sm:space-y-6">
+            <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden bg-[#072B1F] border border-[#D5E5DC] shadow-md">
               <img
                 src={product.image}
                 alt={product.name}
-                className="w-full h-[380px] object-cover"
+                className="w-full h-[260px] xs:h-[320px] sm:h-[380px] object-cover"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
 
-              <div className="absolute top-4 left-4 flex flex-wrap gap-2">
-                <span className="px-3.5 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-white/95 text-[#072B1F] border border-[#D5E5DC] shadow-sm">
+              <div className="absolute top-3.5 left-3.5 sm:top-4 sm:left-4 flex flex-wrap gap-2">
+                <span className="px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-white/95 text-[#072B1F] border border-[#D5E5DC] shadow-sm">
                   {product.category}
                 </span>
                 {product.badge && (
-                  <span className="px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider bg-[#CFA744] text-[#072B1F] shadow-sm">
+                  <span className="px-2.5 sm:px-3 py-1 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-bold uppercase tracking-wider bg-[#CFA744] text-[#072B1F] shadow-sm">
                     {product.badge}
                   </span>
                 )}
               </div>
 
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <div className="flex items-center justify-between text-xs font-mono">
+              <div className="absolute bottom-3 left-3.5 right-3.5 sm:bottom-4 sm:left-4 sm:right-4 text-white">
+                <div className="flex items-center justify-between text-[11px] sm:text-xs font-mono">
                   <span>{product.isService ? 'Brokerage Hub: Karachi' : `Avg Grain: ${product.grainLength}`}</span>
                   <span className="text-[#EADBBD] font-bold">Cultivating Trust</span>
                 </div>
@@ -115,7 +115,7 @@ export default function ProductDetailPage({ onOpenQuoteWithProduct }) {
             </div>
 
             {/* Origin & Port Details Card */}
-            <div className="bg-white rounded-3xl p-6 border border-[#D5E5DC] shadow-sm space-y-4">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-6 border border-[#D5E5DC] shadow-sm space-y-3.5 sm:space-y-4">
               <h4 className="font-sans text-sm font-bold text-[#072B1F] uppercase tracking-wider border-b border-[#D5E5DC] pb-3 flex items-center gap-2">
                 <Compass className="w-4 h-4 text-[#155437]" />
                 <span>Trade &amp; Sourcing Logistics</span>
@@ -255,50 +255,50 @@ export default function ProductDetailPage({ onOpenQuoteWithProduct }) {
             </div>
 
             {/* Export Quality Parameters Table */}
-            <div className="bg-white rounded-3xl p-6 sm:p-8 border border-[#D5E5DC] shadow-sm">
-              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-[#D5E5DC]">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-4 xs:p-5 sm:p-8 border border-[#D5E5DC] shadow-sm">
+              <div className="flex items-center gap-2 mb-3 sm:mb-4 pb-2.5 sm:pb-3 border-b border-[#D5E5DC]">
                 <FileText className="w-5 h-5 text-[#155437]" />
-                <h3 className="font-sans text-lg font-bold text-[#072B1F]">
+                <h3 className="font-sans text-base sm:text-lg font-bold text-[#072B1F]">
                   Export Quality Parameters &amp; Lab Standards
                 </h3>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 font-mono text-xs mb-4">
-                <div className="p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
-                  <span className="text-slate-400 block text-[10px] uppercase font-sans">Avg. Grain Length (AGL)</span>
-                  <span className="font-bold text-[#072B1F] text-sm">{product.grainLength || 'Standard Export'}</span>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 xs:gap-2.5 sm:gap-3 font-mono text-xs mb-3 sm:mb-4">
+                <div className="p-2 xs:p-2.5 sm:p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
+                  <span className="text-slate-400 block text-[9px] xs:text-[10px] uppercase font-sans">Avg. Grain Length</span>
+                  <span className="font-bold text-[#072B1F] text-xs xs:text-sm">{product.grainLength || 'Standard Export'}</span>
                 </div>
 
-                <div className="p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
-                  <span className="text-slate-400 block text-[10px] uppercase font-sans">Moisture Content</span>
-                  <span className="font-bold text-slate-800 text-sm">{product.moisture || 'Max 12.5%'}</span>
+                <div className="p-2 xs:p-2.5 sm:p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
+                  <span className="text-slate-400 block text-[9px] xs:text-[10px] uppercase font-sans">Moisture Content</span>
+                  <span className="font-bold text-slate-800 text-xs xs:text-sm">{product.moisture || 'Max 12.5%'}</span>
                 </div>
 
-                <div className="p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
-                  <span className="text-slate-400 block text-[10px] uppercase font-sans">Broken Ratio</span>
-                  <span className="font-bold text-slate-800 text-sm">{product.brokenRatio || 'Max 2.0%'}</span>
+                <div className="p-2 xs:p-2.5 sm:p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
+                  <span className="text-slate-400 block text-[9px] xs:text-[10px] uppercase font-sans">Broken Ratio</span>
+                  <span className="font-bold text-slate-800 text-xs xs:text-sm">{product.brokenRatio || 'Max 2.0%'}</span>
                 </div>
 
-                <div className="p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
-                  <span className="text-slate-400 block text-[10px] uppercase font-sans">Purity &amp; Sortex</span>
-                  <span className="font-bold text-slate-800 text-sm">{product.purity || '95% Min, 100% Sortex'}</span>
+                <div className="p-2 xs:p-2.5 sm:p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
+                  <span className="text-slate-400 block text-[9px] xs:text-[10px] uppercase font-sans">Purity &amp; Sortex</span>
+                  <span className="font-bold text-slate-800 text-xs xs:text-sm">{product.purity || '95% Min, Sortex'}</span>
                 </div>
 
-                <div className="p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
-                  <span className="text-slate-400 block text-[10px] uppercase font-sans">Crop Year / Harvest</span>
-                  <span className="font-bold text-slate-800 text-sm">{product.cropYear || 'Fresh 2025 / 2026'}</span>
+                <div className="p-2 xs:p-2.5 sm:p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
+                  <span className="text-slate-400 block text-[9px] xs:text-[10px] uppercase font-sans">Crop Year / Harvest</span>
+                  <span className="font-bold text-slate-800 text-xs xs:text-sm">{product.cropYear || 'Fresh 2025/26'}</span>
                 </div>
 
-                <div className="p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
-                  <span className="text-slate-400 block text-[10px] uppercase font-sans">Milling Grade</span>
-                  <span className="font-bold text-[#155437] text-sm">Silky Sortex Clean</span>
+                <div className="p-2 xs:p-2.5 sm:p-3 bg-[#FAF8F3] rounded-xl border border-slate-200">
+                  <span className="text-slate-400 block text-[9px] xs:text-[10px] uppercase font-sans">Milling Grade</span>
+                  <span className="font-bold text-[#155437] text-xs xs:text-sm">Silky Sortex Clean</span>
                 </div>
               </div>
 
               {product.exportQuality && (
-                <div className="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700">
-                  <strong className="text-slate-900 block mb-1">Quality Tolerances:</strong>
-                  <span>{product.exportQuality}</span>
+                <div className="p-3 sm:p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700">
+                  <strong className="text-slate-900 block mb-0.5 sm:mb-1">Quality Tolerances:</strong>
+                  <span className="text-[11px] sm:text-xs">{product.exportQuality}</span>
                 </div>
               )}
             </div>
@@ -396,10 +396,10 @@ export default function ProductDetailPage({ onOpenQuoteWithProduct }) {
             </div>
 
             {/* Bottom Actions */}
-            <div className="pt-2 flex flex-col sm:flex-row gap-4">
+            <div className="pt-2 flex flex-col sm:flex-row gap-3 sm:gap-4 w-full">
               <button
                 onClick={() => onOpenQuoteWithProduct(product)}
-                className="flex-1 bg-[#072B1F] hover:bg-[#155437] text-[#CFA744] hover:text-white font-bold px-8 py-4 rounded-xl text-xs uppercase tracking-widest shadow-md flex items-center justify-center gap-2 transition"
+                className="w-full sm:flex-1 bg-[#072B1F] hover:bg-[#155437] text-[#CFA744] hover:text-white font-bold px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl text-xs uppercase tracking-widest shadow-md flex items-center justify-center gap-2 transition cursor-pointer"
               >
                 <span>Request a Quote</span>
                 <ArrowUpRight className="w-4 h-4 text-[#CFA744]" />
@@ -407,10 +407,10 @@ export default function ProductDetailPage({ onOpenQuoteWithProduct }) {
 
               <button
                 onClick={handleWhatsAppInquiry}
-                className="bg-white hover:bg-slate-50 text-[#072B1F] border border-[#D5E5DC] px-6 py-4 rounded-xl text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 transition shadow-sm"
+                className="w-full sm:w-auto bg-white hover:bg-slate-50 text-[#072B1F] border border-[#D5E5DC] px-5 sm:px-6 py-3.5 sm:py-4 rounded-xl text-xs uppercase tracking-wider font-bold flex items-center justify-center gap-2 transition shadow-sm cursor-pointer"
               >
                 <MessageSquare className="w-4 h-4 text-[#155437]" />
-                <span>Chat With Us on WhatsApp</span>
+                <span>Chat on WhatsApp</span>
               </button>
             </div>
           </div>

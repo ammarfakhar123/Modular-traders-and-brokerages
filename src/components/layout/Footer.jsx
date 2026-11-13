@@ -6,31 +6,31 @@ import { siteConfig } from '@/config/site';
 export default function Footer({ onOpenQuote }) {
   return (
     <footer id="contact" className="bg-[#FAF8F3] text-slate-800 border-t border-[#D5E5DC]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 sm:pt-16 pb-10 sm:pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 sm:gap-10 lg:gap-8">
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-4">
             <Link to="/" className="inline-block">
               <img
                 src="/brand/logo-full.png"
                 alt="Modular Traders and Brokerage"
-                className="h-12 w-auto object-contain"
+                className="h-10 sm:h-12 w-auto object-contain"
               />
             </Link>
 
-            <p className="text-slate-600 text-sm leading-relaxed max-w-sm">
+            <p className="text-slate-600 text-xs sm:text-sm leading-relaxed max-w-sm">
               &ldquo;{siteConfig.tagline}&rdquo; &mdash; {siteConfig.description}
             </p>
 
             <div className="flex items-center gap-2 pt-1 text-xs text-[#072B1F] font-semibold">
-              <ShieldCheck className="w-4 h-4 text-[#155437]" />
+              <ShieldCheck className="w-4 h-4 text-[#155437] shrink-0" />
               <span>Est. {siteConfig.establishedYear} &bull; Karachi HQ &bull; Export Dispatch via KPT &amp; Port Qasim</span>
             </div>
 
             <div className="pt-2">
               <button
                 onClick={onOpenQuote}
-                className="group bg-[#072B1F] hover:bg-[#155437] text-white pl-5 pr-2 py-2 rounded-full text-xs font-semibold inline-flex items-center gap-2.5 transition shadow-sm active:scale-95"
+                className="group bg-[#072B1F] hover:bg-[#155437] text-white pl-5 pr-2 py-2 rounded-full text-xs font-semibold inline-flex items-center gap-2.5 transition shadow-sm active:scale-95 cursor-pointer"
               >
                 <span>Request an Export Quote</span>
                 <span className="w-6 h-6 rounded-full bg-[#CFA744] text-[#072B1F] flex items-center justify-center transition-transform group-hover:rotate-45 font-bold">
@@ -58,7 +58,7 @@ export default function Footer({ onOpenQuote }) {
               </li>
               <li>
                 <Link to="/products" className="text-slate-600 hover:text-[#072B1F] transition">
-                  All 7 Rice Varieties
+                  All 12 Rice Varieties
                 </Link>
               </li>
               <li>
@@ -173,11 +173,11 @@ export default function Footer({ onOpenQuote }) {
         </div>
 
         {/* Bottom Bar */}
-        <div className="mt-12 pt-6 border-t border-[#D5E5DC] flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+        <div className="mt-10 sm:mt-12 pt-6 border-t border-[#D5E5DC] flex flex-col sm:flex-row items-start sm:items-center justify-between text-xs text-slate-500 gap-3 sm:gap-4">
           <p>
             &copy; {siteConfig.establishedYear} {siteConfig.legalName}. All rights reserved.
           </p>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-col xs:flex-row items-start xs:items-center gap-2 xs:gap-6">
             <span>DHA Phase 6, Karachi &bull; KPT &amp; Port Qasim Dispatch</span>
             <span className="text-[#072B1F] font-semibold">Agricultural Commodity Trading &amp; Brokerage</span>
           </div>

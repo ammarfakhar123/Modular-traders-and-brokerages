@@ -50,34 +50,34 @@ export default function CoreValuesSection() {
   ];
 
   return (
-    <section className="py-16 sm:py-24 bg-white text-slate-800 border-b border-[#D5E5DC]">
+    <section className="py-12 sm:py-20 lg:py-24 bg-white text-slate-800 border-b border-[#D5E5DC]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="max-w-2xl mb-12">
-          <div className="flex items-center gap-2.5 mb-3">
-            <span className="w-6 h-[2px] bg-[#B8860B]" />
-            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#072B1F]">
+        <div className="max-w-2xl mb-8 sm:mb-12">
+          <div className="flex items-center gap-2.5 mb-2.5 sm:mb-3">
+            <span className="w-5 sm:w-6 h-[2px] bg-[#B8860B]" />
+            <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#072B1F]">
               Our Foundation &bull; Cultivating Trust
             </span>
           </div>
 
-          <h2 className="font-sans text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] text-[#072B1F] leading-[1.15] mb-3">
+          <h2 className="font-sans text-2xl xs:text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] text-[#072B1F] leading-[1.18] mb-2.5 sm:mb-3">
             Core Values in Rice Trade
           </h2>
 
-          <p className="text-slate-600 text-sm sm:text-base leading-relaxed font-normal">
+          <p className="text-slate-600 text-xs sm:text-base leading-relaxed font-normal">
             Six principles that guide how Modular Traders selects Pakistani rice millers, verifies grain quality, and serves international buyers.
           </p>
         </div>
 
         {/* Clean 6-Card Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {coreValues.map((val) => {
             const Icon = val.icon;
             return (
               <div
                 key={val.number}
-                className="bg-[#FAF8F3] rounded-2xl p-6 border border-[#D5E5DC] hover:border-[#B8860B]/60 transition-all duration-200"
+                className="bg-[#FAF8F3] rounded-2xl p-5 sm:p-6 border border-[#D5E5DC] hover:border-[#B8860B]/60 transition-all duration-200"
               >
                 <div className="flex items-center justify-between mb-4">
                   <div className="w-10 h-10 rounded-xl bg-white border border-[#D5E5DC] flex items-center justify-center text-[#155437]">

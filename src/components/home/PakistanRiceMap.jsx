@@ -47,24 +47,24 @@ export default function PakistanRiceMap({ activeBeltId, onSelectBelt }) {
   ];
 
   return (
-    <div className="relative w-full max-w-[440px] aspect-[1/1.05] rounded-3xl bg-white border border-[#D5E5DC] shadow-[0_15px_40px_rgba(7,43,31,0.06)] p-5 sm:p-6 flex flex-col justify-between overflow-hidden select-none">
+    <div className="relative w-full max-w-full sm:max-w-[440px] rounded-2xl sm:rounded-3xl bg-white border border-[#D5E5DC] shadow-[0_15px_40px_rgba(7,43,31,0.06)] p-4 sm:p-6 flex flex-col justify-between overflow-hidden select-none">
       {/* Header Bar */}
       <div className="flex items-center justify-between pb-3 border-b border-slate-100 z-10">
         <div>
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#B8860B] block">
+          <span className="text-[9px] xs:text-[10px] font-bold uppercase tracking-widest text-[#B8860B] block">
             GEOGRAPHIC PROVENANCE
           </span>
-          <h4 className="text-sm font-extrabold text-[#072B1F]">
+          <h4 className="text-xs xs:text-sm font-extrabold text-[#072B1F]">
             Pakistan Rice Basins
           </h4>
         </div>
-        <span className="text-[10px] font-bold text-[#155437] bg-[#EAF5EF] px-2.5 py-1 rounded-md border border-[#BDE3CF]">
+        <span className="text-[9px] xs:text-[10px] font-bold text-[#155437] bg-[#EAF5EF] px-2 xs:px-2.5 py-1 rounded-md border border-[#BDE3CF]">
           Click Basin to Inspect
         </span>
       </div>
 
       {/* Official Pakistan Geographic Vector Map */}
-      <div className="relative w-full h-[320px] sm:h-[350px] my-auto flex items-center justify-center py-2">
+      <div className="relative w-full h-[260px] xs:h-[290px] sm:h-[350px] my-auto flex items-center justify-center py-2">
         <svg
           viewBox="-2 78.21 964 803.57"
           className="w-full h-full object-contain filter drop-shadow-sm"
@@ -158,7 +158,7 @@ export default function PakistanRiceMap({ activeBeltId, onSelectBelt }) {
       </div>
 
       {/* Bottom Summary Bar */}
-      <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600 font-medium z-10">
+      <div className="pt-3 border-t border-slate-100 flex flex-col xs:flex-row items-start xs:items-center justify-between text-[11px] sm:text-xs text-slate-600 font-medium z-10 gap-1">
         <span>Rice Belts: Punjab &bull; Sindh</span>
         <span className="text-[#072B1F] font-bold">Karachi Headquarters</span>
       </div>
