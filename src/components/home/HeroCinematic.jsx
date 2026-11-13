@@ -1,24 +1,8 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, CheckCircle2 } from 'lucide-react';
-import { initialProducts } from '@/data/products';
 
 export default function HeroCinematic({ onOpenQuote }) {
-  const shortLabels = {
-    '1121-basmati-rice': '1121 Basmati',
-    'super-kernel-basmati-rice': 'Super Kernel',
-    'super-basmati-rice': 'Super Basmati',
-    'pk-385-basmati-rice': 'PK-385',
-    'pk-515-basmati-rice': 'PK-515',
-    'basmati-1692-rice': 'Basmati 1692',
-    'basmati-1718-rice': 'Basmati 1718',
-    'basmati-1509-rice': 'Basmati 1509',
-    'irri-6-long-grain-white-rice': 'IRRI-6 White',
-    'irri-9-c9-long-grain-rice': 'IRRI-9 / C9',
-    'pk-386-long-grain-white-rice': 'PK-386',
-    'ks-282-long-grain-rice': 'KS-282',
-  };
-
   return (
     <section className="px-3 sm:px-6 pt-[96px] sm:pt-[104px] lg:pt-[116px] pb-6 sm:pb-8 max-w-[1440px] mx-auto select-none">
       {/* ========================================================
@@ -89,22 +73,42 @@ export default function HeroCinematic({ onOpenQuote }) {
           </div>
         </div>
 
-        {/* Bottom Docked Strip: Direct Quick Links to All 12 Rice Varieties (Desktop) */}
-        <div className="relative z-10 bg-[#072B1F]/95 border-t border-[#155437] px-4 sm:px-8 py-3 flex flex-col lg:flex-row items-center justify-between gap-2.5 text-white">
-          <div className="text-[11px] font-bold uppercase tracking-wider text-[#CFA744] shrink-0">
-            OUR 12 EXPORT VARIETIES:
+        {/* Bottom Docked Strip: Clean Inline 2 Categories (Basmati & Non-Basmati) */}
+        <div className="relative z-10 bg-[#072B1F]/95 border-t border-[#155437] px-6 sm:px-8 py-3 flex items-center justify-between gap-4 text-white">
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#CFA744] shrink-0">
+            <span className="w-2 h-2 rounded-full bg-[#CFA744]" />
+            <span>EXPORT RICE CATEGORIES:</span>
           </div>
 
-          <div className="flex items-center justify-center gap-2 flex-wrap">
-            {initialProducts.map((item) => (
-              <Link
-                key={item.id}
-                to={`/products/${item.slug}`}
-                className="px-3 py-1.5 rounded-lg text-[11px] sm:text-xs font-medium bg-white/10 hover:bg-white hover:text-[#072B1F] text-slate-100 transition-colors"
-              >
-                {shortLabels[item.slug] || item.name}
-              </Link>
-            ))}
+          <div className="flex items-center gap-3">
+            <Link
+              to="/products?category=Basmati+Rice"
+              className="px-4 py-1.5 rounded-xl text-xs font-bold bg-[#FAF8F3] hover:bg-white text-[#072B1F] transition-all shadow-xs flex items-center gap-2 group cursor-pointer"
+            >
+              <span>Basmati Rice</span>
+              <span className="text-[10px] font-mono text-[#8B6508] bg-[#FAF0D9] px-2 py-0.5 rounded-md font-semibold">
+                8 Varieties
+              </span>
+              <ArrowRight className="w-3.5 h-3.5 text-[#072B1F] group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+
+            <Link
+              to="/products?category=Non-Basmati+Rice"
+              className="px-4 py-1.5 rounded-xl text-xs font-bold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition-all flex items-center gap-2 group cursor-pointer"
+            >
+              <span>Non-Basmati Rice</span>
+              <span className="text-[10px] font-mono text-emerald-300 bg-white/10 px-2 py-0.5 rounded-md font-semibold">
+                4 Varieties
+              </span>
+              <ArrowRight className="w-3.5 h-3.5 text-[#CFA744] group-hover:translate-x-0.5 transition-transform" />
+            </Link>
+
+            <Link
+              to="/products"
+              className="hidden lg:inline-flex items-center gap-1 text-xs text-slate-300 hover:text-white transition pl-2 font-medium"
+            >
+              <span>View All 12 Varieties &rarr;</span>
+            </Link>
           </div>
         </div>
       </div>
