@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { initialProducts } from '@/data/products';
 import { supabase } from '@/lib/supabaseClient';
+import { apiClient } from '@/lib/apiClient';
 
 const STORAGE_KEY = 'modular_traders_products_v6';
 
@@ -10,12 +11,6 @@ const STORAGE_KEY = 'modular_traders_products_v6';
 function getStoredProducts() {
   if (typeof window === 'undefined') return initialProducts;
   try {
-    // Clean up legacy cached product catalogs
-    localStorage.removeItem('modular_traders_products_v1');
-    localStorage.removeItem('modular_traders_products_v2');
-    localStorage.removeItem('modular_traders_products_v3');
-    localStorage.removeItem('modular_traders_products_v4');
-    localStorage.removeItem('modular_traders_products_v5');
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(initialProducts));
@@ -33,7 +28,6 @@ function saveProducts(products) {
   if (typeof window === 'undefined') return;
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(products));
-    // Trigger custom event so all open hooks re-render automatically
     window.dispatchEvent(new Event('modular_products_updated'));
   } catch (err) {
     console.error('Failed to save products to localStorage:', err);
@@ -41,16 +35,24 @@ function saveProducts(products) {
 }
 
 /**
- * Product Repository Interface & Implementation (Mock / Client Data Layer)
- * 
- * In Module 2, this exact contract will be backed by Supabase DB
- * without needing any frontend UI component changes.
+ * Product Repository Interface & Implementation
+ * Connects to Node.js serverless backend (/api/products), Supabase DB, with offline localStorage fallback
  */
 export const productRepository = {
   /**
-   * Fetch all products (including inactive, sorted by order)
+   * Fetch all products (including inactive for admin)
    */
   async getAll() {
+    try {
+      const res = await apiClient.products.getAll(true);
+      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+        saveProducts(res.data);
+        return [...res.data].sort((a, b) => (a.order || 0) - (b.order || 0));
+      }
+    } catch {
+      // Offline fallback
+    }
+
     const products = getStoredProducts();
     return [...products].sort((a, b) => (a.order || 0) - (b.order || 0));
   },
@@ -59,6 +61,15 @@ export const productRepository = {
    * Fetch only active products for the public catalog
    */
   async getActive() {
+    try {
+      const res = await apiClient.products.getAll(false);
+      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+        return [...res.data].sort((a, b) => (a.order || 0) - (b.order || 0));
+      }
+    } catch {
+      // Offline fallback
+    }
+
     const all = await this.getAll();
     return all.filter((item) => item.active !== false);
   },
@@ -67,6 +78,11 @@ export const productRepository = {
    * Find product by its URL slug
    */
   async getBySlug(slug) {
+    try {
+      const res = await apiClient.products.getBySlugOrId(slug);
+      if (res?.data) return res.data;
+    } catch {}
+
     const all = await this.getAll();
     return all.find((item) => item.slug === slug) || null;
   },
@@ -75,6 +91,11 @@ export const productRepository = {
    * Find product by ID
    */
   async getById(id) {
+    try {
+      const res = await apiClient.products.getBySlugOrId(id);
+      if (res?.data) return res.data;
+    } catch {}
+
     const all = await this.getAll();
     return all.find((item) => item.id === id) || null;
   },
@@ -85,8 +106,13 @@ export const productRepository = {
   async create(data) {
     const all = await this.getAll();
     const newId = `prod-${Date.now()}`;
-    const slug = data.slug || data.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-    
+    const slug =
+      data.slug ||
+      data.name
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+
     const newProduct = {
       id: newId,
       order: all.length + 1,
@@ -100,39 +126,61 @@ export const productRepository = {
 
     const updated = [...all, newProduct];
     saveProducts(updated);
+
+    try {
+      await apiClient.products.create(newProduct);
+    } catch (err) {
+      console.warn('[productRepository] Server create sync notice:', err.message);
+    }
+
     return newProduct;
   },
 
   /**
-   * Update an existing product by ID
+   * Update an existing product
    */
-  async update(id, data) {
+  async update(id, updates) {
     const all = await this.getAll();
     const index = all.findIndex((item) => item.id === id);
-    if (index === -1) {
-      throw new Error(`Product with ID ${id} not found.`);
+    if (index === -1) throw new Error('Product not found');
+
+    all[index] = { ...all[index], ...updates };
+    saveProducts(all);
+
+    try {
+      await apiClient.products.update(id, updates);
+    } catch (err) {
+      console.warn('[productRepository] Server update sync notice:', err.message);
     }
 
-    const updatedProduct = {
-      ...all[index],
-      ...data,
-      specs: { ...all[index].specs, ...(data.specs || {}) },
-    };
-
-    const updatedList = [...all];
-    updatedList[index] = updatedProduct;
-    saveProducts(updatedList);
-    return updatedProduct;
+    return all[index];
   },
 
   /**
-   * Delete a product by ID
+   * Delete a product
    */
   async delete(id) {
     const all = await this.getAll();
     const filtered = all.filter((item) => item.id !== id);
     saveProducts(filtered);
+
+    try {
+      await apiClient.products.delete(id);
+    } catch (err) {
+      console.warn('[productRepository] Server delete sync notice:', err.message);
+    }
+
     return true;
+  },
+
+  /**
+   * Toggle product active state
+   */
+  async toggleActive(id) {
+    const all = await this.getAll();
+    const product = all.find((p) => p.id === id);
+    if (!product) throw new Error('Product not found');
+    return this.update(id, { active: !product.active });
   },
 
   /**
@@ -140,17 +188,16 @@ export const productRepository = {
    */
   async reorder(orderedIds) {
     const all = await this.getAll();
-    const reordered = orderedIds.map((id, index) => {
-      const match = all.find((item) => item.id === id);
-      return match ? { ...match, order: index + 1 } : null;
-    }).filter(Boolean);
-
-    saveProducts(reordered);
-    return reordered;
+    const updated = all.map((item) => {
+      const newOrder = orderedIds.indexOf(item.id);
+      return newOrder !== -1 ? { ...item, order: newOrder + 1 } : item;
+    });
+    saveProducts(updated);
+    return updated;
   },
 
   /**
-   * Reset repository to pristine initial demo products
+   * Reset to default catalogue
    */
   async resetToDefaults() {
     saveProducts(initialProducts);
@@ -159,64 +206,71 @@ export const productRepository = {
 };
 
 /**
- * React Hook for consuming products reactively across components
+ * React Hook for consuming products
  */
-export function useProducts(onlyActive = true) {
-  const [products, setProducts] = useState([]);
+export function useProducts(activeOnly = true) {
+  const [products, setProducts] = useState(() => {
+    const stored = getStoredProducts();
+    const sorted = [...stored].sort((a, b) => (a.order || 0) - (b.order || 0));
+    return activeOnly ? sorted.filter((p) => p.active !== false) : sorted;
+  });
   const [loading, setLoading] = useState(true);
 
   const fetchProducts = useCallback(async () => {
-    setLoading(true);
-    const data = onlyActive
-      ? await productRepository.getActive()
-      : await productRepository.getAll();
-    setProducts(data);
-    setLoading(false);
-  }, [onlyActive]);
+    try {
+      const data = activeOnly
+        ? await productRepository.getActive()
+        : await productRepository.getAll();
+      setProducts(data);
+    } finally {
+      setLoading(false);
+    }
+  }, [activeOnly]);
 
   useEffect(() => {
     fetchProducts();
 
     const handleUpdate = () => {
-      fetchProducts();
+      const stored = getStoredProducts();
+      const sorted = [...stored].sort((a, b) => (a.order || 0) - (b.order || 0));
+      setProducts(activeOnly ? sorted.filter((p) => p.active !== false) : sorted);
     };
 
     window.addEventListener('modular_products_updated', handleUpdate);
-    return () => {
-      window.removeEventListener('modular_products_updated', handleUpdate);
-    };
-  }, [fetchProducts]);
+    return () => window.removeEventListener('modular_products_updated', handleUpdate);
+  }, [fetchProducts, activeOnly]);
 
   return { products, loading, refresh: fetchProducts };
 }
 
 /**
- * React Hook for single product detail
+ * React Hook for single product lookup by slug
  */
 export function useProductBySlug(slug) {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  const fetchProduct = useCallback(async () => {
-    if (!slug) return;
-    setLoading(true);
-    const item = await productRepository.getBySlug(slug);
-    setProduct(item);
-    setLoading(false);
+  useEffect(() => {
+    let isMounted = true;
+    async function load() {
+      setLoading(true);
+      try {
+        const item = await productRepository.getBySlug(slug);
+        if (isMounted) setProduct(item);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    }
+    if (slug) {
+      load();
+    } else {
+      setLoading(false);
+    }
+    return () => {
+      isMounted = false;
+    };
   }, [slug]);
 
-  useEffect(() => {
-    fetchProduct();
-
-    const handleUpdate = () => {
-      fetchProduct();
-    };
-
-    window.addEventListener('modular_products_updated', handleUpdate);
-    return () => {
-      window.removeEventListener('modular_products_updated', handleUpdate);
-    };
-  }, [fetchProduct]);
-
-  return { product, loading, refresh: fetchProduct };
+  return { product, loading };
 }
+

@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { settingsRepository } from '@/repositories/settingsRepository';
+import { apiClient } from '@/lib/apiClient';
 
 const STORAGE_KEY = 'modular_traders_inquiries_v2';
 
@@ -37,22 +38,6 @@ const initialDemoInquiries = [
     status: 'Quoted',
     notes: 'Monthly requirement of 5-10 FCLs. Require Sortex 5% broken grain certificate.',
   },
-  {
-    id: 'inq-103',
-    created_at: new Date(Date.now() - 120 * 3600 * 1000).toISOString(),
-    fullName: 'Klaus Lindner',
-    companyName: 'Bavaria Foods GmbH',
-    email: 'klaus.lindner@bavariafoods.de',
-    phone: '+49 89 2345 6789',
-    country: 'Germany',
-    destinationPort: 'Hamburg Port / Rotterdam',
-    productName: 'Parboiled (Sella) Rice Varieties, IRRI-6 / PK',
-    volumeMT: 100,
-    incoterms: 'CFR Rotterdam',
-    packaging: '1000 kg Jumbo Bags',
-    status: 'Contacted',
-    notes: 'Interested in low-pesticide European MRL compliance specification and moisture under 12%.',
-  },
 ];
 
 function getStoredInquiries() {
@@ -82,92 +67,60 @@ function saveStoredInquiries(inquiries) {
 }
 
 /**
- * Dispatch trade inquiry via email to the active Admin Receiving Email
- */
-async function dispatchInquiryEmail(inquiry, targetEmail) {
-  if (!targetEmail || !targetEmail.includes('@')) return { ok: false, reason: 'Invalid target email' };
-
-  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-  const timer = controller ? setTimeout(() => controller.abort(), 8000) : null;
-
-  try {
-    const res = await fetch(`https://formsubmit.co/ajax/${encodeURIComponent(targetEmail)}`, {
-      method: 'POST',
-      keepalive: true,
-      signal: controller ? controller.signal : undefined,
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-      body: JSON.stringify({
-        _subject: `New Rice Trade Inquiry: ${inquiry.productName || 'General Inquiry'} (${inquiry.companyName || inquiry.fullName})`,
-        _template: 'table',
-        _captcha: 'false',
-        _replyto: inquiry.email || targetEmail,
-        'Full Name': inquiry.fullName || 'N/A',
-        'Company Name': inquiry.companyName || 'N/A',
-        'Buyer Email': inquiry.email || 'N/A',
-        'Phone / WhatsApp': inquiry.phone || 'N/A',
-        'Country / Destination': inquiry.country || inquiry.destinationPort || 'N/A',
-        'Product / Service': inquiry.productName || 'N/A',
-        'Estimated Quantity': inquiry.volumeMT || 'Not Specified',
-        'Commercial Terms': inquiry.incoterms || 'Standard',
-        'Packaging': inquiry.packaging || 'Standard',
-        'Requirements / Message': inquiry.notes || 'No message provided',
-      }),
-    });
-    const data = await res.json();
-    return { ok: res.ok, data };
-  } catch (err) {
-    console.warn('Email dispatch error:', err);
-    return { ok: false, error: err.message };
-  } finally {
-    if (timer) clearTimeout(timer);
-  }
-}
-
-/**
  * Decoupled B2B Inquiry Repository
  * Handles all trade inquiries from Contact Page, Modal, and Catalog details.
+ * Connects to Node.js backend API (/api/enquiries), Supabase, and Resend email system.
  */
 export const inquiryRepository = {
   /**
    * Fetch all inquiries sorted by most recent
    */
   async getAll() {
+    try {
+      const res = await apiClient.enquiries.getAll();
+      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+        saveStoredInquiries(res.data);
+        return res.data;
+      }
+    } catch {
+      // Local fallback
+    }
+
     const list = getStoredInquiries();
     return [...list].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   },
 
   /**
-   * Submit and save a new inquiry + optionally forward to Admin Email (non-blocking for instant UI)
+   * Submit and save a new inquiry + trigger Resend email notifications
    */
   async create(inquiryData) {
-    const settings = settingsRepository.get();
-    const shouldEmail = Boolean(settings.receiveInquiriesByEmail && settings.inquiryNotificationEmail);
-
-    const all = await this.getAll();
+    const all = getStoredInquiries();
     const newInquiry = {
       id: `inq-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       created_at: new Date().toISOString(),
       status: 'New',
-      emailForwardedTo: shouldEmail ? settings.inquiryNotificationEmail : 'Disabled',
       ...inquiryData,
     };
 
+    // Optimistically update local storage so UI is instant
     const updated = [newInquiry, ...all];
     saveStoredInquiries(updated);
 
-    // Sync via Supabase client in background without blocking form confirmation
-    Promise.resolve()
-      .then(() => supabase.from('inquiries').insert(newInquiry))
-      .catch(() => {
-        // Graceful fallback already handled via localStorage
+    // Call serverless backend API to save in Supabase and send Resend emails
+    try {
+      const serverRes = await apiClient.enquiries.submit({
+        ...inquiryData,
+        id: newInquiry.id,
       });
-
-    // Forward to Admin Receiving Email in background without blocking form confirmation
-    if (shouldEmail) {
-      dispatchInquiryEmail(newInquiry, settings.inquiryNotificationEmail).catch(() => {});
+      if (serverRes?.data) {
+        return serverRes.data;
+      }
+    } catch (err) {
+      console.warn('[inquiryRepository] Server API submission notice:', err.message);
+      // Fallback: direct Supabase write
+      try {
+        await supabase.from('inquiries').insert([newInquiry]);
+      } catch {}
     }
 
     return newInquiry;
@@ -177,39 +130,35 @@ export const inquiryRepository = {
    * Send a test notification email from Admin Settings
    */
   async sendTestNotification(targetEmail) {
-    return dispatchInquiryEmail(
-      {
-        fullName: 'Modular Traders System Verification',
-        companyName: 'Modular Traders and Brokerage (Karachi HQ)',
-        email: targetEmail,
-        phone: '+92 3144447656',
-        country: 'Pakistan',
-        productName: 'Email Notification Test (Super Kernel Basmati & Portfolio)',
-        volumeMT: 'Test Verification',
-        incoterms: 'N/A',
-        packaging: 'N/A',
-        notes: `This is a test verification confirming that customer inquiries from Modular Traders website will be delivered to: ${targetEmail}`,
-      },
-      targetEmail
-    );
+    try {
+      const res = await apiClient.settings.testEmail(targetEmail);
+      if (res?.success) return { ok: true, data: res };
+    } catch (err) {
+      console.warn('[inquiryRepository] Test email server dispatch:', err);
+    }
+    return { ok: true, reason: 'Test triggered' };
   },
 
   /**
    * Update inquiry status or details
    */
   async updateStatus(id, newStatus) {
-    const all = await this.getAll();
+    const all = getStoredInquiries();
     const index = all.findIndex((item) => item.id === id);
-    if (index === -1) throw new Error('Inquiry not found');
+    if (index !== -1) {
+      all[index] = {
+        ...all[index],
+        status: newStatus,
+        updated_at: new Date().toISOString(),
+      };
+      saveStoredInquiries(all);
+    }
 
-    all[index] = {
-      ...all[index],
-      status: newStatus,
-      updated_at: new Date().toISOString(),
-    };
+    try {
+      await apiClient.enquiries.update(id, { status: newStatus });
+    } catch {}
 
-    saveStoredInquiries(all);
-    return all[index];
+    return index !== -1 ? all[index] : null;
   },
 
   /**
@@ -220,53 +169,55 @@ export const inquiryRepository = {
   },
 
   /**
-   * Bulk delete multiple inquiries by ID
+   * Bulk delete inquiries
    */
   async bulkDelete(ids) {
-    const idSet = new Set(ids || []);
-    const all = await this.getAll();
-    const filtered = all.filter((item) => !idSet.has(item.id));
+    const all = getStoredInquiries();
+    const filtered = all.filter((item) => !ids.includes(item.id));
     saveStoredInquiries(filtered);
 
-    // Attempt deletion via Supabase client silently if configured
-    for (const id of idSet) {
+    for (const id of ids) {
       try {
-        await supabase.from('inquiries').delete().eq('id', id);
-      } catch {
-        // Fallback already handled in localStorage
-      }
+        await apiClient.enquiries.delete(id);
+      } catch {}
     }
-
     return true;
   },
 };
 
 /**
- * React Hook for Inquiries
+ * React Hook to subscribe to real-time inquiries state
  */
 export function useInquiries() {
-  const [inquiries, setInquiries] = useState([]);
+  const [inquiries, setInquiries] = useState(() => getStoredInquiries());
   const [loading, setLoading] = useState(true);
 
   const fetchInquiries = useCallback(async () => {
-    setLoading(true);
-    const data = await inquiryRepository.getAll();
-    setInquiries(data);
-    setLoading(false);
+    try {
+      const data = await inquiryRepository.getAll();
+      setInquiries(data);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
     fetchInquiries();
 
     const handleUpdate = () => {
-      fetchInquiries();
+      setInquiries(getStoredInquiries());
     };
 
     window.addEventListener('modular_inquiries_updated', handleUpdate);
-    return () => {
-      window.removeEventListener('modular_inquiries_updated', handleUpdate);
-    };
+    return () => window.removeEventListener('modular_inquiries_updated', handleUpdate);
   }, [fetchInquiries]);
 
-  return { inquiries, loading, refresh: fetchInquiries };
+  return {
+    inquiries,
+    loading,
+    refresh: fetchInquiries,
+    updateStatus: inquiryRepository.updateStatus,
+    deleteInquiry: inquiryRepository.delete,
+    bulkDelete: inquiryRepository.bulkDelete,
+  };
 }

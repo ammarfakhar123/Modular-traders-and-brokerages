@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { isAdminSubdomain, getPublicWebsiteUrl } from '@/lib/domainHelper';
 import {
   Shield,
   ShieldCheck,
@@ -44,11 +45,45 @@ import { authRepository, useAuth } from '@/repositories/authRepository';
 import { settingsRepository, useAdminSettings } from '@/repositories/settingsRepository';
 import { siteConfig } from '@/config/site';
 
-export default function AdminPage() {
+export default function AdminPage({ defaultTab }) {
   const { isAuthenticated, user, logout } = useAuth();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isSubdomain = isAdminSubdomain();
 
-  // Active Admin Tab
-  const [activeTab, setActiveTab] = useState('products'); // 'products' | 'inquiries' | 'settings'
+  const getTabFromPath = (path) => {
+    if (path.includes('/enquiries') || path.includes('/inquiries')) return 'inquiries';
+    if (path.includes('/settings')) return 'settings';
+    return 'products';
+  };
+
+  // Active Admin Tab synced with route
+  const [activeTab, setActiveTab] = useState(() => defaultTab || getTabFromPath(location.pathname));
+
+  useEffect(() => {
+    const tab = defaultTab || getTabFromPath(location.pathname);
+    setActiveTab(tab);
+  }, [location.pathname, defaultTab]);
+
+  // Navigate when changing tab
+  const handleTabChange = (tab) => {
+    setActiveTab(tab);
+    const prefix = isSubdomain ? '' : '/admin';
+    if (tab === 'products') navigate(`${prefix}/products`);
+    else if (tab === 'inquiries') navigate(`${prefix}/enquiries`);
+    else if (tab === 'settings') navigate(`${prefix}/settings`);
+  };
+
+  // Redirect to /products after login if on /login or base
+  useEffect(() => {
+    if (isAuthenticated) {
+      const p = location.pathname;
+      if (p.endsWith('/login') || p === '/admin' || (isSubdomain && p === '/')) {
+        const prefix = isSubdomain ? '' : '/admin';
+        navigate(`${prefix}/products`, { replace: true });
+      }
+    }
+  }, [isAuthenticated, location.pathname, isSubdomain, navigate]);
 
   // Login Form States
   const [loginEmail, setLoginEmail] = useState('admin@modularagro.com');
@@ -595,9 +630,9 @@ export default function AdminPage() {
             <span className="text-[11px] text-slate-500 font-medium block">
               Default Credentials: <code className="text-[#072B1F] font-bold">admin@modulartraders.com</code> / <code className="text-[#072B1F] font-bold">admin2026</code>
             </span>
-            <Link to="/" className="inline-flex items-center gap-1.5 text-xs font-bold text-[#155437] hover:underline mt-3">
+            <a href={getPublicWebsiteUrl('/')} className="inline-flex items-center gap-1.5 text-xs font-bold text-[#155437] hover:underline mt-3">
               <Home className="w-3.5 h-3.5" /> Return to Website
-            </Link>
+            </a>
           </div>
         </div>
       </div>
@@ -613,9 +648,9 @@ export default function AdminPage() {
       <header className="bg-white border-b border-[#D5E5DC] sticky top-0 z-40 shadow-xs">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link to="/" className="flex items-center gap-2 group">
+            <a href={getPublicWebsiteUrl('/')} className="flex items-center gap-2 group" title="Return to Public Website">
               <img src="/brand/logo-full.png" alt="Modular" className="h-8 w-auto object-contain" />
-            </Link>
+            </a>
             <span className="hidden sm:inline-block text-slate-300">|</span>
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#155437] bg-[#EAF5EF] px-3 py-1 rounded-full border border-[#BDE3CF]">
               Enterprise Portal &bull; Karachi HQ
@@ -623,13 +658,13 @@ export default function AdminPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Link
-              to="/"
+            <a
+              href={getPublicWebsiteUrl('/')}
               className="text-xs font-semibold text-slate-600 hover:text-black px-3 py-1.5 rounded-full hover:bg-slate-100 transition hidden sm:inline-flex items-center gap-1.5"
             >
               <Home className="w-3.5 h-3.5" />
               <span>Live Site</span>
-            </Link>
+            </a>
 
             <button
               onClick={handleLogout}
@@ -644,7 +679,7 @@ export default function AdminPage() {
         {/* Tab Navigation */}
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center gap-4 sm:gap-6 border-t border-slate-100 overflow-x-auto scrollbar-none whitespace-nowrap">
           <button
-            onClick={() => setActiveTab('products')}
+            onClick={() => handleTabChange('products')}
             className={`py-3 text-xs font-bold flex items-center gap-2 border-b-2 transition shrink-0 cursor-pointer ${
               activeTab === 'products'
                 ? 'border-[#072B1F] text-[#072B1F]'
@@ -656,7 +691,7 @@ export default function AdminPage() {
           </button>
 
           <button
-            onClick={() => setActiveTab('inquiries')}
+            onClick={() => handleTabChange('inquiries')}
             className={`py-3 text-xs font-bold flex items-center gap-2 border-b-2 transition shrink-0 cursor-pointer ${
               activeTab === 'inquiries'
                 ? 'border-[#072B1F] text-[#072B1F]'
@@ -671,7 +706,7 @@ export default function AdminPage() {
           </button>
 
           <button
-            onClick={() => setActiveTab('settings')}
+            onClick={() => handleTabChange('settings')}
             className={`py-3 text-xs font-bold flex items-center gap-2 border-b-2 transition shrink-0 cursor-pointer ${
               activeTab === 'settings'
                 ? 'border-[#072B1F] text-[#072B1F]'

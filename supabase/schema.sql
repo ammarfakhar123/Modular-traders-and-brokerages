@@ -58,11 +58,10 @@ CREATE TABLE IF NOT EXISTS public.site_settings (
     id TEXT PRIMARY KEY DEFAULT 'primary_settings',
     site_name TEXT DEFAULT 'Modular Traders and Brokerage',
     tagline TEXT DEFAULT 'Cultivating Trust',
-    headquarters_address TEXT DEFAULT 'Sheikh Zayed Road, Dubai, UAE',
-    contact_email TEXT DEFAULT 'trade@modulartraders.com',
-    contact_phone TEXT DEFAULT '+971 4 XXX XXXX',
-    contact_whatsapp TEXT DEFAULT '+971 50 123 4567',
-    working_hours TEXT DEFAULT 'Monday to Friday, 9:00 am to 5:00 pm Gulf Standard Time',
+    headquarters_address TEXT DEFAULT 'Z Signature, 46-C, 4 Shahbaz Commercial Ln, Shahbaz Commercial Area, Phase 6, DHA, Karachi, 75500, Pakistan',
+    contact_email TEXT DEFAULT 'info@modularagro.com',
+    contact_phone TEXT DEFAULT '+92 3144447656',
+    contact_whatsapp TEXT DEFAULT '+92 3144447656',
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT timezone('utc'::text, now()) NOT NULL
 );
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
+import { apiClient } from '@/lib/apiClient';
 
 const AUTH_KEY = 'modular_admin_session_v2';
 
@@ -24,9 +25,32 @@ export const authRepository = {
   },
 
   async login(email, password) {
-    // Try Supabase auth first
+    const cleanEmail = email.trim().toLowerCase();
+
+    // 1. Try serverless backend /api/auth/login
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      const res = await apiClient.auth.login(cleanEmail, password);
+      if (res?.success && res?.token) {
+        const session = {
+          user: res.user || {
+            email: cleanEmail,
+            role: 'Super Administrator',
+            name: 'Commodity Desk Lead',
+          },
+          token: res.token,
+          expiresAt: Date.now() + 7 * 24 * 3600 * 1000,
+        };
+        localStorage.setItem(AUTH_KEY, JSON.stringify(session));
+        window.dispatchEvent(new Event('modular_auth_changed'));
+        return { success: true, session };
+      }
+    } catch (apiErr) {
+      // Fall through to client direct check
+    }
+
+    // 2. Try Supabase Auth direct client
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({ email: cleanEmail, password });
       if (data?.session) {
         const session = {
           user: data.user,
@@ -39,12 +63,12 @@ export const authRepository = {
       }
       if (error) throw error;
     } catch (e) {
-      // Fallback to default administrator credentials
+      // 3. Fallback to default administrator credentials
       const validAdminEmails = ['admin@modulartraders.com', 'admin@modularagro.com', 'info@modularagro.com'];
-      if (validAdminEmails.includes(email.trim().toLowerCase()) && password === 'admin2026') {
+      if (validAdminEmails.includes(cleanEmail) && password === 'admin2026') {
         const session = {
           user: {
-            email: email.trim().toLowerCase(),
+            email: cleanEmail,
             role: 'Super Administrator',
             name: 'Commodity Desk Lead',
           },
@@ -61,7 +85,12 @@ export const authRepository = {
 
   async logout() {
     localStorage.removeItem(AUTH_KEY);
-    await supabase.auth.signOut();
+    try {
+      await apiClient.auth.logout();
+    } catch {}
+    try {
+      await supabase.auth.signOut();
+    } catch {}
     window.dispatchEvent(new Event('modular_auth_changed'));
     return true;
   },
@@ -101,10 +130,13 @@ export function useAuth() {
     };
 
     window.addEventListener('modular_auth_changed', handleAuthChange);
-    return () => {
-      window.removeEventListener('modular_auth_changed', handleAuthChange);
-    };
+    return () => window.removeEventListener('modular_auth_changed', handleAuthChange);
   }, []);
 
-  return { isAuthenticated, user, loading, logout: authRepository.logout };
+  return {
+    isAuthenticated,
+    user,
+    loading,
+    logout: authRepository.logout,
+  };
 }
