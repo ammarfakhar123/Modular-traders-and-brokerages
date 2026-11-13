@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
@@ -21,6 +21,8 @@ import {
   Scale,
   Wheat,
   TrendingUp,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 
@@ -33,6 +35,68 @@ export default function AboutPage({ onOpenQuote }) {
 
   // 5-Step Working Process (How We Work)
   const workProcess = siteConfig.workProcess;
+
+  // Mobile Carousels State & Refs
+  const pillarScrollRef = useRef(null);
+  const [pillarActiveIdx, setPillarActiveIdx] = useState(0);
+
+  const actScrollRef = useRef(null);
+  const [actActiveIdx, setActActiveIdx] = useState(0);
+
+  const agriPillars = [
+    {
+      title: 'Pakistani Agri Focus',
+      desc: "Dedicated specifically to representing Pakistan's finest agricultural yield with verifiable regional provenance.",
+      icon: Wheat,
+      color: '#155437',
+    },
+    {
+      title: 'International Reach',
+      desc: 'Connecting domestic suppliers with verified buyers across the Middle East, Africa, Southeast Asia, and Europe.',
+      icon: Globe2,
+      color: '#CFA744',
+    },
+    {
+      title: 'Ethical Brokerage',
+      desc: 'Transparent commercial negotiations, clear agency terms, and absolute integrity across every transaction.',
+      icon: Scale,
+      color: '#155437',
+    },
+    {
+      title: 'Karachi Port Gateway',
+      desc: 'Direct access to export loading berths at Karachi Port (KPT) and Port Muhammad Bin Qasim (PQ).',
+      icon: Ship,
+      color: '#CFA744',
+    },
+  ];
+
+  const handlePillarScroll = () => {
+    if (!pillarScrollRef.current) return;
+    const { scrollLeft, clientWidth } = pillarScrollRef.current;
+    const index = Math.round(scrollLeft / (clientWidth * 0.82));
+    setPillarActiveIdx(Math.min(Math.max(index, 0), agriPillars.length - 1));
+  };
+
+  const scrollPillarTo = (idx) => {
+    if (!pillarScrollRef.current) return;
+    const w = pillarScrollRef.current.clientWidth * 0.82;
+    pillarScrollRef.current.scrollTo({ left: idx * w, behavior: 'smooth' });
+    setPillarActiveIdx(idx);
+  };
+
+  const handleActScroll = () => {
+    if (!actScrollRef.current) return;
+    const { scrollLeft, clientWidth } = actScrollRef.current;
+    const index = Math.round(scrollLeft / (clientWidth * 0.85));
+    setActActiveIdx(Math.min(Math.max(index, 0), activities.length - 1));
+  };
+
+  const scrollActTo = (idx) => {
+    if (!actScrollRef.current) return;
+    const w = actScrollRef.current.clientWidth * 0.85;
+    actScrollRef.current.scrollTo({ left: idx * w, behavior: 'smooth' });
+    setActActiveIdx(idx);
+  };
 
   return (
     <div className="pt-20 sm:pt-28 pb-16 sm:pb-20 bg-[#FAF8F3] text-slate-800">
@@ -189,7 +253,75 @@ export default function AboutPage({ onOpenQuote }) {
                 </p>
               </div>
 
-              <div className="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              {/* 1. Mobile Phone Carousel for Agri Pillars (Image 3) */}
+              <div className="lg:col-span-6 block sm:hidden">
+                <div className="flex items-center justify-between mb-3 px-1">
+                  <span className="text-[11px] font-mono font-bold text-[#155437]">
+                    Pillars &bull; {pillarActiveIdx + 1} of {agriPillars.length}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => scrollPillarTo(Math.max(pillarActiveIdx - 1, 0))}
+                      disabled={pillarActiveIdx === 0}
+                      className="w-7 h-7 rounded-full bg-[#FAF8F3] border border-[#EADBBD] flex items-center justify-center text-[#072B1F] disabled:opacity-30 transition cursor-pointer"
+                      aria-label="Previous pillar"
+                    >
+                      <ChevronLeft className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      onClick={() => scrollPillarTo(Math.min(pillarActiveIdx + 1, agriPillars.length - 1))}
+                      disabled={pillarActiveIdx === agriPillars.length - 1}
+                      className="w-7 h-7 rounded-full bg-[#FAF8F3] border border-[#EADBBD] flex items-center justify-center text-[#072B1F] disabled:opacity-30 transition cursor-pointer"
+                      aria-label="Next pillar"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  ref={pillarScrollRef}
+                  onScroll={handlePillarScroll}
+                  className="flex overflow-x-auto snap-x snap-mandatory gap-3.5 pb-2 -mx-4 px-4 scrollbar-none scroll-smooth"
+                >
+                  {agriPillars.map((pillar) => {
+                    const Icon = pillar.icon;
+                    return (
+                      <div
+                        key={pillar.title}
+                        className="w-[82vw] max-w-[300px] shrink-0 snap-center bg-[#FAF8F3] p-5 rounded-2xl border border-[#EADBBD] space-y-2 flex flex-col justify-between shadow-xs"
+                      >
+                        <div>
+                          <div className="w-10 h-10 rounded-xl bg-[#EAF5EF] text-[#155437] flex items-center justify-center font-bold mb-3">
+                            <Icon className="w-5 h-5" style={{ color: pillar.color }} />
+                          </div>
+                          <h3 className="font-bold text-[#072B1F] text-sm mb-1">{pillar.title}</h3>
+                          <p className="text-xs text-slate-600 leading-relaxed">{pillar.desc}</p>
+                        </div>
+                        <div className="pt-2 text-[10px] font-mono text-slate-400">
+                          Modular Agro &bull; Provenance
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                <div className="flex items-center justify-center gap-1.5 pt-3">
+                  {agriPillars.map((p, idx) => (
+                    <button
+                      key={p.title}
+                      onClick={() => scrollPillarTo(idx)}
+                      className={`transition-all duration-200 rounded-full cursor-pointer ${
+                        pillarActiveIdx === idx ? 'w-5 h-1.5 bg-[#072B1F]' : 'w-1.5 h-1.5 bg-slate-300'
+                      }`}
+                      aria-label={`Go to ${p.title}`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* 2. Laptop / Tablet Grid (Completely Untouched) */}
+              <div className="lg:col-span-6 hidden sm:grid sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="bg-[#FAF8F3] p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-[#EADBBD] space-y-2">
                   <div className="w-10 h-10 rounded-xl bg-[#EAF5EF] text-[#155437] flex items-center justify-center font-bold">
                     <Wheat className="w-5 h-5 text-[#155437]" />
@@ -251,7 +383,76 @@ export default function AboutPage({ onOpenQuote }) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {/* 1. Mobile Phone Carousel for What We Do (Image 4) */}
+          <div className="block md:hidden">
+            <div className="flex items-center justify-between mb-3.5 px-1">
+              <span className="text-[11px] font-mono font-bold text-[#155437]">
+                Scope &bull; {actActiveIdx + 1} of {activities.length}
+              </span>
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => scrollActTo(Math.max(actActiveIdx - 1, 0))}
+                  disabled={actActiveIdx === 0}
+                  className="w-8 h-8 rounded-full bg-white border border-[#D5E5DC] flex items-center justify-center text-[#072B1F] disabled:opacity-30 transition cursor-pointer shadow-2xs"
+                  aria-label="Previous activity"
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => scrollActTo(Math.min(actActiveIdx + 1, activities.length - 1))}
+                  disabled={actActiveIdx === activities.length - 1}
+                  className="w-8 h-8 rounded-full bg-white border border-[#D5E5DC] flex items-center justify-center text-[#072B1F] disabled:opacity-30 transition cursor-pointer shadow-2xs"
+                  aria-label="Next activity"
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            <div
+              ref={actScrollRef}
+              onScroll={handleActScroll}
+              className="flex overflow-x-auto snap-x snap-mandatory gap-3.5 pb-2 -mx-4 px-4 scrollbar-none scroll-smooth"
+            >
+              {activities.map((act, idx) => (
+                <div
+                  key={act.id}
+                  className="w-[84vw] max-w-[320px] shrink-0 snap-center bg-white rounded-3xl p-6 border border-[#D5E5DC] shadow-sm flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="w-10 h-10 rounded-2xl bg-[#EAF5EF] text-[#155437] flex items-center justify-center font-mono font-bold text-xs mb-4">
+                      0{idx + 1}
+                    </div>
+                    <h3 className="font-sans text-base font-bold text-[#072B1F] mb-2">
+                      {act.title}
+                    </h3>
+                    <p className="text-slate-600 text-xs leading-relaxed">
+                      {act.desc}
+                    </p>
+                  </div>
+                  <div className="pt-4 mt-4 border-t border-slate-100 flex items-center text-[11px] font-mono font-bold text-[#155437]">
+                    <span>Modular Traders Scope &bull; Service Pillar</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="flex items-center justify-center gap-1.5 pt-3">
+              {activities.map((act, idx) => (
+                <button
+                  key={act.id}
+                  onClick={() => scrollActTo(idx)}
+                  className={`transition-all duration-200 rounded-full cursor-pointer ${
+                    actActiveIdx === idx ? 'w-6 h-1.5 bg-[#072B1F]' : 'w-1.5 h-1.5 bg-slate-300'
+                  }`}
+                  aria-label={`Go to ${act.title}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* 2. Laptop / Desktop Grid (Completely Untouched) */}
+          <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {activities.map((act, idx) => (
               <div
                 key={act.id}

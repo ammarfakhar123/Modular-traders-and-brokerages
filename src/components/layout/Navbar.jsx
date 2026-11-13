@@ -213,14 +213,6 @@ export default function Navbar({ onOpenQuote }) {
                       </svg>
                     </a>
                   </div>
-
-                  <Link
-                    to="/admin"
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="text-center text-[11px] font-semibold text-slate-500 hover:text-[#072B1F] py-1"
-                  >
-                    Admin Portal Login &rarr;
-                  </Link>
                 </div>
               </div>
             </motion.div>

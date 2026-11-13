@@ -9,6 +9,71 @@ import settingsRouter from './routes/settings';
 
 const app = express();
 
+// =============================================================================
+// WEB APPLICATION FIREWALL (WAF) & MALICIOUS BOT PROTECTION
+// =============================================================================
+
+// 1. Sliding Window In-Memory Rate Limiting (Prevent DoS & Scraping Floods)
+interface RateLimitRecord {
+  count: number;
+  resetAt: number;
+}
+const rateLimitMap = new Map<string, RateLimitRecord>();
+const RATE_LIMIT_WINDOW_MS = 60 * 1000; // 1 minute window
+const MAX_REQUESTS_PER_WINDOW = 150; // generous for genuine traffic, stops scrapers
+
+const rateLimitMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  const forwarded = req.headers['x-forwarded-for'];
+  const ip = typeof forwarded === 'string' ? forwarded.split(',')[0].trim() : (req.socket?.remoteAddress || 'unknown');
+  const now = Date.now();
+
+  const record = rateLimitMap.get(ip);
+  if (!record || now > record.resetAt) {
+    rateLimitMap.set(ip, { count: 1, resetAt: now + RATE_LIMIT_WINDOW_MS });
+    return next();
+  }
+
+  record.count += 1;
+  if (record.count > MAX_REQUESTS_PER_WINDOW) {
+    res.setHeader('Retry-After', '60');
+    return res.status(429).json({
+      success: false,
+      error: 'Rate limit exceeded. Too many requests from your IP. Please try again in 1 minute.',
+      firewall: 'Modular-WAF-Active',
+    });
+  }
+
+  next();
+};
+
+// 2. Exploit Scanner & Malicious Bot Defense Middleware
+const MALICIOUS_USER_AGENT_PATTERN = /(sqlmap|nikto|masscan|wprecon|acunetix|dirbuster|nmap|zgrab|gobuster|fuzz|shodan|censys|havij|netsparker|vuln|morfeus|nessus|arachni)/i;
+
+const botFirewallMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  const ua = req.headers['user-agent'] || '';
+
+  // Block known penetration testing / vulnerability exploit bots
+  if (MALICIOUS_USER_AGENT_PATTERN.test(ua)) {
+    return res.status(403).json({
+      success: false,
+      error: 'Access blocked by Modular Security Firewall. Malicious activity signature detected.',
+      firewall: 'Modular-WAF-Blocked',
+    });
+  }
+
+  // Set hardened security headers on all API responses
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'DENY');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('X-Security-Firewall', 'Active (Modular Agro Defense v2.4)');
+
+  next();
+};
+
+app.use(botFirewallMiddleware);
+app.use(rateLimitMiddleware);
+
 // Enable Cross-Origin Resource Sharing with credentials support for subdomains
 app.use(
   cors({

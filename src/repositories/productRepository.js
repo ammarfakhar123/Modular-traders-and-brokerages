@@ -214,14 +214,17 @@ export function useProducts(activeOnly = true) {
     const sorted = [...stored].sort((a, b) => (a.order || 0) - (b.order || 0));
     return activeOnly ? sorted.filter((p) => p.active !== false) : sorted;
   });
-  const [loading, setLoading] = useState(true);
+  // Instant load: never block the initial render with a loading spinner
+  const [loading, setLoading] = useState(false);
 
   const fetchProducts = useCallback(async () => {
     try {
       const data = activeOnly
         ? await productRepository.getActive()
         : await productRepository.getAll();
-      setProducts(data);
+      if (data && data.length > 0) {
+        setProducts(data);
+      }
     } finally {
       setLoading(false);
     }
@@ -244,19 +247,21 @@ export function useProducts(activeOnly = true) {
 }
 
 /**
- * React Hook for single product lookup by slug
+ * React Hook for single product lookup by slug (Instant 0ms synchronous render with background sync)
  */
 export function useProductBySlug(slug) {
-  const [product, setProduct] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [product, setProduct] = useState(() => {
+    const stored = getStoredProducts();
+    return stored.find((p) => p.slug === slug || p.id === slug) || null;
+  });
+  const [loading, setLoading] = useState(() => !product);
 
   useEffect(() => {
     let isMounted = true;
     async function load() {
-      setLoading(true);
       try {
         const item = await productRepository.getBySlug(slug);
-        if (isMounted) setProduct(item);
+        if (isMounted && item) setProduct(item);
       } finally {
         if (isMounted) setLoading(false);
       }

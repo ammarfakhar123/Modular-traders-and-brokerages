@@ -86,8 +86,8 @@ export default function AdminPage({ defaultTab }) {
   }, [isAuthenticated, location.pathname, isSubdomain, navigate]);
 
   // Login Form States
-  const [loginEmail, setLoginEmail] = useState('admin@modularagro.com');
-  const [loginPassword, setLoginPassword] = useState('admin2026');
+  const [loginEmail, setLoginEmail] = useState('info@modularagro.com');
+  const [loginPassword, setLoginPassword] = useState('');
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
@@ -593,7 +593,7 @@ export default function AdminPage({ defaultTab }) {
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
                   className="w-full bg-[#FAF8F3] border border-[#D5E5DC] focus:border-[#CFA744] rounded-xl pl-9 pr-3.5 py-3 text-xs text-slate-800 outline-none transition"
-                  placeholder="admin@modulartraders.com"
+                  placeholder="info@modularagro.com"
                   required
                 />
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
@@ -608,7 +608,7 @@ export default function AdminPage({ defaultTab }) {
                   value={loginPassword}
                   onChange={(e) => setLoginPassword(e.target.value)}
                   className="w-full bg-[#FAF8F3] border border-[#D5E5DC] focus:border-[#CFA744] rounded-xl pl-9 pr-3.5 py-3 text-xs text-slate-800 outline-none transition"
-                  placeholder="Password"
+                  placeholder="Enter security passcode"
                   required
                 />
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3 top-3.5" />
@@ -625,13 +625,10 @@ export default function AdminPage({ defaultTab }) {
             </button>
           </form>
 
-          {/* Quick Demo Credentials Info */}
+          {/* Return to Public Website */}
           <div className="mt-6 pt-5 border-t border-slate-100 text-center">
-            <span className="text-[11px] text-slate-500 font-medium block">
-              Default Credentials: <code className="text-[#072B1F] font-bold">admin@modulartraders.com</code> / <code className="text-[#072B1F] font-bold">admin2026</code>
-            </span>
-            <a href={getPublicWebsiteUrl('/')} className="inline-flex items-center gap-1.5 text-xs font-bold text-[#155437] hover:underline mt-3">
-              <Home className="w-3.5 h-3.5" /> Return to Website
+            <a href={getPublicWebsiteUrl('/')} className="inline-flex items-center gap-1.5 text-xs font-bold text-[#155437] hover:underline">
+              <Home className="w-3.5 h-3.5" /> Return to Public Website
             </a>
           </div>
         </div>

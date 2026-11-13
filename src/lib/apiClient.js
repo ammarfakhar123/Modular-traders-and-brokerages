@@ -25,11 +25,16 @@ async function request(endpoint, options = {}) {
     ...(options.headers || {}),
   };
 
+  const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+  const timeoutId = controller ? setTimeout(() => controller.abort(), 2500) : null;
+
   try {
     const res = await fetch(`${API_BASE}${endpoint}`, {
       ...options,
       headers,
+      signal: options.signal || (controller ? controller.signal : undefined),
     });
+    if (timeoutId) clearTimeout(timeoutId);
 
     const json = await res.json().catch(() => ({}));
     if (!res.ok) {
@@ -37,7 +42,8 @@ async function request(endpoint, options = {}) {
     }
     return json;
   } catch (err) {
-    console.warn(`[apiClient] Request to ${endpoint} failed:`, err.message);
+    if (timeoutId) clearTimeout(timeoutId);
+    console.warn(`[apiClient] Notice on ${endpoint}:`, err.message);
     throw err;
   }
 }

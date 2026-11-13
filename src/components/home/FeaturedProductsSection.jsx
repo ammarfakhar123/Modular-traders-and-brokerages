@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, ArrowUpRight, ShieldCheck, CheckCircle2, Package, Ship, Compass } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, ShieldCheck, CheckCircle2, Package, Ship, Compass, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useProducts } from '@/repositories/productRepository';
 
 export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithProduct }) {
   const { products, loading } = useProducts(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const scrollRef = useRef(null);
+  const [activeIdx, setActiveIdx] = useState(0);
 
   // Two Primary Export Categories: Basmati Rice & Non-Basmati Rice
   const categories = [
@@ -21,6 +23,20 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
   const filteredRice = selectedCategory === 'All'
     ? riceProducts
     : riceProducts.filter((p) => p.category === selectedCategory);
+
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const { scrollLeft, clientWidth } = scrollRef.current;
+    const idx = Math.round(scrollLeft / (clientWidth * 0.85));
+    setActiveIdx(Math.min(Math.max(idx, 0), filteredRice.length - 1));
+  };
+
+  const scrollToIndex = (idx) => {
+    if (!scrollRef.current) return;
+    const w = scrollRef.current.clientWidth * 0.85;
+    scrollRef.current.scrollTo({ left: idx * w, behavior: 'smooth' });
+    setActiveIdx(idx);
+  };
 
   return (
     <section id="products-section" className="py-12 sm:py-20 lg:py-28 bg-[#FAF8F3] border-b border-[#D5E5DC]">
@@ -71,8 +87,123 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
           ))}
         </div>
 
-        {/* Products Grid: 6 Verified Rice Varieties */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12">
+        {/* 1. MOBILE PHONE CAROUSEL (block md:hidden) */}
+        <div className="block md:hidden mb-8">
+          <div className="flex items-center justify-between mb-3 px-1">
+            <span className="text-[11px] font-mono font-bold text-[#155437]">
+              Rice Varieties &bull; {activeIdx + 1} of {filteredRice.length}
+            </span>
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => scrollToIndex(Math.max(activeIdx - 1, 0))}
+                disabled={activeIdx === 0}
+                className="w-8 h-8 rounded-full bg-white border border-[#D5E5DC] flex items-center justify-center text-[#072B1F] disabled:opacity-30 transition cursor-pointer shadow-2xs"
+                aria-label="Previous rice product"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => scrollToIndex(Math.min(activeIdx + 1, filteredRice.length - 1))}
+                disabled={activeIdx === filteredRice.length - 1}
+                className="w-8 h-8 rounded-full bg-white border border-[#D5E5DC] flex items-center justify-center text-[#072B1F] disabled:opacity-30 transition cursor-pointer shadow-2xs"
+                aria-label="Next rice product"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="flex overflow-x-auto snap-x snap-mandatory gap-3.5 pb-2 -mx-4 px-4 scrollbar-none scroll-smooth"
+          >
+            {filteredRice.map((product) => (
+              <div
+                key={product.id}
+                className="w-[85vw] max-w-[330px] shrink-0 snap-center bg-white rounded-2xl border border-[#D5E5DC] overflow-hidden shadow-xs flex flex-col justify-between"
+              >
+                <div>
+                  <div className="relative h-48 overflow-hidden bg-slate-100">
+                    <img
+                      src={product.image || '/images/products/super-kernel.jpg'}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-3 left-3">
+                      <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider bg-white/95 text-[#072B1F] border border-[#D5E5DC] shadow-xs">
+                        {product.category}
+                      </span>
+                    </div>
+                    {product.badge && (
+                      <div className="absolute top-3 right-3">
+                        <span className="px-2 py-0.5 rounded-md text-[9px] font-bold uppercase tracking-wider bg-[#072B1F] text-[#CFA744] shadow-xs">
+                          {product.badge}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-4">
+                    <span className="text-[10px] font-mono text-[#B8860B] font-bold block mb-1">
+                      Grain: {product.grainLength}
+                    </span>
+                    <h3 className="font-sans text-base font-bold text-[#072B1F] mb-1.5 leading-snug">
+                      {product.name}
+                    </h3>
+                    <p className="text-xs text-slate-600 leading-relaxed mb-2.5 line-clamp-2">
+                      {product.shortDescription}
+                    </p>
+                    <div className="flex flex-wrap gap-1 mb-2.5 text-[9px] font-bold">
+                      <span className="px-1.5 py-0.5 rounded bg-[#FAF8F3] text-slate-700 border border-slate-200">
+                        White
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded bg-[#EAF5EF] text-[#155437] border border-[#BDE3CF]">
+                        Sella
+                      </span>
+                      <span className="px-1.5 py-0.5 rounded bg-[#FAF0D9] text-[#8B6508] border border-[#EADBBD]">
+                        Steamed
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="px-4 pb-4 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
+                  <Link
+                    to={`/products/${product.slug}`}
+                    className="text-xs font-bold text-[#072B1F] hover:text-[#155437] flex items-center gap-1 transition"
+                  >
+                    <span>Specs</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-[#B8860B]" />
+                  </Link>
+
+                  <button
+                    onClick={() => onOpenQuoteWithProduct(product)}
+                    className="bg-[#072B1F] hover:bg-[#155437] text-white px-3.5 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition cursor-pointer"
+                  >
+                    Quote
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex items-center justify-center gap-1.5 pt-3">
+            {filteredRice.map((product, idx) => (
+              <button
+                key={product.id}
+                onClick={() => scrollToIndex(idx)}
+                className={`transition-all duration-200 rounded-full cursor-pointer ${
+                  activeIdx === idx ? 'w-5 h-1.5 bg-[#072B1F]' : 'w-1.5 h-1.5 bg-slate-300'
+                }`}
+                aria-label={`Go to ${product.name}`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* 2. LAPTOP / DESKTOP PRODUCTS GRID (hidden md:grid) — Completely Untouched */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12">
           {filteredRice.map((product) => (
             <div
               key={product.id}

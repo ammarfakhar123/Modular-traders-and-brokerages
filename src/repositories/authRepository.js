@@ -64,8 +64,8 @@ export const authRepository = {
       if (error) throw error;
     } catch (e) {
       // 3. Fallback to default administrator credentials
-      const validAdminEmails = ['admin@modulartraders.com', 'admin@modularagro.com', 'info@modularagro.com'];
-      if (validAdminEmails.includes(cleanEmail) && password === 'admin2026') {
+      const validAdminEmails = ['info@modularagro.com', 'admin@modularagro.com', 'admin@modulartraders.com'];
+      if (validAdminEmails.includes(cleanEmail) && (password === 'Modular@122333' || password === 'admin2026')) {
         const session = {
           user: {
             email: cleanEmail,
@@ -79,7 +79,7 @@ export const authRepository = {
         window.dispatchEvent(new Event('modular_auth_changed'));
         return { success: true, session };
       }
-      return { success: false, error: 'Invalid credentials. Use admin@modularagro.com / admin2026' };
+      return { success: false, error: 'Invalid credentials. Please verify your administrator email and passcode.' };
     }
   },
 

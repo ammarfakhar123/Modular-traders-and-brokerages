@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Search,
   ArrowUpRight,
+  ArrowRight,
   Wheat,
   CheckCircle2,
   Ship,
@@ -13,6 +14,8 @@ import {
   MessageSquare,
   ShieldCheck,
   Scale,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import { useProducts } from '@/repositories/productRepository';
 import { siteConfig } from '@/config/site';
@@ -24,6 +27,10 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
   const [activeCategory, setActiveCategory] = useState(initialCategory);
   const [searchQuery, setSearchQuery] = useState('');
   const { products, loading } = useProducts(true);
+
+  // Mobile Carousel State & Ref
+  const mobileProductScrollRef = useRef(null);
+  const [mobileProductIdx, setMobileProductIdx] = useState(0);
 
   // Two Core Categories: Basmati Rice & Non-Basmati Rice
   const categories = [
@@ -62,6 +69,20 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
       searchParams.set('category', cat);
     }
     setSearchParams(searchParams);
+  };
+
+  const handleMobileProductScroll = () => {
+    if (!mobileProductScrollRef.current) return;
+    const { scrollLeft, clientWidth } = mobileProductScrollRef.current;
+    const idx = Math.round(scrollLeft / (clientWidth * 0.85));
+    setMobileProductIdx(Math.min(Math.max(idx, 0), filteredRiceProducts.length - 1));
+  };
+
+  const scrollMobileProductTo = (idx) => {
+    if (!mobileProductScrollRef.current) return;
+    const w = mobileProductScrollRef.current.clientWidth * 0.85;
+    mobileProductScrollRef.current.scrollTo({ left: idx * w, behavior: 'smooth' });
+    setMobileProductIdx(idx);
   };
 
   return (
@@ -156,10 +177,10 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
         </section>
 
         {/* ========================================================
-            3. RICE PRODUCTS GRID (6 Products)
+            3. RICE PRODUCTS GRID
            ======================================================== */}
         <section className="mb-20 sm:mb-28">
-          {loading ? (
+          {loading && products.length === 0 ? (
             <div className="py-24 text-center text-slate-400 font-mono text-sm">
               Retrieving product specifications...
             </div>
@@ -179,124 +200,258 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
               </button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {filteredRiceProducts.map((product, idx) => (
-                <motion.div
-                  key={product.id}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: idx * 0.05 }}
-                  className="group bg-white rounded-2xl sm:rounded-3xl border border-[#D5E5DC] hover:border-[#CFA744] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+            <>
+              {/* 1. MOBILE PHONE CAROUSEL (block md:hidden) */}
+              <div className="block md:hidden mb-12">
+                <div className="flex items-center justify-between mb-3.5 px-1">
+                  <span className="text-[11px] font-mono font-bold text-[#155437]">
+                    Variety {mobileProductIdx + 1} of {filteredRiceProducts.length}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    <button
+                      onClick={() => scrollMobileProductTo(Math.max(mobileProductIdx - 1, 0))}
+                      disabled={mobileProductIdx === 0}
+                      className="w-8 h-8 rounded-full bg-white border border-[#D5E5DC] flex items-center justify-center text-[#072B1F] disabled:opacity-30 transition cursor-pointer shadow-2xs"
+                      aria-label="Previous product"
+                    >
+                      <ChevronLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => scrollMobileProductTo(Math.min(mobileProductIdx + 1, filteredRiceProducts.length - 1))}
+                      disabled={mobileProductIdx === filteredRiceProducts.length - 1}
+                      className="w-8 h-8 rounded-full bg-white border border-[#D5E5DC] flex items-center justify-center text-[#072B1F] disabled:opacity-30 transition cursor-pointer shadow-2xs"
+                      aria-label="Next product"
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  ref={mobileProductScrollRef}
+                  onScroll={handleMobileProductScroll}
+                  className="flex overflow-x-auto snap-x snap-mandatory gap-3.5 pb-2 -mx-4 px-4 scrollbar-none scroll-smooth"
                 >
-                  {/* Image */}
-                  <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-[#072B1F]">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95 group-hover:opacity-100"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
+                  {filteredRiceProducts.map((product) => (
+                    <div
+                      key={product.id}
+                      className="w-[85vw] max-w-[340px] shrink-0 snap-center bg-white rounded-2xl border border-[#D5E5DC] overflow-hidden shadow-sm flex flex-col justify-between"
+                    >
+                      {/* Image */}
+                      <div className="relative h-48 w-full overflow-hidden bg-[#072B1F]">
+                        <img
+                          src={product.image}
+                          alt={product.name}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
 
-                    <div className="absolute top-3.5 left-3.5 sm:top-4 sm:left-4 flex gap-2">
-                      <span className="px-2.5 sm:px-3 py-1 rounded-md text-[10px] sm:text-[11px] font-bold tracking-wider bg-white/95 text-[#072B1F] border border-[#D5E5DC] shadow-xs">
-                        {product.category}
-                      </span>
-                    </div>
+                        <div className="absolute top-3 left-3 flex gap-2">
+                          <span className="px-2.5 py-0.5 rounded-md text-[10px] font-bold tracking-wider bg-white/95 text-[#072B1F] border border-[#D5E5DC] shadow-xs">
+                            {product.category}
+                          </span>
+                        </div>
 
-                    {product.badge && (
-                      <div className="absolute top-3.5 right-3.5 sm:top-4 sm:right-4">
-                        <span className="px-2 sm:px-2.5 py-1 rounded-md text-[9px] sm:text-[10px] uppercase tracking-wider bg-[#CFA744] text-[#072B1F] font-bold shadow-xs">
-                          {product.badge}
-                        </span>
-                      </div>
-                    )}
-
-                    <div className="absolute bottom-2.5 left-3 right-3 sm:bottom-3 sm:left-4 sm:right-4 flex items-center justify-between text-[11px] sm:text-xs text-white">
-                      <span className="bg-[#072B1F]/90 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-[#155437] font-bold font-mono text-[10px] sm:text-xs">
-                        Length: <strong className="text-[#CFA744]">{product.grainLength}</strong>
-                      </span>
-                      <span className="text-[10px] sm:text-[11px] text-slate-200 bg-[#072B1F]/90 px-2 py-0.5 rounded border border-[#155437]">
-                        Pakistan Origin
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Content */}
-                  <div className="p-4 xs:p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-3.5 sm:space-y-4">
-                    <div>
-                      <h3 className="font-sans text-base sm:text-lg font-bold text-[#072B1F] group-hover:text-[#155437] transition mb-1.5 sm:mb-2">
-                        <Link to={`/products/${product.slug}`}>
-                          {product.name}
-                        </Link>
-                      </h3>
-
-                      <p className="text-slate-600 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-3 sm:mb-4">
-                        {product.shortDescription}
-                      </p>
-
-                      {/* Processing Types Available & Pesticide Wash */}
-                      <div className="mb-3 flex flex-wrap gap-1 sm:gap-1.5 text-[9px] xs:text-[10px] font-bold">
-                        <span className="px-2 py-0.5 rounded-md bg-[#FAF8F3] text-slate-700 border border-slate-200">
-                          White (Raw)
-                        </span>
-                        <span className="px-2 py-0.5 rounded-md bg-[#EAF5EF] text-[#155437] border border-[#BDE3CF]">
-                          Parboiled (Sella)
-                        </span>
-                        <span className="px-2 py-0.5 rounded-md bg-[#FAF0D9] text-[#8B6508] border border-[#EADBBD]">
-                          Steamed
-                        </span>
-                        <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
-                          Pesticide-Washed
-                        </span>
-                      </div>
-
-                      {/* Verified Key Characteristics */}
-                      <div className="mb-3.5 sm:mb-4 space-y-1 sm:space-y-1.5 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-[#FAF8F3] border border-[#EADBBD]">
-                        <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-[#B8860B] font-bold block mb-1">
-                          Key Verified Characteristics:
-                        </span>
-                        {(product.characteristics || []).slice(0, 3).map((char, cIdx) => (
-                          <div key={cIdx} className="flex items-start gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-700">
-                            <CheckCircle2 className="w-3.5 h-3.5 text-[#155437] flex-shrink-0 mt-0.5" />
-                            <span className="line-clamp-1">{char}</span>
+                        {product.badge && (
+                          <div className="absolute top-3 right-3">
+                            <span className="px-2 py-0.5 rounded-md text-[9px] uppercase tracking-wider bg-[#CFA744] text-[#072B1F] font-bold shadow-xs">
+                              {product.badge}
+                            </span>
                           </div>
-                        ))}
+                        )}
+
+                        <div className="absolute bottom-2.5 left-3 right-3 flex items-center justify-between text-[11px] text-white">
+                          <span className="bg-[#072B1F]/90 px-2 py-0.5 rounded-md border border-[#155437] font-bold font-mono text-[10px]">
+                            Length: <strong className="text-[#CFA744]">{product.grainLength}</strong>
+                          </span>
+                          <span className="text-[10px] text-slate-200 bg-[#072B1F]/90 px-2 py-0.5 rounded border border-[#155437]">
+                            Pakistan Origin
+                          </span>
+                        </div>
                       </div>
 
-                      {/* Target Buyers / Markets */}
-                      <div className="text-xs text-slate-500">
-                        <strong className="text-slate-700 block text-[10px] sm:text-[11px] font-mono uppercase mb-0.5">
-                          Suitable Target Buyers &amp; Markets:
-                        </strong>
-                        <p className="line-clamp-2 text-slate-600 leading-relaxed text-[10px] sm:text-[11px]">
-                          {product.targetMarkets}
+                      {/* Content */}
+                      <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
+                        <div>
+                          <h3 className="font-sans text-base font-bold text-[#072B1F] mb-1">
+                            <Link to={`/products/${product.slug}`}>
+                              {product.name}
+                            </Link>
+                          </h3>
+
+                          <p className="text-slate-600 text-xs line-clamp-2 leading-relaxed mb-2.5">
+                            {product.shortDescription}
+                          </p>
+
+                          <div className="mb-2.5 flex flex-wrap gap-1 text-[9px] font-bold">
+                            <span className="px-1.5 py-0.5 rounded-md bg-[#FAF8F3] text-slate-700 border border-slate-200">
+                              White (Raw)
+                            </span>
+                            <span className="px-1.5 py-0.5 rounded-md bg-[#EAF5EF] text-[#155437] border border-[#BDE3CF]">
+                              Parboiled (Sella)
+                            </span>
+                            <span className="px-1.5 py-0.5 rounded-md bg-[#FAF0D9] text-[#8B6508] border border-[#EADBBD]">
+                              Steamed
+                            </span>
+                          </div>
+                        </div>
+
+                        <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+                          <Link
+                            to={`/products/${product.slug}`}
+                            className="text-[11px] font-bold text-[#155437] hover:text-[#072B1F] transition flex items-center gap-1 uppercase tracking-wider"
+                          >
+                            <span>Specs</span>
+                            <ArrowUpRight className="w-3.5 h-3.5" />
+                          </Link>
+
+                          <button
+                            onClick={() => onOpenQuoteWithProduct(product)}
+                            className="bg-[#072B1F] hover:bg-[#155437] text-white px-3.5 py-1.5 rounded-xl text-[11px] font-bold tracking-wider transition shadow-xs flex items-center gap-1 cursor-pointer"
+                          >
+                            <span>Request Quote</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex items-center justify-center gap-1.5 pt-3">
+                  {filteredRiceProducts.map((p, idx) => (
+                    <button
+                      key={p.id}
+                      onClick={() => scrollMobileProductTo(idx)}
+                      className={`transition-all duration-200 rounded-full cursor-pointer ${
+                        mobileProductIdx === idx ? 'w-5 h-1.5 bg-[#072B1F]' : 'w-1.5 h-1.5 bg-slate-300'
+                      }`}
+                      aria-label={`Go to ${p.name}`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* 2. LAPTOP / DESKTOP PRODUCTS GRID (hidden md:grid) — Completely Untouched */}
+              <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                {filteredRiceProducts.map((product, idx) => (
+                  <motion.div
+                    key={product.id}
+                    initial={{ opacity: 0, y: 15 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="group bg-white rounded-2xl sm:rounded-3xl border border-[#D5E5DC] hover:border-[#CFA744] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                  >
+                    {/* Image */}
+                    <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-[#072B1F]">
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95 group-hover:opacity-100"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
+
+                      <div className="absolute top-3.5 left-3.5 sm:top-4 sm:left-4 flex gap-2">
+                        <span className="px-2.5 sm:px-3 py-1 rounded-md text-[10px] sm:text-[11px] font-bold tracking-wider bg-white/95 text-[#072B1F] border border-[#D5E5DC] shadow-xs">
+                          {product.category}
+                        </span>
+                      </div>
+
+                      {product.badge && (
+                        <div className="absolute top-3.5 right-3.5 sm:top-4 sm:right-4">
+                          <span className="px-2 sm:px-2.5 py-1 rounded-md text-[9px] sm:text-[10px] uppercase tracking-wider bg-[#CFA744] text-[#072B1F] font-bold shadow-xs">
+                            {product.badge}
+                          </span>
+                        </div>
+                      )}
+
+                      <div className="absolute bottom-2.5 left-3 right-3 sm:bottom-3 sm:left-4 sm:right-4 flex items-center justify-between text-[11px] sm:text-xs text-white">
+                        <span className="bg-[#072B1F]/90 px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md border border-[#155437] font-bold font-mono text-[10px] sm:text-xs">
+                          Length: <strong className="text-[#CFA744]">{product.grainLength}</strong>
+                        </span>
+                        <span className="text-[10px] sm:text-[11px] text-slate-200 bg-[#072B1F]/90 px-2 py-0.5 rounded border border-[#155437]">
+                          Pakistan Origin
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Content */}
+                    <div className="p-4 xs:p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-3.5 sm:space-y-4">
+                      <div>
+                        <h3 className="font-sans text-base sm:text-lg font-bold text-[#072B1F] group-hover:text-[#155437] transition mb-1.5 sm:mb-2">
+                          <Link to={`/products/${product.slug}`}>
+                            {product.name}
+                          </Link>
+                        </h3>
+
+                        <p className="text-slate-600 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-3 sm:mb-4">
+                          {product.shortDescription}
                         </p>
+
+                        {/* Processing Types Available & Pesticide Wash */}
+                        <div className="mb-3 flex flex-wrap gap-1 sm:gap-1.5 text-[9px] xs:text-[10px] font-bold">
+                          <span className="px-2 py-0.5 rounded-md bg-[#FAF8F3] text-slate-700 border border-slate-200">
+                            White (Raw)
+                          </span>
+                          <span className="px-2 py-0.5 rounded-md bg-[#EAF5EF] text-[#155437] border border-[#BDE3CF]">
+                            Parboiled (Sella)
+                          </span>
+                          <span className="px-2 py-0.5 rounded-md bg-[#FAF0D9] text-[#8B6508] border border-[#EADBBD]">
+                            Steamed
+                          </span>
+                          <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            Pesticide-Washed
+                          </span>
+                        </div>
+
+                        {/* Verified Key Characteristics */}
+                        <div className="mb-3.5 sm:mb-4 space-y-1 sm:space-y-1.5 p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-[#FAF8F3] border border-[#EADBBD]">
+                          <span className="text-[9px] sm:text-[10px] font-mono uppercase tracking-wider text-[#B8860B] font-bold block mb-1">
+                            Key Verified Characteristics:
+                          </span>
+                          {(product.characteristics || []).slice(0, 3).map((char, cIdx) => (
+                            <div key={cIdx} className="flex items-start gap-1.5 sm:gap-2 text-[11px] sm:text-xs text-slate-700">
+                              <CheckCircle2 className="w-3.5 h-3.5 text-[#155437] flex-shrink-0 mt-0.5" />
+                              <span className="line-clamp-1">{char}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        {/* Target Buyers / Markets */}
+                        <div className="text-xs text-slate-500">
+                          <strong className="text-slate-700 block text-[10px] sm:text-[11px] font-mono uppercase mb-0.5">
+                            Suitable Target Buyers &amp; Markets:
+                          </strong>
+                          <p className="line-clamp-2 text-slate-600 leading-relaxed text-[10px] sm:text-[11px]">
+                            {product.targetMarkets}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="pt-3.5 sm:pt-4 border-t border-slate-100 flex items-center justify-between gap-2 sm:gap-3">
+                        <Link
+                          to={`/products/${product.slug}`}
+                          className="text-[11px] sm:text-xs font-bold text-[#155437] hover:text-[#072B1F] transition flex items-center gap-1 uppercase tracking-wider"
+                        >
+                          <span>Specifications</span>
+                          <ArrowUpRight className="w-3.5 h-3.5" />
+                        </Link>
+
+                        <button
+                          onClick={() => onOpenQuoteWithProduct(product)}
+                          className="bg-[#072B1F] hover:bg-[#155437] text-white px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-bold tracking-wider transition shadow-xs flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <span>Request Quote</span>
+                        </button>
                       </div>
                     </div>
-
-                    {/* Actions */}
-                    <div className="pt-3.5 sm:pt-4 border-t border-slate-100 flex items-center justify-between gap-2 sm:gap-3">
-                      <Link
-                        to={`/products/${product.slug}`}
-                        className="text-[11px] sm:text-xs font-bold text-[#155437] hover:text-[#072B1F] transition flex items-center gap-1 uppercase tracking-wider"
-                      >
-                        <span>Specifications</span>
-                        <ArrowUpRight className="w-3.5 h-3.5" />
-                      </Link>
-
-                      <button
-                        onClick={() => onOpenQuoteWithProduct(product)}
-                        className="bg-[#072B1F] hover:bg-[#155437] text-white px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-bold tracking-wider transition shadow-xs flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <span>Request Quote</span>
-                      </button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+                  </motion.div>
+                ))}
+              </div>
+            </>
           )}
         </section>
 
