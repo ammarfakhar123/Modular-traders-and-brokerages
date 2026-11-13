@@ -97,7 +97,7 @@ function LegacyAdminRedirect() {
 
   return (
     <div className="min-h-screen bg-[#FAF8F3] flex flex-col items-center justify-center p-6 text-center text-slate-800">
-      <div className="w-12 h-12 border-3 border-[#072B1F] border-t-transparent rounded-full animate-spin mb-4" />
+      <img src="/brand/loading-emblem.png" alt="Loading" className="w-14 h-14 object-contain animate-pulse mb-4" />
       <p className="text-sm font-semibold text-[#072B1F]">
         Redirecting to Modular Enterprise Admin Subdomain...
       </p>

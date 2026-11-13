@@ -73,20 +73,12 @@ export default function Navbar({ onOpenQuote }) {
               })}
             </nav>
 
-            {/* Right: Admin Link + Signature Pill Button */}
+            {/* Right: Signature Pill Button */}
             <div className="hidden sm:flex items-center gap-3">
-              <Link
-                to="/admin"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-slate-600 hover:text-[#072B1F] hover:bg-slate-100 transition"
-              >
-                <Shield className="w-3.5 h-3.5 text-[#CFA744]" />
-                <span>Admin</span>
-              </Link>
-
               {/* Signature Dark Green Pill with Circular Gold Arrow Icon */}
               <button
                 onClick={onOpenQuote}
-                className="group bg-[#072B1F] hover:bg-[#0D3E2D] text-white pl-4 pr-1.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2.5 transition shadow-sm active:scale-95"
+                className="group bg-[#072B1F] hover:bg-[#0D3E2D] text-white pl-4 pr-1.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2.5 transition shadow-sm active:scale-95 cursor-pointer"
               >
                 <span>Request a Quote</span>
                 <span className="w-6 h-6 rounded-full bg-[#CFA744] text-[#072B1F] flex items-center justify-center transition-transform group-hover:rotate-45 font-bold">
@@ -97,16 +89,9 @@ export default function Navbar({ onOpenQuote }) {
 
             {/* Mobile Toggle Button */}
             <div className="flex items-center gap-2 md:hidden">
-              <Link
-                to="/admin"
-                className="p-1.5 rounded-full text-slate-700 bg-slate-100 text-xs"
-              >
-                <Shield className="w-4 h-4 text-[#CFA744]" />
-              </Link>
-
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="p-2 rounded-full bg-slate-100 text-slate-800 hover:bg-slate-200"
+                className="p-2 rounded-full bg-slate-100 text-slate-800 hover:bg-slate-200 cursor-pointer"
                 aria-label="Toggle Menu"
               >
                 {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}

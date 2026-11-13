@@ -18,11 +18,11 @@ export default function HomePage({ onOpenQuote, onOpenQuoteWithProduct }) {
       {/* 3. Core Values */}
       <CoreValuesSection />
 
-      {/* 4. Center Cinematic Video Showcase Section (Looping background video without voice) */}
-      <RiceVideoShowcaseSection onOpenQuote={onOpenQuote} />
-
-      {/* 5. Featured Products Grid */}
+      {/* 4. Featured Products Grid */}
       <FeaturedProductsSection onOpenQuote={onOpenQuote} onOpenQuoteWithProduct={onOpenQuoteWithProduct} />
+
+      {/* 5. Center Cinematic Video Showcase Section (Looping background video without voice) */}
+      <RiceVideoShowcaseSection onOpenQuote={onOpenQuote} />
 
       {/* 6. Strong CTA Band */}
       <CtaBandSection onOpenQuote={onOpenQuote} />

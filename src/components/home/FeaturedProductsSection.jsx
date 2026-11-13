@@ -128,6 +128,8 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
                     <img
                       src={product.image || '/images/products/super-kernel.jpg'}
                       alt={product.name}
+                      loading="lazy"
+                      decoding="async"
                       className="w-full h-full object-cover"
                     />
                     <div className="absolute top-3 left-3">
@@ -215,6 +217,8 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
                   <img
                     src={product.image || '/images/products/super-kernel.jpg'}
                     alt={product.name}
+                    loading="lazy"
+                    decoding="async"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                   <div className="absolute top-3.5 left-3.5">

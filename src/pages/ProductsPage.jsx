@@ -244,6 +244,7 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                           alt={product.name}
                           className="w-full h-full object-cover"
                           loading="lazy"
+                          decoding="async"
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
 
@@ -350,6 +351,7 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 opacity-95 group-hover:opacity-100"
                         loading="lazy"
+                        decoding="async"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/10" />
 

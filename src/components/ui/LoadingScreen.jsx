@@ -2,15 +2,23 @@ import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function LoadingScreen() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    // If user already loaded the app in this session, skip loader for instant 0ms speed
+    return !sessionStorage.getItem('modular_splash_shown');
+  });
 
   useEffect(() => {
+    if (!loading) return;
     const timer = setTimeout(() => {
       setLoading(false);
-    }, 1100);
+      try {
+        sessionStorage.setItem('modular_splash_shown', 'true');
+      } catch {}
+    }, 400); // Snappy 400ms entrance splash
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [loading]);
 
   return (
     <AnimatePresence>
@@ -18,7 +26,7 @@ export default function LoadingScreen() {
         <motion.div
           key="loader"
           initial={{ opacity: 1 }}
-          exit={{ opacity: 0, transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] } }}
+          exit={{ opacity: 0, transition: { duration: 0.35, ease: 'easeOut' } }}
           className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-[#FCFBF8] text-forest-950 overflow-hidden pointer-events-none"
         >
           {/* Subtle warm golden ambient glow */}
@@ -31,10 +39,10 @@ export default function LoadingScreen() {
             transition={{ duration: 0.6, ease: 'easeOut' }}
             className="relative flex flex-col items-center"
           >
-            {/* Real Logo Image */}
+            {/* Transparent Emblem Without Background (Image 3) */}
             <div className="relative w-28 h-28 mb-4 flex items-center justify-center">
               <img
-                src="/brand/logo-icon.png"
+                src="/brand/loading-emblem.png"
                 alt="Modular Traders Emblem"
                 className="w-full h-full object-contain filter drop-shadow-[0_10px_20px_rgba(14,53,40,0.12)]"
               />
