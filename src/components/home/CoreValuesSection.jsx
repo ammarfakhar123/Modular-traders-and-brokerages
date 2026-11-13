@@ -1,11 +1,11 @@
 import React, { useRef, useState, useEffect } from 'react';
 import {
-  Award,
-  FileCheck,
-  ShieldCheck,
-  Clock,
-  HeartHandshake,
-  Users,
+  Crown,
+  Scan,
+  BadgeCheck,
+  Compass,
+  UserCheck,
+  Network,
   ChevronLeft,
   ChevronRight,
 } from 'lucide-react';
@@ -20,37 +20,37 @@ export default function CoreValuesSection() {
       number: '01',
       title: 'Quality',
       desc: 'Uncompromising standards across rice grain length, milling purity, natural aging, and clean optical grading.',
-      icon: Award,
+      icon: Crown,
     },
     {
       number: '02',
       title: 'Transparency',
       desc: 'Clear commercial terms, open sample verification, and honest communication from initial sourcing through settlement.',
-      icon: FileCheck,
+      icon: Scan,
     },
     {
       number: '03',
       title: 'Trust',
       desc: 'Guided by our core ethos — "Cultivating Trust" — honoring every contract and rice specification we agree to.',
-      icon: ShieldCheck,
+      icon: BadgeCheck,
     },
     {
       number: '04',
       title: 'Reliability',
       desc: 'Consistent crop quality and steady supply access through long-standing relationships with trusted Pakistani mills.',
-      icon: Clock,
+      icon: Compass,
     },
     {
       number: '05',
       title: 'Customer Commitment',
       desc: 'Dedicated attention to each buyer’s exact rice variety, broken percentage, and retail or bulk packaging needs.',
-      icon: HeartHandshake,
+      icon: UserCheck,
     },
     {
       number: '06',
       title: 'Long-Term Partnerships',
       desc: 'Building lasting trade alliances with international importers, food distributors, and local rice producers.',
-      icon: Users,
+      icon: Network,
     },
   ];
 

@@ -23,6 +23,10 @@ import {
   TrendingUp,
   ChevronLeft,
   ChevronRight,
+  Sprout,
+  Anchor,
+  BadgeCheck,
+  Send,
 } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 
@@ -47,25 +51,25 @@ export default function AboutPage({ onOpenQuote }) {
     {
       title: 'Pakistani Agri Focus',
       desc: "Dedicated specifically to representing Pakistan's finest agricultural yield with verifiable regional provenance.",
-      icon: Wheat,
+      icon: Sprout,
       color: '#155437',
     },
     {
       title: 'International Reach',
       desc: 'Connecting domestic suppliers with verified buyers across the Middle East, Africa, Southeast Asia, and Europe.',
-      icon: Globe2,
+      icon: Send,
       color: '#CFA744',
     },
     {
       title: 'Ethical Brokerage',
       desc: 'Transparent commercial negotiations, clear agency terms, and absolute integrity across every transaction.',
-      icon: Scale,
+      icon: BadgeCheck,
       color: '#155437',
     },
     {
       title: 'Karachi Port Gateway',
       desc: 'Direct access to export loading berths at Karachi Port (KPT) and Port Muhammad Bin Qasim (PQ).',
-      icon: Ship,
+      icon: Anchor,
       color: '#CFA744',
     },
   ];
@@ -320,11 +324,11 @@ export default function AboutPage({ onOpenQuote }) {
                 </div>
               </div>
 
-              {/* 2. Laptop / Tablet Grid (Completely Untouched) */}
+              {/* 2. Laptop / Tablet Grid (Completely Untouched Layout, New Modern Icons) */}
               <div className="lg:col-span-6 hidden sm:grid sm:grid-cols-2 gap-3 sm:gap-4">
                 <div className="bg-[#FAF8F3] p-4 sm:p-6 rounded-xl sm:rounded-2xl border border-[#EADBBD] space-y-2">
                   <div className="w-10 h-10 rounded-xl bg-[#EAF5EF] text-[#155437] flex items-center justify-center font-bold">
-                    <Wheat className="w-5 h-5 text-[#155437]" />
+                    <Sprout className="w-5 h-5 text-[#155437]" />
                   </div>
                   <h3 className="font-bold text-[#072B1F] text-sm">Pakistani Agri Focus</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
@@ -334,7 +338,7 @@ export default function AboutPage({ onOpenQuote }) {
 
                 <div className="bg-[#FAF8F3] p-6 rounded-2xl border border-[#EADBBD] space-y-2">
                   <div className="w-10 h-10 rounded-xl bg-[#EAF5EF] text-[#155437] flex items-center justify-center font-bold">
-                    <Globe2 className="w-5 h-5 text-[#CFA744]" />
+                    <Send className="w-5 h-5 text-[#CFA744]" />
                   </div>
                   <h3 className="font-bold text-[#072B1F] text-sm">International Reach</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
@@ -344,7 +348,7 @@ export default function AboutPage({ onOpenQuote }) {
 
                 <div className="bg-[#FAF8F3] p-6 rounded-2xl border border-[#EADBBD] space-y-2">
                   <div className="w-10 h-10 rounded-xl bg-[#EAF5EF] text-[#155437] flex items-center justify-center font-bold">
-                    <Scale className="w-5 h-5 text-[#155437]" />
+                    <BadgeCheck className="w-5 h-5 text-[#155437]" />
                   </div>
                   <h3 className="font-bold text-[#072B1F] text-sm">Ethical Brokerage</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
@@ -354,7 +358,7 @@ export default function AboutPage({ onOpenQuote }) {
 
                 <div className="bg-[#FAF8F3] p-6 rounded-2xl border border-[#EADBBD] space-y-2">
                   <div className="w-10 h-10 rounded-xl bg-[#EAF5EF] text-[#155437] flex items-center justify-center font-bold">
-                    <Ship className="w-5 h-5 text-[#CFA744]" />
+                    <Anchor className="w-5 h-5 text-[#CFA744]" />
                   </div>
                   <h3 className="font-bold text-[#072B1F] text-sm">Karachi Port Gateway</h3>
                   <p className="text-xs text-slate-600 leading-relaxed">
