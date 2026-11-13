@@ -6,6 +6,7 @@ import Footer from '@/components/layout/Footer';
 import CustomCursor from '@/components/ui/CustomCursor';
 import LoadingScreen from '@/components/ui/LoadingScreen';
 import QuoteModal from '@/components/ui/QuoteModal';
+import FloatingContactWidget from '@/components/ui/FloatingContactWidget';
 import { isAdminSubdomain, getAdminBaseUrl } from '@/lib/domainHelper';
 
 // Pages
@@ -203,13 +204,16 @@ export default function App() {
             </MainLayout>
           )}
 
-          {/* Global B2B Export Quote Modal (Only on Public Website) */}
+          {/* Global B2B Export Quote Modal & Floating Contact Channels (Only on Public Website) */}
           {!isSubdomain && (
-            <QuoteModal
-              isOpen={isQuoteOpen}
-              onClose={handleCloseQuote}
-              preselectedProduct={selectedProduct}
-            />
+            <>
+              <QuoteModal
+                isOpen={isQuoteOpen}
+                onClose={handleCloseQuote}
+                preselectedProduct={selectedProduct}
+              />
+              <FloatingContactWidget />
+            </>
           )}
         </SmoothScroll>
       </BrowserRouter>

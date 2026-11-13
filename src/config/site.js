@@ -218,8 +218,8 @@ export const siteConfig = {
     },
     socials: {
       whatsapp: "https://wa.me/923144447656",
-      instagram: "https://www.instagram.com/modulartraders",
-      facebook: "https://www.facebook.com/modulartraders",
+      instagram: "https://www.instagram.com/modularagro/?hl=en",
+      facebook: "https://www.facebook.com/profile.php?id=61596730791384",
       linkedin: "https://www.linkedin.com/company/modular-traders-and-brokerage",
     },
   },
