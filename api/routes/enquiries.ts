@@ -9,43 +9,8 @@ const router = Router();
 // Deduplication cache: prevent double-clicks and repeated requests within 15 seconds
 const recentSubmissions = new Map<string, { time: number; inquiry: any }>();
 
-// In-memory runtime mirror for instant admin access
-let inMemoryInquiries: any[] = [
-  {
-    id: 'MT-2026-1001',
-    created_at: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
-    inquiryType: 'RFQ',
-    fullName: 'Tariq Al-Fahad',
-    companyName: 'Al-Fahad Grain Trading Co',
-    email: 'tariq@alfahadgrain.sa',
-    phone: '+966 50 882 1944',
-    country: 'Saudi Arabia',
-    destinationPort: 'Jeddah Islamic Port',
-    productName: 'Super Kernel Basmati Rice',
-    volumeMT: '50 MT (2 Containers)',
-    incoterms: 'CIF Jeddah',
-    packaging: '25 kg PP Bags (Private Label)',
-    status: 'New',
-    notes: 'Looking for 2x 20ft FCL trial shipment of aged harvest with SGS pre-shipment inspection.',
-  },
-  {
-    id: 'MT-2026-1002',
-    created_at: new Date(Date.now() - 72 * 3600 * 1000).toISOString(),
-    inquiryType: 'RFQ',
-    fullName: 'Patrick Ochieng',
-    companyName: 'Equatorial Commodity Importers Ltd',
-    email: 'p.ochieng@equatorialcommodities.ke',
-    phone: '+254 712 345 678',
-    country: 'Kenya',
-    destinationPort: 'Mombasa Port',
-    productName: 'IRRI-6 Long Grain White Rice, Sindh Origin',
-    volumeMT: '250 MT',
-    incoterms: 'CIF Mombasa',
-    packaging: '50 kg Export Jute/PP Sacks',
-    status: 'Quoted',
-    notes: 'Monthly requirement of 5-10 FCLs. Require Sortex 5% broken grain certificate.',
-  },
-];
+// In-memory runtime mirror for instant admin access (starts clean with 0 demo inquiries)
+let inMemoryInquiries: any[] = [];
 
 /**
  * POST /api/enquiries

@@ -5,54 +5,33 @@ import { apiClient } from '@/lib/apiClient';
 
 const STORAGE_KEY = 'modular_traders_inquiries_v2';
 
-const initialDemoInquiries = [
-  {
-    id: 'inq-101',
-    created_at: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
-    fullName: 'Tariq Al-Fahad',
-    companyName: 'Al-Fahad Grain Trading Co',
-    email: 'tariq@alfahadgrain.sa',
-    phone: '+966 50 882 1944',
-    country: 'Saudi Arabia',
-    destinationPort: 'Jeddah Islamic Port',
-    productName: 'Super Kernel Basmati Rice',
-    volumeMT: 50,
-    incoterms: 'CIF Jeddah',
-    packaging: '25 kg PP Bags (Private Label)',
-    status: 'New',
-    notes: 'Looking for 2x 20ft FCL trial shipment of aged harvest with SGS pre-shipment inspection.',
-  },
-  {
-    id: 'inq-102',
-    created_at: new Date(Date.now() - 72 * 3600 * 1000).toISOString(),
-    fullName: 'Patrick Ochieng',
-    companyName: 'Equatorial Commodity Importers Ltd',
-    email: 'p.ochieng@equatorialcommodities.ke',
-    phone: '+254 712 345 678',
-    country: 'Kenya',
-    destinationPort: 'Mombasa Port',
-    productName: 'IRRI-6 Long Grain White Rice, Sindh Origin',
-    volumeMT: 250,
-    incoterms: 'CIF Mombasa',
-    packaging: '50 kg Export Jute/PP Sacks',
-    status: 'Quoted',
-    notes: 'Monthly requirement of 5-10 FCLs. Require Sortex 5% broken grain certificate.',
-  },
-];
+function isDemoInquiry(item) {
+  if (!item) return false;
+  const demoIds = ['inq-101', 'inq-102', 'inq-103', 'MT-2026-1001', 'MT-2026-1002'];
+  const demoNames = ['Tariq Al-Fahad', 'Patrick Ochieng', 'Klaus Lindner'];
+  return demoIds.includes(item.id) || demoNames.includes(item.fullName);
+}
 
 function getStoredInquiries() {
-  if (typeof window === 'undefined') return initialDemoInquiries;
+  if (typeof window === 'undefined') return [];
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(initialDemoInquiries));
-      return initialDemoInquiries;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify([]));
+      return [];
     }
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? parsed : initialDemoInquiries;
+    if (!Array.isArray(parsed)) return [];
+    
+    // Purge any legacy pre-seeded demo inquiries
+    const cleaned = parsed.filter((item) => !isDemoInquiry(item));
+    if (cleaned.length !== parsed.length) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(cleaned));
+    }
+    return cleaned;
   } catch (err) {
     console.error('Failed to read inquiries from localStorage:', err);
-    return initialDemoInquiries;
+    return [];
   }
 }
 
