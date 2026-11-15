@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef } from 'react';
-import { Link, useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
   Search,
@@ -21,6 +21,7 @@ import { useProducts } from '@/repositories/productRepository';
 import { siteConfig } from '@/config/site';
 
 export default function ProductsPage({ onOpenQuoteWithProduct }) {
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const initialCategory = searchParams.get('category') || 'All';
 
@@ -235,7 +236,8 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                   {filteredRiceProducts.map((product, idx) => (
                     <div
                       key={product.id}
-                      className="w-[85vw] max-w-[340px] shrink-0 snap-center bg-white rounded-2xl border border-[#D5E5DC] overflow-hidden shadow-sm flex flex-col justify-between"
+                      onClick={() => navigate(`/products/${product.slug}`)}
+                      className="w-[85vw] max-w-[340px] shrink-0 snap-center bg-white rounded-2xl border border-[#D5E5DC] hover:border-[#155437] overflow-hidden shadow-sm flex flex-col justify-between cursor-pointer transition"
                     >
                       {/* Image */}
                       <div className="relative h-48 w-full overflow-hidden bg-[#072B1F]">
@@ -276,10 +278,8 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                       {/* Content */}
                       <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
                         <div>
-                          <h3 className="font-sans text-base font-bold text-[#072B1F] mb-1">
-                            <Link to={`/products/${product.slug}`}>
-                              {product.name}
-                            </Link>
+                          <h3 className="font-sans text-base font-bold text-[#072B1F] hover:text-[#155437] transition-colors mb-1">
+                            {product.name}
                           </h3>
 
                           <p className="text-slate-600 text-xs line-clamp-2 leading-relaxed mb-2.5">
@@ -300,16 +300,18 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                         </div>
 
                         <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-                          <Link
-                            to={`/products/${product.slug}`}
+                          <span
                             className="text-[11px] font-bold text-[#155437] hover:text-[#072B1F] transition flex items-center gap-1 uppercase tracking-wider"
                           >
                             <span>Specs</span>
                             <ArrowUpRight className="w-3.5 h-3.5" />
-                          </Link>
+                          </span>
 
                           <button
-                            onClick={() => onOpenQuoteWithProduct(product)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onOpenQuoteWithProduct(product);
+                            }}
                             className="bg-[#072B1F] hover:bg-[#155437] text-white px-3.5 py-1.5 rounded-xl text-[11px] font-bold tracking-wider transition shadow-xs flex items-center gap-1 cursor-pointer"
                           >
                             <span>Request Quote</span>
@@ -334,7 +336,7 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                 </div>
               </div>
 
-              {/* 2. LAPTOP / DESKTOP PRODUCTS GRID (hidden md:grid) — Completely Untouched */}
+              {/* 2. LAPTOP / DESKTOP PRODUCTS GRID (hidden md:grid) */}
               <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 {filteredRiceProducts.map((product, idx) => (
                   <motion.div
@@ -343,7 +345,8 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: idx * 0.05 }}
-                    className="group bg-white rounded-2xl sm:rounded-3xl border border-[#D5E5DC] hover:border-[#CFA744] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between"
+                    onClick={() => navigate(`/products/${product.slug}`)}
+                    className="group bg-white rounded-2xl sm:rounded-3xl border border-[#D5E5DC] hover:border-[#CFA744] overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between cursor-pointer"
                   >
                     {/* Image */}
                     <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-[#072B1F]">
@@ -385,9 +388,7 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
                     <div className="p-4 xs:p-5 sm:p-6 flex-1 flex flex-col justify-between space-y-3.5 sm:space-y-4">
                       <div>
                         <h3 className="font-sans text-base sm:text-lg font-bold text-[#072B1F] group-hover:text-[#155437] transition mb-1.5 sm:mb-2">
-                          <Link to={`/products/${product.slug}`}>
-                            {product.name}
-                          </Link>
+                          {product.name}
                         </h3>
 
                         <p className="text-slate-600 text-xs sm:text-sm line-clamp-3 leading-relaxed mb-3 sm:mb-4">
@@ -436,16 +437,18 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
 
                       {/* Actions */}
                       <div className="pt-3.5 sm:pt-4 border-t border-slate-100 flex items-center justify-between gap-2 sm:gap-3">
-                        <Link
-                          to={`/products/${product.slug}`}
-                          className="text-[11px] sm:text-xs font-bold text-[#155437] hover:text-[#072B1F] transition flex items-center gap-1 uppercase tracking-wider"
+                        <span
+                          className="text-[11px] sm:text-xs font-bold text-[#155437] group-hover:text-[#072B1F] transition flex items-center gap-1 uppercase tracking-wider"
                         >
                           <span>Specifications</span>
                           <ArrowUpRight className="w-3.5 h-3.5" />
-                        </Link>
+                        </span>
 
                         <button
-                          onClick={() => onOpenQuoteWithProduct(product)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onOpenQuoteWithProduct(product);
+                          }}
                           className="bg-[#072B1F] hover:bg-[#155437] text-white px-3 sm:px-4 py-2 rounded-xl text-[11px] sm:text-xs font-bold tracking-wider transition shadow-xs flex items-center gap-1.5 cursor-pointer"
                         >
                           <span>Request Quote</span>

@@ -57,7 +57,7 @@ export const inquiryRepository = {
   async getAll() {
     try {
       const res = await apiClient.enquiries.getAll();
-      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
+      if (res?.data && Array.isArray(res.data)) {
         saveStoredInquiries(res.data);
         return res.data;
       }

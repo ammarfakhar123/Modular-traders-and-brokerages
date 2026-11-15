@@ -1,9 +1,10 @@
 import React, { useState, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, ShieldCheck, CheckCircle2, Package, Ship, Compass, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useProducts } from '@/repositories/productRepository';
 
 export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithProduct }) {
+  const navigate = useNavigate();
   const { products, loading } = useProducts(true);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const scrollRef = useRef(null);
@@ -121,7 +122,8 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
             {filteredRice.map((product, idx) => (
               <div
                 key={product.id}
-                className="w-[85vw] max-w-[330px] shrink-0 snap-center bg-white rounded-2xl border border-[#D5E5DC] overflow-hidden shadow-xs flex flex-col justify-between"
+                onClick={() => navigate(`/products/${product.slug}`)}
+                className="w-[85vw] max-w-[330px] shrink-0 snap-center bg-white rounded-2xl border border-[#D5E5DC] hover:border-[#155437] overflow-hidden shadow-xs hover:shadow-sm flex flex-col justify-between cursor-pointer transition"
               >
                 <div>
                   <div className="relative h-48 overflow-hidden bg-slate-100">
@@ -151,7 +153,7 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
                     <span className="text-[10px] font-mono text-[#B8860B] font-bold block mb-1">
                       Grain: {product.grainLength}
                     </span>
-                    <h3 className="font-sans text-base font-bold text-[#072B1F] mb-1.5 leading-snug">
+                    <h3 className="font-sans text-base font-bold text-[#072B1F] mb-1.5 leading-snug hover:text-[#155437] transition-colors">
                       {product.name}
                     </h3>
                     <p className="text-xs text-slate-600 leading-relaxed mb-2.5 line-clamp-2">
@@ -172,16 +174,18 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
                 </div>
 
                 <div className="px-4 pb-4 pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
-                  <Link
-                    to={`/products/${product.slug}`}
+                  <span
                     className="text-xs font-bold text-[#072B1F] hover:text-[#155437] flex items-center gap-1 transition"
                   >
                     <span>Specs</span>
                     <ArrowRight className="w-3.5 h-3.5 text-[#B8860B]" />
-                  </Link>
+                  </span>
 
                   <button
-                    onClick={() => onOpenQuoteWithProduct(product)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onOpenQuoteWithProduct(product);
+                    }}
                     className="bg-[#072B1F] hover:bg-[#155437] text-white px-3.5 py-1.5 rounded-lg text-[11px] font-bold uppercase tracking-wider transition cursor-pointer"
                   >
                     Quote
@@ -205,12 +209,13 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
           </div>
         </div>
 
-        {/* 2. LAPTOP / DESKTOP PRODUCTS GRID (hidden md:grid) — Completely Untouched */}
+        {/* 2. LAPTOP / DESKTOP PRODUCTS GRID (hidden md:grid) */}
         <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-10 sm:mb-12">
           {filteredRice.map((product, idx) => (
             <div
               key={product.id}
-              className="bg-white rounded-2xl border border-[#D5E5DC] overflow-hidden shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group"
+              onClick={() => navigate(`/products/${product.slug}`)}
+              className="bg-white rounded-2xl border border-[#D5E5DC] hover:border-[#155437] overflow-hidden shadow-xs hover:shadow-md transition-all duration-200 flex flex-col justify-between group cursor-pointer"
             >
               <div>
                 {/* Product Image */}
@@ -278,16 +283,18 @@ export default function FeaturedProductsSection({ onOpenQuote, onOpenQuoteWithPr
 
               {/* Action Buttons */}
               <div className="px-6 pb-6 pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
-                <Link
-                  to={`/products/${product.slug}`}
-                  className="text-xs font-bold text-[#072B1F] hover:text-[#155437] flex items-center gap-1 transition"
+                <span
+                  className="text-xs font-bold text-[#072B1F] group-hover:text-[#155437] flex items-center gap-1 transition"
                 >
                   <span>Specifications</span>
                   <ArrowRight className="w-3.5 h-3.5 text-[#B8860B]" />
-                </Link>
+                </span>
 
                 <button
-                  onClick={() => onOpenQuoteWithProduct(product)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenQuoteWithProduct(product);
+                  }}
                   className="bg-[#072B1F] hover:bg-[#155437] text-white px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition cursor-pointer"
                 >
                   Request Quote
