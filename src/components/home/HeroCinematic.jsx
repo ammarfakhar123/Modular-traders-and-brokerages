@@ -1,52 +1,21 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ArrowUpRight, CheckCircle2 } from 'lucide-react';
 
 export default function HeroCinematic({ onOpenQuote }) {
-  const desktopVideoRef = useRef(null);
-  const mobileVideoRef = useRef(null);
-
-  useEffect(() => {
-    const startVideo = (el) => {
-      if (el) {
-        el.muted = true;
-        el.defaultMuted = true;
-        el.playbackRate = 1.0;
-        const playPromise = el.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {
-            // Autoplay permitted silently or waiting on user touch
-          });
-        }
-      }
-    };
-    startVideo(desktopVideoRef.current);
-    startVideo(mobileVideoRef.current);
-  }, []);
-
   return (
     <section className="px-3 sm:px-6 pt-[96px] sm:pt-[104px] lg:pt-[116px] pb-6 sm:pb-8 max-w-[1440px] mx-auto select-none">
       {/* ========================================================
-          1. DESKTOP BANNER (CONTAINED VIDEO BANNER)
+          1. DESKTOP BANNER (IMAGE BANNER)
          ======================================================== */}
       <div className="hidden md:flex relative rounded-3xl sm:rounded-[2.25rem] overflow-hidden min-h-[440px] sm:min-h-[490px] lg:min-h-[520px] flex-col justify-between text-slate-800 border border-[#D5E5DC] bg-[#FAF8F3] shadow-[0_20px_50px_rgba(7,43,31,0.08)]">
-        {/* Contained Rice Harvest Video Background (Muted, Seamless Loop, Natural Speed) */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <video
-            ref={desktopVideoRef}
-            autoPlay
-            loop
-            muted
-            defaultMuted
-            playsInline
-            preload="auto"
-            poster="/images/hero-banner.jpg"
-            onEnded={(e) => { e.currentTarget.play().catch(() => {}); }}
-            className="w-full h-full object-cover object-right sm:object-center"
-          >
-            <source src="/videos/hero-banner.mp4" type="video/mp4" />
-          </video>
-        </div>
+        {/* Full-Bleed Rice Crop Field & Harvest Background Image */}
+        <div
+          className="absolute inset-0 bg-cover bg-right sm:bg-center pointer-events-none"
+          style={{
+            backgroundImage: `url('/images/hero-banner.jpg')`,
+          }}
+        />
 
         {/* Smooth Left Gradient Wash for 100% Text Readability */}
         <div className="absolute inset-0 bg-gradient-to-r from-[#FAF8F3] via-[#FAF8F3]/92 via-42% to-transparent pointer-events-none" />
@@ -148,23 +117,13 @@ export default function HeroCinematic({ onOpenQuote }) {
           2. MOBILE/PHONE BANNER (DEDICATED TAILORED MOBILE LAYOUT)
          ======================================================== */}
       <div className="flex md:hidden relative rounded-2xl overflow-hidden min-h-[460px] flex-col justify-between text-slate-800 border border-[#D5E5DC] bg-[#FAF8F3] shadow-md">
-        {/* Background Video with Mobile Fallback & Contrast Wash */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <video
-            ref={mobileVideoRef}
-            autoPlay
-            loop
-            muted
-            defaultMuted
-            playsInline
-            preload="auto"
-            poster="/images/hero-banner.jpg"
-            onEnded={(e) => { e.currentTarget.play().catch(() => {}); }}
-            className="w-full h-full object-cover object-center"
-          >
-            <source src="/videos/hero-banner.mp4" type="video/mp4" />
-          </video>
-        </div>
+        {/* Background Image with Enhanced Mobile Contrast Wash */}
+        <div
+          className="absolute inset-0 bg-cover bg-center pointer-events-none"
+          style={{
+            backgroundImage: `url('/images/hero-banner.jpg')`,
+          }}
+        />
         <div className="absolute inset-0 bg-gradient-to-r from-[#FAF8F3] via-[#FAF8F3]/95 via-75% to-[#FAF8F3]/70 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent pointer-events-none" />
 
