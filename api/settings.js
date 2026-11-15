@@ -26,7 +26,7 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
 const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
 const BREVO_SENDER_EMAIL =
   process.env.BREVO_SENDER_EMAIL || process.env.ADMIN_NOTIFICATION_EMAIL || 'info@modularagro.com';
-const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || 'Modular Traders Website';
+const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || 'Modular Traders and Brokerage';
 
 // Direct Business SMTP Configuration (e.g. Spacemail / Custom Private Email)
 const SMTP_HOST = process.env.SMTP_HOST || process.env.MAIL_HOST || 'mail.spacemail.com';
