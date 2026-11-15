@@ -325,6 +325,26 @@ export default async function handler(req, res) {
 
   // 1. GET: Fetch inquiries
   if (req.method === 'GET') {
+    // 1. Direct Supabase PostgREST fetch (Fastest, zero middleware overhead)
+    try {
+      const restRes = await fetch(`${SUPABASE_URL}/rest/v1/inquiries?select=*`, {
+        headers: {
+          apikey: SUPABASE_KEY,
+        },
+      });
+      if (restRes.ok) {
+        const rows = await restRes.json();
+        if (Array.isArray(rows)) {
+          const normalized = rows.map(normalizeFromDb);
+          normalized.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+          return res.status(200).json({ success: true, count: normalized.length, data: normalized });
+        }
+      }
+    } catch (e) {
+      console.warn('[Enquiries] Direct PostgREST fetch notice:', e.message);
+    }
+
+    // 2. Supabase SDK Client fallback
     let supabaseError = null;
     try {
       const { data, error } = await supabase.from('inquiries').select('*');
@@ -407,33 +427,54 @@ export default async function handler(req, res) {
 
     // Save to Supabase
     let savedInDb = false;
+    const dbPayload = {
+      id: newInquiry.id,
+      full_name: newInquiry.fullName,
+      company_name: newInquiry.companyName,
+      email: newInquiry.email,
+      phone: newInquiry.phone,
+      country: newInquiry.country,
+      destination_port: newInquiry.destinationPort,
+      product_name: newInquiry.productName,
+      volume_mt: newInquiry.volumeMT,
+      incoterms: newInquiry.incoterms,
+      packaging: newInquiry.packaging,
+      notes: newInquiry.notes,
+      status: newInquiry.status,
+      created_at: nowIso,
+      updated_at: nowIso,
+    };
+
+    // 1. Direct PostgREST write
     try {
-      const { error: dbError } = await supabase.from('inquiries').insert([
-        {
-          id: newInquiry.id,
-          full_name: newInquiry.fullName,
-          company_name: newInquiry.companyName,
-          email: newInquiry.email,
-          phone: newInquiry.phone,
-          country: newInquiry.country,
-          destination_port: newInquiry.destinationPort,
-          product_name: newInquiry.productName,
-          volume_mt: newInquiry.volumeMT,
-          incoterms: newInquiry.incoterms,
-          packaging: newInquiry.packaging,
-          notes: newInquiry.notes,
-          status: newInquiry.status,
-          created_at: nowIso,
-          updated_at: nowIso,
+      const dbRes = await fetch(`${SUPABASE_URL}/rest/v1/inquiries`, {
+        method: 'POST',
+        headers: {
+          apikey: SUPABASE_KEY,
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation',
         },
-      ]);
-      if (!dbError) {
+        body: JSON.stringify([dbPayload]),
+      });
+      if (dbRes.ok) {
         savedInDb = true;
-      } else {
-        console.warn('[Enquiries] Supabase insert warning:', dbError.message);
       }
     } catch (dbErr) {
-      console.warn('[Enquiries] Supabase insert error:', dbErr.message);
+      console.warn('[Enquiries] Direct PostgREST insert notice:', dbErr.message);
+    }
+
+    // 2. Supabase SDK fallback write
+    if (!savedInDb) {
+      try {
+        const { error: dbError } = await supabase.from('inquiries').insert([dbPayload]);
+        if (!dbError) {
+          savedInDb = true;
+        } else {
+          console.warn('[Enquiries] Supabase insert warning:', dbError.message);
+        }
+      } catch (dbErr) {
+        console.warn('[Enquiries] Supabase insert error:', dbErr.message);
+      }
     }
 
     inMemoryInquiries.unshift(newInquiry);
