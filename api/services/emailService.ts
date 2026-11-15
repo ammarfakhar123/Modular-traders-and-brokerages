@@ -1,12 +1,9 @@
-import nodemailer from 'nodemailer';
 import { Resend } from 'resend';
 
-// Direct Business SMTP Configuration (Nodemailer)
-const SMTP_HOST = process.env.SMTP_HOST || process.env.MAIL_HOST || 'mail.modularagro.com';
-const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10);
-const SMTP_USER = process.env.SMTP_USER || process.env.ADMIN_NOTIFICATION_EMAIL || 'info@modularagro.com';
-const SMTP_PASS = process.env.SMTP_PASS || process.env.SMTP_PASSWORD || process.env.MAIL_PASSWORD || '';
-const SMTP_SECURE = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : SMTP_PORT === 465;
+// Brevo (Sendinblue) Configuration (300 Free Emails / Day)
+const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
+const BREVO_SENDER_EMAIL = process.env.BREVO_SENDER_EMAIL || process.env.ADMIN_NOTIFICATION_EMAIL || 'info@modularagro.com';
+const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || 'Modular Traders Website';
 
 // Resend Configuration (Alternative / Fallback)
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
@@ -16,24 +13,60 @@ const DEFAULT_BUSINESS_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || 'info@mod
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
 
 /**
- * Creates and returns a Nodemailer SMTP transporter if password is provided
+ * Dispatch transactional email via Brevo REST API v3
+ * Free tier: 300 emails/day, 9,000 emails/month
  */
-function getSmtpTransporter() {
-  if (!SMTP_PASS) {
-    return null;
+async function sendViaBrevo(options: {
+  toEmail: string;
+  toName?: string;
+  replyToEmail: string;
+  replyToName?: string;
+  subject: string;
+  htmlContent: string;
+  senderEmail?: string;
+  senderName?: string;
+}) {
+  if (!BREVO_API_KEY) {
+    throw new Error('BREVO_API_KEY is not configured');
   }
-  return nodemailer.createTransport({
-    host: SMTP_HOST,
-    port: SMTP_PORT,
-    secure: SMTP_SECURE,
-    auth: {
-      user: SMTP_USER,
-      pass: SMTP_PASS,
+
+  const payload = {
+    sender: {
+      name: options.senderName || BREVO_SENDER_NAME,
+      email: options.senderEmail || BREVO_SENDER_EMAIL,
     },
-    tls: {
-      rejectUnauthorized: false, // Prevents certificate verification drops on shared business mail servers
+    to: [
+      {
+        email: options.toEmail,
+        name: options.toName || options.toEmail,
+      },
+    ],
+    replyTo: {
+      email: options.replyToEmail,
+      name: options.replyToName || options.replyToEmail,
     },
+    subject: options.subject,
+    htmlContent: options.htmlContent,
+  };
+
+  const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+    method: 'POST',
+    headers: {
+      accept: 'application/json',
+      'api-key': BREVO_API_KEY,
+      'content-type': 'application/json',
+    },
+    body: JSON.stringify(payload),
   });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    const errorMsg = data?.message || data?.error || `Brevo API HTTP ${response.status}`;
+    throw new Error(errorMsg);
+  }
+
+  return data;
 }
 
 export interface InquiryEmailData {
@@ -58,16 +91,15 @@ export interface InquiryEmailData {
  */
 export async function sendInquiryEmails(inquiry: InquiryEmailData, targetAdminEmail?: string) {
   const adminRecipient = targetAdminEmail || DEFAULT_BUSINESS_EMAIL;
-  const transporter = getSmtpTransporter();
 
-  if (!transporter && !resend) {
+  if (!BREVO_API_KEY && !resend) {
     console.warn(
-      `[EmailService] Neither SMTP_PASS nor RESEND_API_KEY is configured. Email dispatch skipped for inquiry ${inquiry.id || 'N/A'}. Target: ${adminRecipient}`
+      `[EmailService] Neither BREVO_API_KEY nor RESEND_API_KEY is configured. Email dispatch skipped for inquiry ${inquiry.id || 'N/A'}. Target: ${adminRecipient}`
     );
     return {
       adminEmailSent: false,
       customerEmailSent: false,
-      reason: 'No email transport configured (set SMTP_PASS or RESEND_API_KEY in Vercel)',
+      reason: 'No email transport configured (set BREVO_API_KEY in Vercel)',
     };
   }
 
@@ -277,23 +309,24 @@ ${escapeHtml(inquiry.notes)}
       </html>
     `;
 
-    if (transporter) {
-      // 1. Send via Direct Business SMTP (Nodemailer)
-      const info = await transporter.sendMail({
-        from: `"Modular Traders Website" <${SMTP_USER}>`,
-        to: adminRecipient,
-        replyTo: `"${inquiry.fullName}" <${inquiry.email}>`,
+    if (BREVO_API_KEY) {
+      // 1. Send via Brevo REST API v3 (300 Free Emails / Day)
+      const brevoRes = await sendViaBrevo({
+        toEmail: adminRecipient,
+        toName: 'Modular Traders HQ',
+        replyToEmail: inquiry.email,
+        replyToName: inquiry.fullName,
         subject: subjectLine,
-        html: adminHtml,
+        htmlContent: adminHtml,
       });
 
       results.adminEmailSent = true;
-      results.adminMessageId = info.messageId;
+      results.adminMessageId = (brevoRes as any)?.messageId || null;
       console.log(
-        `[EmailService] Business notification dispatched successfully via Direct SMTP to ${adminRecipient} for inquiry ${inquiry.id}. MessageId: ${info.messageId}`
+        `[EmailService] Business notification dispatched successfully via Brevo to ${adminRecipient} for inquiry ${inquiry.id}. MessageId: ${results.adminMessageId}`
       );
     } else if (resend) {
-      // 2. Send via Resend API
+      // 2. Fallback via Resend API
       const adminResponse = await resend.emails.send({
         from: FROM_EMAIL,
         to: [adminRecipient],
@@ -381,16 +414,18 @@ ${escapeHtml(inquiry.notes)}
       </html>
     `;
 
-    if (transporter) {
-      await transporter.sendMail({
-        from: `"Modular Traders and Brokerage" <${SMTP_USER}>`,
-        to: inquiry.email,
-        replyTo: adminRecipient,
+    if (BREVO_API_KEY) {
+      await sendViaBrevo({
+        toEmail: inquiry.email,
+        toName: inquiry.fullName,
+        replyToEmail: adminRecipient,
+        replyToName: 'Modular Traders and Brokerage',
         subject: `Inquiry Confirmation — Modular Traders and Brokerage (Ref: ${inquiry.id || 'MT-RICE'})`,
-        html: customerHtml,
+        htmlContent: customerHtml,
+        senderName: 'Modular Traders and Brokerage',
       });
       results.customerEmailSent = true;
-      console.log(`[EmailService] Customer confirmation dispatched via Direct SMTP to ${inquiry.email}`);
+      console.log(`[EmailService] Customer confirmation dispatched via Brevo to ${inquiry.email}`);
     } else if (resend) {
       await resend.emails.send({
         from: FROM_EMAIL,
@@ -404,7 +439,7 @@ ${escapeHtml(inquiry.notes)}
       console.log(`[EmailService] Customer confirmation dispatched via Resend to ${inquiry.email}`);
     }
   } catch (err: any) {
-    // Isolated catch: on Resend free/testing tiers, sending to unverified customer emails can be rejected.
+    // Isolated catch: sending to unverified customer emails can be rejected on test tiers.
     // This is caught cleanly so it never halts or impacts the business inbox notification.
     console.warn('[EmailService] Customer confirmation notice:', err?.message || err);
     results.customerError = err?.message || 'Customer confirmation skipped';
@@ -417,34 +452,32 @@ ${escapeHtml(inquiry.notes)}
  * Send a verification test email
  */
 export async function sendTestEmail(targetEmail: string) {
-  const transporter = getSmtpTransporter();
-  if (!transporter && !resend) {
-    return { ok: false, error: 'Neither SMTP_PASS nor RESEND_API_KEY environment variable is configured.' };
+  if (!BREVO_API_KEY && !resend) {
+    return { ok: false, error: 'Neither BREVO_API_KEY nor RESEND_API_KEY environment variable is configured.' };
   }
   try {
     const testHtml = `
       <div style="font-family: -apple-system, sans-serif; padding: 24px; background-color: #FAF8F3; border-radius: 12px; border: 1px solid #D5E5DC; max-width: 550px;">
         <h2 style="color: #072B1F; margin: 0 0 12px;">Email Verification Successful</h2>
         <p style="color: #334155; font-size: 14px; line-height: 1.6;">
-          This is a verified test email sent via ${transporter ? 'Direct Business SMTP' : 'Resend'} from the Modular Traders backend.
+          This is a verified test email sent via ${BREVO_API_KEY ? 'Brevo API' : 'Resend'} from the Modular Traders backend.
         </p>
         <div style="background-color: #EAF5EF; padding: 12px; border-radius: 8px; font-size: 12px; color: #072B1F; margin-top: 16px;">
           <strong>Receiver:</strong> ${escapeHtml(targetEmail)}<br/>
-          <strong>Sender:</strong> ${transporter ? SMTP_USER : FROM_EMAIL}<br/>
+          <strong>Sender:</strong> ${BREVO_API_KEY ? BREVO_SENDER_EMAIL : FROM_EMAIL}<br/>
           <strong>Timestamp:</strong> ${new Date().toISOString()} (UTC)
         </div>
       </div>
     `;
 
-    if (transporter) {
-      const res = await transporter.sendMail({
-        from: `"Modular Traders System" <${SMTP_USER}>`,
-        to: targetEmail,
-        replyTo: DEFAULT_BUSINESS_EMAIL,
-        subject: 'Test Verification — Modular Traders Direct SMTP System',
-        html: testHtml,
+    if (BREVO_API_KEY) {
+      const res = await sendViaBrevo({
+        toEmail: targetEmail,
+        replyToEmail: DEFAULT_BUSINESS_EMAIL,
+        subject: 'Test Verification — Modular Traders Brevo System',
+        htmlContent: testHtml,
       });
-      return { ok: true, data: res, provider: 'smtp' };
+      return { ok: true, data: res, provider: 'brevo' };
     } else if (resend) {
       const res = await resend.emails.send({
         from: FROM_EMAIL,
