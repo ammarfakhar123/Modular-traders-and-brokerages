@@ -49,12 +49,12 @@ export default function HeroCinematic({ onOpenQuote }) {
               <ArrowRight className="w-4 h-4 text-[#CFA744]" />
             </Link>
 
-            <button
-              onClick={onOpenQuote}
-              className="bg-white/95 hover:bg-white text-[#072B1F] border border-[#D5E5DC] px-6 py-3 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider transition shadow-2xs cursor-pointer"
+            <Link
+              to="/contact"
+              className="bg-white/95 hover:bg-white text-[#072B1F] border border-[#D5E5DC] px-6 py-3 rounded-xl text-xs sm:text-sm font-bold uppercase tracking-wider transition shadow-2xs text-center"
             >
               Request a Quote
-            </button>
+            </Link>
           </div>
 
           {/* Concise Rice-Focused Trust Line */}
@@ -155,12 +155,12 @@ export default function HeroCinematic({ onOpenQuote }) {
               <ArrowRight className="w-4 h-4 text-[#CFA744]" />
             </Link>
 
-            <button
-              onClick={onOpenQuote}
-              className="w-full bg-white active:bg-slate-50 text-[#072B1F] border border-[#D5E5DC] py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider shadow-2xs text-center cursor-pointer"
+            <Link
+              to="/contact"
+              className="w-full bg-white active:bg-slate-50 text-[#072B1F] border border-[#D5E5DC] py-3 px-4 rounded-xl text-xs font-bold uppercase tracking-wider shadow-2xs text-center"
             >
               Request a Quote
-            </button>
+            </Link>
           </div>
 
           {/* Concise Mobile Trust Indicators */}

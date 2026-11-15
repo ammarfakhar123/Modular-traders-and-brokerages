@@ -1,0 +1,169 @@
+import { createClient } from '@supabase/supabase-js';
+
+const SUPABASE_URL =
+  process.env.SUPABASE_URL ||
+  process.env.NEXT_PUBLIC_SUPABASE_URL ||
+  process.env.VITE_SUPABASE_URL ||
+  'https://ptjwbwxwemwmhbogwaeh.supabase.co';
+
+const SUPABASE_KEY =
+  process.env.SUPABASE_SERVICE_ROLE_KEY ||
+  process.env.SUPABASE_ANON_KEY ||
+  process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+  process.env.VITE_SUPABASE_ANON_KEY ||
+  'sb_publishable_xbiw1aaBHyGTh8vpTiHxSw_JHfLVHk8';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
+
+const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
+const BREVO_SENDER_EMAIL =
+  process.env.BREVO_SENDER_EMAIL || process.env.ADMIN_NOTIFICATION_EMAIL || 'info@modularagro.com';
+const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || 'Modular Traders Website';
+const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
+const RESEND_FROM_EMAIL =
+  process.env.RESEND_FROM_EMAIL || 'Modular Traders Website <website@modularagro.com>';
+
+let adminSettings = {
+  receiveInquiriesByEmail: true,
+  inquiryNotificationEmail: process.env.ADMIN_NOTIFICATION_EMAIL || 'info@modularagro.com',
+};
+
+export default async function handler(req, res) {
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization'
+  );
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
+  const path = req.query.path || req.url || '';
+
+  // Test Email Endpoint
+  if (path.includes('test-email') && req.method === 'POST') {
+    const targetEmail =
+      req.body?.targetEmail || adminSettings.inquiryNotificationEmail || 'info@modularagro.com';
+
+    const testSubject = '[Test Verification] Modular Traders Email System Active';
+    const testHtml = `
+      <div style="font-family: sans-serif; padding: 20px; background: #FAF8F3; color: #072B1F;">
+        <h2 style="color: #072B1F;">Modular Traders Email Verification</h2>
+        <p>This is a test notification confirming your email dispatch system is operational.</p>
+        <p><strong>Provider:</strong> ${BREVO_API_KEY ? 'Brevo (Free 300/day tier)' : RESEND_API_KEY ? 'Resend' : 'Pending Configuration'}</p>
+        <p><strong>Recipient:</strong> ${targetEmail}</p>
+        <p><strong>Timestamp:</strong> ${new Date().toISOString()}</p>
+      </div>
+    `;
+
+    // Try Brevo
+    if (BREVO_API_KEY) {
+      try {
+        const brevoRes = await fetch('https://api.brevo.com/v3/smtp/email', {
+          method: 'POST',
+          headers: {
+            accept: 'application/json',
+            'api-key': BREVO_API_KEY,
+            'content-type': 'application/json',
+          },
+          body: JSON.stringify({
+            sender: { name: BREVO_SENDER_NAME, email: BREVO_SENDER_EMAIL },
+            to: [{ email: targetEmail }],
+            replyTo: { email: targetEmail, name: 'Admin' },
+            subject: testSubject,
+            htmlContent: testHtml,
+          }),
+        });
+
+        if (brevoRes.ok) {
+          return res.status(200).json({
+            success: true,
+            provider: 'Brevo',
+            message: `Test email sent to ${targetEmail} via Brevo.`,
+          });
+        }
+      } catch (err) {
+        console.warn('Brevo test email error:', err.message);
+      }
+    }
+
+    // Try Resend Fallback
+    if (RESEND_API_KEY) {
+      try {
+        const resendRes = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${RESEND_API_KEY}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            from: RESEND_FROM_EMAIL,
+            to: [targetEmail],
+            subject: testSubject,
+            html: testHtml,
+          }),
+        });
+        if (resendRes.ok) {
+          return res.status(200).json({
+            success: true,
+            provider: 'Resend',
+            message: `Test email sent to ${targetEmail} via Resend.`,
+          });
+        }
+      } catch (err) {
+        console.warn('Resend test email error:', err.message);
+      }
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: `Test processed. Please ensure BREVO_API_KEY is configured in Vercel environment variables.`,
+      targetEmail,
+    });
+  }
+
+  // GET Settings
+  if (req.method === 'GET') {
+    try {
+      const { data } = await supabase
+        .from('site_settings')
+        .select('*')
+        .eq('id', 'primary_settings')
+        .maybeSingle();
+
+      if (data?.contact_email) {
+        adminSettings.inquiryNotificationEmail = data.contact_email;
+      }
+    } catch {}
+
+    return res.status(200).json({ success: true, data: adminSettings });
+  }
+
+  // POST Settings
+  if (req.method === 'POST') {
+    const { receiveInquiriesByEmail, inquiryNotificationEmail } = req.body || {};
+    if (typeof receiveInquiriesByEmail === 'boolean') {
+      adminSettings.receiveInquiriesByEmail = receiveInquiriesByEmail;
+    }
+    if (inquiryNotificationEmail) {
+      adminSettings.inquiryNotificationEmail = String(inquiryNotificationEmail).trim();
+    }
+
+    try {
+      await supabase.from('site_settings').upsert({
+        id: 'primary_settings',
+        contact_email: adminSettings.inquiryNotificationEmail,
+        updated_at: new Date().toISOString(),
+      });
+    } catch {}
+
+    return res.status(200).json({ success: true, data: adminSettings });
+  }
+
+  return res.status(405).json({ success: false, error: 'Method not allowed' });
+}

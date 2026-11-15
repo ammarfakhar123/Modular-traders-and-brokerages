@@ -50,32 +50,70 @@ function saveStoredInquiries(inquiries) {
  * Handles all trade inquiries from Contact Page, Modal, and Catalog details.
  * Connects to Node.js backend API (/api/enquiries), Supabase, and Resend email system.
  */
+function normalizeInquiryRow(row) {
+  if (!row) return null;
+  return {
+    id: row.id,
+    fullName: row.full_name || row.fullName || 'Trade Buyer',
+    companyName: row.company_name || row.companyName || 'Export Client',
+    email: row.email,
+    phone: row.phone,
+    country: row.country || 'International',
+    destinationPort: row.destination_port || row.destinationPort || '',
+    productName: row.product_name || row.productName || 'General Rice Sourcing',
+    volumeMT: row.volume_mt || row.volumeMT || '25-50 MT',
+    incoterms: row.incoterms || 'FOB Karachi / CIF',
+    packaging: row.packaging || 'Standard Export 50kg Bags',
+    notes: row.notes || '',
+    status: row.status || 'New',
+    created_at: row.created_at || row.createdAt || new Date().toISOString(),
+  };
+}
+
 export const inquiryRepository = {
   /**
    * Fetch all inquiries sorted by most recent
    */
   async getAll() {
+    // 1. Try serverless backend API
     try {
       const res = await apiClient.enquiries.getAll();
       if (res?.data && Array.isArray(res.data)) {
         saveStoredInquiries(res.data);
         return res.data;
       }
-    } catch {
-      // Local fallback
+    } catch (apiErr) {
+      console.warn('[inquiryRepository] Server API fetch notice:', apiErr.message);
     }
 
+    // 2. Direct Supabase DB query fallback
+    try {
+      const { data: dbData, error } = await supabase
+        .from('inquiries')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (!error && Array.isArray(dbData) && dbData.length > 0) {
+        const normalized = dbData.map(normalizeInquiryRow).filter(Boolean);
+        saveStoredInquiries(normalized);
+        return normalized;
+      }
+    } catch (dbErr) {
+      console.warn('[inquiryRepository] Supabase direct read notice:', dbErr);
+    }
+
+    // 3. Browser storage fallback
     const list = getStoredInquiries();
     return [...list].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   },
 
   /**
-   * Submit and save a new inquiry + trigger Resend email notifications
+   * Submit and save a new inquiry + trigger email notifications
    */
   async create(inquiryData) {
     const all = getStoredInquiries();
     const newInquiry = {
-      id: `inq-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      id: `MT-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`,
       created_at: new Date().toISOString(),
       status: 'New',
       ...inquiryData,
@@ -85,7 +123,7 @@ export const inquiryRepository = {
     const updated = [newInquiry, ...all];
     saveStoredInquiries(updated);
 
-    // Call serverless backend API to save in Supabase and send Resend emails
+    // 1. Call serverless backend API to save in Supabase and send Brevo / Resend emails
     try {
       const serverRes = await apiClient.enquiries.submit({
         ...inquiryData,
@@ -96,10 +134,30 @@ export const inquiryRepository = {
       }
     } catch (err) {
       console.warn('[inquiryRepository] Server API submission notice:', err.message);
-      // Fallback: direct Supabase write
+
+      // 2. Fallback: direct Supabase write with correct snake_case columns
       try {
-        await supabase.from('inquiries').insert([newInquiry]);
-      } catch {}
+        const dbPayload = {
+          id: newInquiry.id,
+          full_name: newInquiry.fullName,
+          company_name: newInquiry.companyName,
+          email: newInquiry.email,
+          phone: newInquiry.phone,
+          country: newInquiry.country,
+          destination_port: newInquiry.destinationPort || newInquiry.country,
+          product_name: newInquiry.productName,
+          volume_mt: newInquiry.volumeMT,
+          incoterms: newInquiry.incoterms,
+          packaging: newInquiry.packaging,
+          notes: newInquiry.notes,
+          status: 'New',
+          created_at: newInquiry.created_at,
+          updated_at: newInquiry.created_at,
+        };
+        await supabase.from('inquiries').insert([dbPayload]);
+      } catch (dbErr) {
+        console.warn('[inquiryRepository] Supabase direct write fallback notice:', dbErr);
+      }
     }
 
     return newInquiry;

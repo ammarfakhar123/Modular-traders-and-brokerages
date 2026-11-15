@@ -1,0 +1,22 @@
+# Production & Local Environment Configuration for Modular Traders
+# Shared Supabase credentials
+VITE_SUPABASE_URL=https://ptjwbwxwemwmhbogwaeh.supabase.co
+VITE_SUPABASE_ANON_KEY=sb_publishable_xbiw1aaBHyGTh8vpTiHxSw_JHfLVHk8
+
+NEXT_PUBLIC_SUPABASE_URL=https://ptjwbwxwemwmhbogwaeh.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sb_publishable_xbiw1aaBHyGTh8vpTiHxSw_JHfLVHk8
+NEXT_PUBLIC_SUPABASE_ANON_KEY=sb_publishable_xbiw1aaBHyGTh8vpTiHxSw_JHfLVHk8
+
+# Brevo (Sendinblue) Email Configuration (300 Free Emails / Day)
+BREVO_API_KEY=
+BREVO_SENDER_EMAIL=info@modularagro.com
+BREVO_SENDER_NAME=Modular Traders Website
+
+# Server-Side Email Configuration (Resend Fallback)
+RESEND_FROM_EMAIL=Modular Traders Website <website@modularagro.com>
+ADMIN_NOTIFICATION_EMAIL=info@modularagro.com
+ADMIN_PASSWORD=Modular@122333
+ADMIN_JWT_SECRET=jwt-modular-admin-token-2026
+
+VITE_APP_TITLE=Modular Traders and Brokerage
+VITE_ADMIN_DEFAULT_EMAIL=info@modularagro.com

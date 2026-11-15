@@ -711,12 +711,12 @@ export default function AboutPage({ onOpenQuote }) {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto shrink-0">
-              <button
-                onClick={onOpenQuote}
-                className="bg-[#072B1F] hover:bg-[#155437] text-white font-bold px-7 py-3.5 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition shadow-sm text-center cursor-pointer"
+              <Link
+                to="/contact"
+                className="bg-[#072B1F] hover:bg-[#155437] text-white font-bold px-7 py-3.5 rounded-xl text-xs sm:text-sm uppercase tracking-wider transition shadow-sm text-center"
               >
                 Request a Quote
-              </button>
+              </Link>
 
               <Link
                 to="/contact"

@@ -2,8 +2,20 @@
   "framework": "vite",
   "rewrites": [
     {
-      "source": "/api/(.*)",
-      "destination": "/api/index.ts"
+      "source": "/api/enquiries/:path*",
+      "destination": "/api/enquiries.js"
+    },
+    {
+      "source": "/api/auth/:path*",
+      "destination": "/api/auth.js"
+    },
+    {
+      "source": "/api/settings/:path*",
+      "destination": "/api/settings.js"
+    },
+    {
+      "source": "/api/products/:path*",
+      "destination": "/api/products.js"
     },
     {
       "source": "/(.*)",
