@@ -1,10 +1,40 @@
+import nodemailer from 'nodemailer';
 import { Resend } from 'resend';
 
+// Direct Business SMTP Configuration (Nodemailer)
+const SMTP_HOST = process.env.SMTP_HOST || process.env.MAIL_HOST || 'mail.modularagro.com';
+const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10);
+const SMTP_USER = process.env.SMTP_USER || process.env.ADMIN_NOTIFICATION_EMAIL || 'info@modularagro.com';
+const SMTP_PASS = process.env.SMTP_PASS || process.env.SMTP_PASSWORD || process.env.MAIL_PASSWORD || '';
+const SMTP_SECURE = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : SMTP_PORT === 465;
+
+// Resend Configuration (Alternative / Fallback)
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'Modular Traders Website <website@modularagro.com>';
 const DEFAULT_BUSINESS_EMAIL = process.env.ADMIN_NOTIFICATION_EMAIL || 'info@modularagro.com';
 
 const resend = RESEND_API_KEY ? new Resend(RESEND_API_KEY) : null;
+
+/**
+ * Creates and returns a Nodemailer SMTP transporter if password is provided
+ */
+function getSmtpTransporter() {
+  if (!SMTP_PASS) {
+    return null;
+  }
+  return nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_SECURE,
+    auth: {
+      user: SMTP_USER,
+      pass: SMTP_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false, // Prevents certificate verification drops on shared business mail servers
+    },
+  });
+}
 
 export interface InquiryEmailData {
   id?: string;
@@ -28,15 +58,16 @@ export interface InquiryEmailData {
  */
 export async function sendInquiryEmails(inquiry: InquiryEmailData, targetAdminEmail?: string) {
   const adminRecipient = targetAdminEmail || DEFAULT_BUSINESS_EMAIL;
+  const transporter = getSmtpTransporter();
 
-  if (!resend) {
+  if (!transporter && !resend) {
     console.warn(
-      `[EmailService] RESEND_API_KEY is not set. Email dispatch skipped for inquiry ${inquiry.id || 'N/A'}. Target: ${adminRecipient}`
+      `[EmailService] Neither SMTP_PASS nor RESEND_API_KEY is configured. Email dispatch skipped for inquiry ${inquiry.id || 'N/A'}. Target: ${adminRecipient}`
     );
     return {
       adminEmailSent: false,
       customerEmailSent: false,
-      reason: 'RESEND_API_KEY not set',
+      reason: 'No email transport configured (set SMTP_PASS or RESEND_API_KEY in Vercel)',
     };
   }
 
@@ -246,20 +277,38 @@ ${escapeHtml(inquiry.notes)}
       </html>
     `;
 
-    const adminResponse = await resend.emails.send({
-      from: FROM_EMAIL,
-      to: [adminRecipient],
-      replyTo: inquiry.email, // Standard camelCase for Resend SDK
-      reply_to: inquiry.email, // snake_case compatibility
-      subject: subjectLine,
-      html: adminHtml,
-    } as any);
+    if (transporter) {
+      // 1. Send via Direct Business SMTP (Nodemailer)
+      const info = await transporter.sendMail({
+        from: `"Modular Traders Website" <${SMTP_USER}>`,
+        to: adminRecipient,
+        replyTo: `"${inquiry.fullName}" <${inquiry.email}>`,
+        subject: subjectLine,
+        html: adminHtml,
+      });
 
-    results.adminEmailSent = true;
-    results.adminMessageId = (adminResponse as any)?.data?.id || null;
-    console.log(
-      `[EmailService] Business notification dispatched successfully to ${adminRecipient} for inquiry ${inquiry.id}. MessageId: ${results.adminMessageId}`
-    );
+      results.adminEmailSent = true;
+      results.adminMessageId = info.messageId;
+      console.log(
+        `[EmailService] Business notification dispatched successfully via Direct SMTP to ${adminRecipient} for inquiry ${inquiry.id}. MessageId: ${info.messageId}`
+      );
+    } else if (resend) {
+      // 2. Send via Resend API
+      const adminResponse = await resend.emails.send({
+        from: FROM_EMAIL,
+        to: [adminRecipient],
+        replyTo: inquiry.email, // Standard camelCase for Resend SDK
+        reply_to: inquiry.email, // snake_case compatibility
+        subject: subjectLine,
+        html: adminHtml,
+      } as any);
+
+      results.adminEmailSent = true;
+      results.adminMessageId = (adminResponse as any)?.data?.id || null;
+      console.log(
+        `[EmailService] Business notification dispatched successfully via Resend to ${adminRecipient} for inquiry ${inquiry.id}. MessageId: ${results.adminMessageId}`
+      );
+    }
   } catch (err: any) {
     console.error(`[EmailService] Business notification dispatch failed to ${adminRecipient}:`, err);
     results.adminError = err?.message || 'Failed to dispatch business notification';
@@ -332,15 +381,28 @@ ${escapeHtml(inquiry.notes)}
       </html>
     `;
 
-    await resend.emails.send({
-      from: FROM_EMAIL,
-      to: [inquiry.email],
-      replyTo: DEFAULT_BUSINESS_EMAIL,
-      reply_to: DEFAULT_BUSINESS_EMAIL,
-      subject: `Inquiry Confirmation — Modular Traders and Brokerage (Ref: ${inquiry.id || 'MT-RICE'})`,
-      html: customerHtml,
-    } as any);
-    results.customerEmailSent = true;
+    if (transporter) {
+      await transporter.sendMail({
+        from: `"Modular Traders and Brokerage" <${SMTP_USER}>`,
+        to: inquiry.email,
+        replyTo: adminRecipient,
+        subject: `Inquiry Confirmation — Modular Traders and Brokerage (Ref: ${inquiry.id || 'MT-RICE'})`,
+        html: customerHtml,
+      });
+      results.customerEmailSent = true;
+      console.log(`[EmailService] Customer confirmation dispatched via Direct SMTP to ${inquiry.email}`);
+    } else if (resend) {
+      await resend.emails.send({
+        from: FROM_EMAIL,
+        to: [inquiry.email],
+        replyTo: DEFAULT_BUSINESS_EMAIL,
+        reply_to: DEFAULT_BUSINESS_EMAIL,
+        subject: `Inquiry Confirmation — Modular Traders and Brokerage (Ref: ${inquiry.id || 'MT-RICE'})`,
+        html: customerHtml,
+      } as any);
+      results.customerEmailSent = true;
+      console.log(`[EmailService] Customer confirmation dispatched via Resend to ${inquiry.email}`);
+    }
   } catch (err: any) {
     // Isolated catch: on Resend free/testing tiers, sending to unverified customer emails can be rejected.
     // This is caught cleanly so it never halts or impacts the business inbox notification.
@@ -355,30 +417,45 @@ ${escapeHtml(inquiry.notes)}
  * Send a verification test email
  */
 export async function sendTestEmail(targetEmail: string) {
-  if (!resend) {
-    return { ok: false, error: 'RESEND_API_KEY environment variable is not configured.' };
+  const transporter = getSmtpTransporter();
+  if (!transporter && !resend) {
+    return { ok: false, error: 'Neither SMTP_PASS nor RESEND_API_KEY environment variable is configured.' };
   }
   try {
-    const res = await resend.emails.send({
-      from: FROM_EMAIL,
-      to: [targetEmail],
-      replyTo: DEFAULT_BUSINESS_EMAIL,
-      reply_to: DEFAULT_BUSINESS_EMAIL,
-      subject: 'Test Verification — Modular Traders B2B Email System',
-      html: `
-        <div style="font-family: -apple-system, sans-serif; padding: 24px; background-color: #FAF8F3; border-radius: 12px; border: 1px solid #D5E5DC; max-width: 550px;">
-          <h2 style="color: #072B1F; margin: 0 0 12px;">Email Verification Successful</h2>
-          <p style="color: #334155; font-size: 14px; line-height: 1.6;">
-            This is a verified test email sent via Resend from the Modular Traders Express backend.
-          </p>
-          <div style="background-color: #EAF5EF; padding: 12px; border-radius: 8px; font-size: 12px; color: #072B1F; margin-top: 16px;">
-            <strong>Receiver:</strong> ${escapeHtml(targetEmail)}<br/>
-            <strong>Timestamp:</strong> ${new Date().toISOString()} (UTC)
-          </div>
+    const testHtml = `
+      <div style="font-family: -apple-system, sans-serif; padding: 24px; background-color: #FAF8F3; border-radius: 12px; border: 1px solid #D5E5DC; max-width: 550px;">
+        <h2 style="color: #072B1F; margin: 0 0 12px;">Email Verification Successful</h2>
+        <p style="color: #334155; font-size: 14px; line-height: 1.6;">
+          This is a verified test email sent via ${transporter ? 'Direct Business SMTP' : 'Resend'} from the Modular Traders backend.
+        </p>
+        <div style="background-color: #EAF5EF; padding: 12px; border-radius: 8px; font-size: 12px; color: #072B1F; margin-top: 16px;">
+          <strong>Receiver:</strong> ${escapeHtml(targetEmail)}<br/>
+          <strong>Sender:</strong> ${transporter ? SMTP_USER : FROM_EMAIL}<br/>
+          <strong>Timestamp:</strong> ${new Date().toISOString()} (UTC)
         </div>
-      `,
-    } as any);
-    return { ok: true, data: res };
+      </div>
+    `;
+
+    if (transporter) {
+      const res = await transporter.sendMail({
+        from: `"Modular Traders System" <${SMTP_USER}>`,
+        to: targetEmail,
+        replyTo: DEFAULT_BUSINESS_EMAIL,
+        subject: 'Test Verification — Modular Traders Direct SMTP System',
+        html: testHtml,
+      });
+      return { ok: true, data: res, provider: 'smtp' };
+    } else if (resend) {
+      const res = await resend.emails.send({
+        from: FROM_EMAIL,
+        to: [targetEmail],
+        replyTo: DEFAULT_BUSINESS_EMAIL,
+        reply_to: DEFAULT_BUSINESS_EMAIL,
+        subject: 'Test Verification — Modular Traders B2B Email System',
+        html: testHtml,
+      } as any);
+      return { ok: true, data: res, provider: 'resend' };
+    }
   } catch (err: any) {
     return { ok: false, error: err?.message || 'Failed to dispatch test email' };
   }

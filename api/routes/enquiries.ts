@@ -212,7 +212,7 @@ router.get('/', requireAuth, async (_req: AuthenticatedRequest, res: Response) =
       .select('*')
       .order('created_at', { ascending: false });
 
-    if (!error && Array.isArray(data) && data.length > 0) {
+    if (!error && Array.isArray(data)) {
       const normalized = data.map(normalizeInquiryFromDb);
       return res.json({ success: true, count: normalized.length, data: normalized });
     }
