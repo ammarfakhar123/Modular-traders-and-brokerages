@@ -75,7 +75,30 @@ export const inquiryRepository = {
    * Fetch all inquiries sorted by most recent
    */
   async getAll() {
-    // 1. Try serverless backend API
+    // 1. Direct Supabase PostgREST Fetch (Most reliable, zero middleware)
+    try {
+      const restRes = await fetch(
+        'https://ptjwbwxwemwmhbogwaeh.supabase.co/rest/v1/inquiries?select=*',
+        {
+          headers: {
+            apikey: 'sb_publishable_xbiw1aaBHyGTh8vpTiHxSw_JHfLVHk8',
+          },
+        }
+      );
+      if (restRes.ok) {
+        const rows = await restRes.json();
+        if (Array.isArray(rows) && rows.length > 0) {
+          const normalized = rows.map(normalizeInquiryRow).filter(Boolean);
+          normalized.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+          saveStoredInquiries(normalized);
+          return normalized;
+        }
+      }
+    } catch (restErr) {
+      console.warn('[inquiryRepository] Direct Supabase REST fetch notice:', restErr);
+    }
+
+    // 2. Try serverless backend API
     try {
       const res = await apiClient.enquiries.getAll();
       if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
@@ -86,12 +109,9 @@ export const inquiryRepository = {
       console.warn('[inquiryRepository] Server API fetch notice:', apiErr.message);
     }
 
-    // 2. Direct Supabase DB query fallback
+    // 3. Supabase SDK Client fallback
     try {
-      const { data: dbData, error } = await supabase
-        .from('inquiries')
-        .select('*');
-
+      const { data: dbData, error } = await supabase.from('inquiries').select('*');
       if (!error && Array.isArray(dbData) && dbData.length > 0) {
         const normalized = dbData.map(normalizeInquiryRow).filter(Boolean);
         normalized.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
@@ -102,7 +122,7 @@ export const inquiryRepository = {
       console.warn('[inquiryRepository] Supabase direct read notice:', dbErr);
     }
 
-    // 3. Browser storage fallback
+    // 4. Browser storage fallback
     const list = getStoredInquiries();
     return [...list].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   },
@@ -123,41 +143,47 @@ export const inquiryRepository = {
     const updated = [newInquiry, ...all];
     saveStoredInquiries(updated);
 
-    // 1. Call serverless backend API to save in Supabase and send Brevo / Resend emails
+    const dbPayload = {
+      id: newInquiry.id,
+      full_name: newInquiry.fullName,
+      company_name: newInquiry.companyName,
+      email: newInquiry.email,
+      phone: newInquiry.phone,
+      country: newInquiry.country,
+      destination_port: newInquiry.destinationPort || newInquiry.country,
+      product_name: newInquiry.productName,
+      volume_mt: newInquiry.volumeMT,
+      incoterms: newInquiry.incoterms,
+      packaging: newInquiry.packaging,
+      notes: newInquiry.notes,
+      status: 'New',
+      created_at: newInquiry.created_at,
+      updated_at: newInquiry.created_at,
+    };
+
+    // 1. Direct Supabase PostgREST Insert (Immediate write to database)
     try {
-      const serverRes = await apiClient.enquiries.submit({
+      await fetch('https://ptjwbwxwemwmhbogwaeh.supabase.co/rest/v1/inquiries', {
+        method: 'POST',
+        headers: {
+          apikey: 'sb_publishable_xbiw1aaBHyGTh8vpTiHxSw_JHfLVHk8',
+          'Content-Type': 'application/json',
+          Prefer: 'return=representation',
+        },
+        body: JSON.stringify([dbPayload]),
+      });
+    } catch (postErr) {
+      console.warn('[inquiryRepository] Direct Supabase REST insert notice:', postErr);
+    }
+
+    // 2. Call serverless backend API to send Brevo / Resend emails
+    try {
+      await apiClient.enquiries.submit({
         ...inquiryData,
         id: newInquiry.id,
       });
-      if (serverRes?.data) {
-        return serverRes.data;
-      }
     } catch (err) {
-      console.warn('[inquiryRepository] Server API submission notice:', err.message);
-
-      // 2. Fallback: direct Supabase write with correct snake_case columns
-      try {
-        const dbPayload = {
-          id: newInquiry.id,
-          full_name: newInquiry.fullName,
-          company_name: newInquiry.companyName,
-          email: newInquiry.email,
-          phone: newInquiry.phone,
-          country: newInquiry.country,
-          destination_port: newInquiry.destinationPort || newInquiry.country,
-          product_name: newInquiry.productName,
-          volume_mt: newInquiry.volumeMT,
-          incoterms: newInquiry.incoterms,
-          packaging: newInquiry.packaging,
-          notes: newInquiry.notes,
-          status: 'New',
-          created_at: newInquiry.created_at,
-          updated_at: newInquiry.created_at,
-        };
-        await supabase.from('inquiries').insert([dbPayload]);
-      } catch (dbErr) {
-        console.warn('[inquiryRepository] Supabase direct write fallback notice:', dbErr);
-      }
+      console.warn('[inquiryRepository] Server API email dispatch notice:', err.message);
     }
 
     return newInquiry;
