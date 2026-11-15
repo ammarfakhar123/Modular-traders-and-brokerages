@@ -45,7 +45,7 @@ export default function Navbar({ onOpenQuote }) {
               <img
                 src="/brand/logo-full.png"
                 alt="Modular Traders and Brokerage"
-                className="h-7 xs:h-8 sm:h-11 max-w-[145px] xs:max-w-[180px] sm:max-w-none w-auto object-contain transition-transform group-hover:scale-[1.02]"
+                className="h-8 xs:h-9 sm:h-12 md:h-[50px] max-w-[160px] xs:max-w-[195px] sm:max-w-none w-auto object-contain transition-transform group-hover:scale-[1.02]"
               />
             </Link>
 
@@ -120,7 +120,7 @@ export default function Navbar({ onOpenQuote }) {
             >
               <div className="flex flex-col space-y-3">
                 <div className="flex justify-center pb-3 border-b border-slate-100">
-                  <img src="/brand/logo-full.png" alt="Modular Traders" className="h-8 w-auto object-contain" />
+                  <img src="/brand/logo-full.png" alt="Modular Traders" className="h-9 w-auto object-contain" />
                 </div>
 
                 {navLinks.map((link) => (

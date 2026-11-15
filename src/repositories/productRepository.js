@@ -3,7 +3,7 @@ import { initialProducts } from '@/data/products';
 import { supabase } from '@/lib/supabaseClient';
 import { apiClient } from '@/lib/apiClient';
 
-const STORAGE_KEY = 'modular_traders_products_v6';
+const STORAGE_KEY = 'modular_traders_products_v7';
 
 /**
  * Storage Helper for Local Storage persistence with initial fallback

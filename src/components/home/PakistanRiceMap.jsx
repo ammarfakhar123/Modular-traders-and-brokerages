@@ -58,8 +58,10 @@ export default function PakistanRiceMap({ activeBeltId, onSelectBelt }) {
             Pakistan Rice Basins
           </h4>
         </div>
-        <span className="text-[9px] xs:text-[10px] font-bold text-[#155437] bg-[#EAF5EF] px-2 xs:px-2.5 py-1 rounded-md border border-[#BDE3CF]">
-          Click Basin to Inspect
+        <span className="text-[9px] xs:text-[10px] font-bold text-[#155437] bg-[#EAF5EF] px-2.5 py-1 rounded-md border border-[#BDE3CF] transition-all">
+          {activeBeltId === 'punjab-basmati' && '📍 Punjab Basmati Active'}
+          {activeBeltId === 'sindh-irri' && '📍 Sindh IRRI Active'}
+          {activeBeltId === 'karachi-milling' && '⚡ Karachi Export Hub Active'}
         </span>
       </div>
 
@@ -67,25 +69,46 @@ export default function PakistanRiceMap({ activeBeltId, onSelectBelt }) {
       <div className="relative w-full h-[260px] xs:h-[290px] sm:h-[350px] my-auto flex items-center justify-center py-2">
         <svg
           viewBox="-2 78.21 964 803.57"
-          className="w-full h-full object-contain filter drop-shadow-sm"
+          className="w-full h-full object-contain filter drop-shadow-sm select-none"
         >
+          <defs>
+            {/* Soft Glow Filter for Active Beacons */}
+            <filter id="mapGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
+
           {provinces.map((prov) => {
             const isSelected = activeBeltId === prov.id;
+            const isMilling = activeBeltId === 'karachi-milling';
             let fillColor = '#0D3828';
             let strokeColor = '#FFFFFF';
             let strokeWidth = '1.8';
 
             if (prov.id === 'punjab-basmati') {
-              fillColor = isSelected ? '#CFA744' : '#155437';
               if (isSelected) {
+                fillColor = '#D97706'; // Vibrant Golden Amber
                 strokeColor = '#072B1F';
-                strokeWidth = '3';
+                strokeWidth = '3.5';
+              } else if (isMilling) {
+                fillColor = '#1F533E'; // Active supplier tint
+                strokeColor = '#D97706';
+                strokeWidth = '2';
+              } else {
+                fillColor = '#155437';
               }
             } else if (prov.id === 'sindh-irri') {
-              fillColor = isSelected ? '#1B6248' : '#0B3525';
               if (isSelected) {
-                strokeColor = '#CFA744';
-                strokeWidth = '3';
+                fillColor = '#059669'; // Radiant Vivid Emerald
+                strokeColor = '#FFFFFF';
+                strokeWidth = '3.5';
+              } else if (isMilling) {
+                fillColor = '#1A4D39'; // Active supplier tint
+                strokeColor = '#059669';
+                strokeWidth = '2';
+              } else {
+                fillColor = '#0B3525';
               }
             } else if (prov.id === 'PK-BA') {
               fillColor = '#07241A';
@@ -98,7 +121,7 @@ export default function PakistanRiceMap({ activeBeltId, onSelectBelt }) {
             return (
               <g
                 key={prov.id}
-                className={prov.isRiceBelt ? 'cursor-pointer transition-opacity hover:opacity-90' : ''}
+                className={prov.isRiceBelt ? 'cursor-pointer transition-opacity hover:opacity-95' : ''}
                 onClick={() => prov.isRiceBelt && onSelectBelt && onSelectBelt(prov.id)}
               >
                 <path
@@ -107,7 +130,7 @@ export default function PakistanRiceMap({ activeBeltId, onSelectBelt }) {
                   stroke={strokeColor}
                   strokeWidth={strokeWidth}
                   strokeLinejoin="round"
-                  className="transition-colors duration-200"
+                  className="transition-all duration-500 ease-out"
                 />
 
                 {/* Province Text Labels */}
@@ -119,7 +142,7 @@ export default function PakistanRiceMap({ activeBeltId, onSelectBelt }) {
                   fontSize={prov.fontSize}
                   fontFamily="'Plus Jakarta Sans', system-ui, sans-serif"
                   fontWeight="bold"
-                  className="pointer-events-none select-none tracking-tight"
+                  className="pointer-events-none select-none tracking-tight drop-shadow-sm"
                 >
                   {prov.name}
                 </text>
@@ -130,11 +153,11 @@ export default function PakistanRiceMap({ activeBeltId, onSelectBelt }) {
                     x={prov.labelPos.x}
                     y={prov.labelPos.y + 22}
                     textAnchor="middle"
-                    fill={isSelected ? (prov.id === 'punjab-basmati' ? '#072B1F' : '#EADBBD') : '#D5E5DC'}
+                    fill={isSelected ? (prov.id === 'punjab-basmati' ? '#072B1F' : '#FFFFFF') : '#D5E5DC'}
                     fontSize={14}
                     fontFamily="sans-serif"
                     fontWeight="bold"
-                    className="pointer-events-none"
+                    className="pointer-events-none transition-colors duration-300"
                   >
                     {prov.id === 'punjab-basmati' ? 'Basmati Bowl' : 'IRRI Delta'}
                   </text>
@@ -143,15 +166,115 @@ export default function PakistanRiceMap({ activeBeltId, onSelectBelt }) {
             );
           })}
 
-          {/* Karachi Trade Hub Node */}
+          {/* Dynamic Radar Wave & Epicenter Pin on Punjab (When Punjab Active) */}
+          {activeBeltId === 'punjab-basmati' && (
+            <g className="pointer-events-none">
+              <circle cx="620" cy="370" r="10" fill="#D97706" opacity="0.8">
+                <animate attributeName="r" from="8" to="38" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" from="0.9" to="0" dur="2s" repeatCount="indefinite" />
+              </circle>
+              <circle cx="620" cy="370" r="7" fill="#072B1F" stroke="#FFFFFF" strokeWidth="2.5" />
+              <circle cx="620" cy="370" r="3.5" fill="#FBBF24" />
+            </g>
+          )}
+
+          {/* Dynamic Radar Wave & Epicenter Pin on Sindh (When Sindh Active) */}
+          {activeBeltId === 'sindh-irri' && (
+            <g className="pointer-events-none">
+              <circle cx="410" cy="720" r="10" fill="#10B981" opacity="0.8">
+                <animate attributeName="r" from="8" to="38" dur="2s" repeatCount="indefinite" />
+                <animate attributeName="opacity" from="0.9" to="0" dur="2s" repeatCount="indefinite" />
+              </circle>
+              <circle cx="410" cy="720" r="7" fill="#072B1F" stroke="#FFFFFF" strokeWidth="2.5" />
+              <circle cx="410" cy="720" r="3.5" fill="#34D399" />
+            </g>
+          )}
+
+          {/* Active Milling & Aging Transit Route Flow Lines */}
+          {activeBeltId === 'karachi-milling' && (
+            <g className="pointer-events-none">
+              {/* Route 1: Punjab Basmati Bowl down to Karachi */}
+              <path
+                d="M620,370 Q510,610 330,820"
+                fill="none"
+                stroke="#D97706"
+                strokeWidth="3.5"
+                strokeDasharray="8,6"
+                filter="url(#mapGlow)"
+              >
+                <animate attributeName="stroke-dashoffset" from="56" to="0" dur="1.8s" repeatCount="indefinite" />
+              </path>
+
+              {/* Route 2: Sindh Indus Basin down to Karachi Port */}
+              <path
+                d="M410,720 Q370,770 330,820"
+                fill="none"
+                stroke="#10B981"
+                strokeWidth="3.5"
+                strokeDasharray="8,6"
+                filter="url(#mapGlow)"
+              >
+                <animate attributeName="stroke-dashoffset" from="56" to="0" dur="1.4s" repeatCount="indefinite" />
+              </path>
+
+              {/* Punjab & Sindh Departure Nodes */}
+              <circle cx="620" cy="370" r="5" fill="#D97706" stroke="#FFFFFF" strokeWidth="2" />
+              <circle cx="410" cy="720" r="5" fill="#10B981" stroke="#FFFFFF" strokeWidth="2" />
+            </g>
+          )}
+
+          {/* Karachi Trade & Milling Hub Node */}
           <g
-            className="cursor-pointer"
+            className="cursor-pointer transition-transform duration-300 hover:scale-105"
             onClick={() => onSelectBelt && onSelectBelt('karachi-milling')}
           >
-            <circle cx="330" cy="820" r="7" fill="#CFA744" stroke="#FFFFFF" strokeWidth="2" />
-            <rect x="255" y="834" width="150" height="24" rx="4" fill="#072B1F" stroke="#CFA744" strokeWidth="1" />
-            <text x="330" y="850" textAnchor="middle" fill="#FFFFFF" fontSize="12" fontWeight="bold" fontFamily="sans-serif">
-              Karachi Rice Desk
+            {/* Luminous Pulsing Radar Rings when Karachi Milling is Active */}
+            {activeBeltId === 'karachi-milling' && (
+              <>
+                <circle cx="330" cy="820" r="10" fill="#F59E0B" opacity="0.8">
+                  <animate attributeName="r" from="10" to="44" dur="2s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" from="0.95" to="0" dur="2s" repeatCount="indefinite" />
+                </circle>
+                <circle cx="330" cy="820" r="10" fill="#10B981" opacity="0.6">
+                  <animate attributeName="r" from="6" to="28" dur="1.6s" repeatCount="indefinite" />
+                  <animate attributeName="opacity" from="0.8" to="0" dur="1.6s" repeatCount="indefinite" />
+                </circle>
+              </>
+            )}
+
+            <circle
+              cx="330"
+              cy="820"
+              r={activeBeltId === 'karachi-milling' ? '9' : '7'}
+              fill={activeBeltId === 'karachi-milling' ? '#F59E0B' : '#CFA744'}
+              stroke="#FFFFFF"
+              strokeWidth="2.5"
+            />
+
+            <rect
+              x={activeBeltId === 'karachi-milling' ? '230' : '255'}
+              y="834"
+              width={activeBeltId === 'karachi-milling' ? '200' : '150'}
+              height="26"
+              rx="6"
+              fill={activeBeltId === 'karachi-milling' ? '#072B1F' : '#072B1F'}
+              stroke={activeBeltId === 'karachi-milling' ? '#F59E0B' : '#CFA744'}
+              strokeWidth={activeBeltId === 'karachi-milling' ? '2' : '1'}
+              className="transition-all duration-300"
+            />
+
+            <text
+              x="330"
+              y="851"
+              textAnchor="middle"
+              fill={activeBeltId === 'karachi-milling' ? '#FBBF24' : '#FFFFFF'}
+              fontSize="12"
+              fontWeight="bold"
+              fontFamily="sans-serif"
+            >
+              {activeBeltId === 'karachi-milling'
+                ? '★ Karachi Milling & Port Hub'
+                : 'Karachi Rice Desk'}
             </text>
           </g>
         </svg>

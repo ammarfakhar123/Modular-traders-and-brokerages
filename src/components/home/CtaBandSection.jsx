@@ -18,16 +18,17 @@ export default function CtaBandSection({ onOpenQuote }) {
             </h2>
 
             <p className="text-slate-300 text-xs sm:text-base font-normal leading-relaxed">
-              Connect with our team in Karachi to discuss 1121 Basmati, Super Kernel, IRRI-6, IRRI-9, PK-386, KS-282, and Parboiled Sella sourcing tailored to your commercial requirements.
+              Connect directly with our Karachi export trade desk today for live FOB &amp; CIF container rates, custom private-label packing, and verified crop specifications tailored to your target international market.
             </p>
 
             <div className="pt-1 sm:pt-2 flex flex-wrap items-center justify-center lg:justify-start gap-3 sm:gap-4 text-xs text-slate-300">
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-1.5 font-medium">
                 <MapPin className="w-4 h-4 text-[#CFA744]" /> DHA Phase 6, Karachi HQ
               </span>
               <span className="text-slate-500">&bull;</span>
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" /> Cultivating Trust
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#CFA744]/20 border border-[#CFA744]/60 text-[#FBBF24] font-extrabold text-xs shadow-xs tracking-wider">
+                <ShieldCheck className="w-4 h-4 text-[#FBBF24]" />
+                <span>Cultivating Trust</span>
               </span>
             </div>
           </div>
