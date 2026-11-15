@@ -23,14 +23,10 @@ export default function HeroCinematic({ onOpenQuote }) {
 
         {/* Left Column Text Content (Clean, Balanced, Uncluttered) */}
         <div className="relative z-10 max-w-2xl p-6 sm:p-10 lg:p-11 my-auto space-y-4">
-          <div className="flex flex-wrap items-center gap-2.5">
+          <div className="flex items-center gap-2.5">
             <span className="w-6 h-[2px] bg-[#B8860B]" />
             <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] text-[#072B1F]">
               Modular Traders and Brokerage &bull; Karachi, Pakistan
-            </span>
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#FAF0D9] border border-[#CFA744]/60 text-[#8B6508] font-bold text-xs shadow-xs tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 text-[#CFA744]" />
-              <span>Cultivating Trust</span>
             </span>
           </div>
 
@@ -134,16 +130,10 @@ export default function HeroCinematic({ onOpenQuote }) {
 
         {/* Mobile Content Column */}
         <div className="relative z-10 p-5 my-auto space-y-3">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2">
-              <span className="w-5 h-[2px] bg-[#B8860B]" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#072B1F]">
-                Modular Traders &bull; Karachi HQ
-              </span>
-            </div>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#FAF0D9] border border-[#CFA744]/60 text-[#8B6508] font-bold text-[10px] shadow-2xs">
-              <Sparkles className="w-2.5 h-2.5 text-[#CFA744]" />
-              <span>Cultivating Trust</span>
+          <div className="flex items-center gap-2">
+            <span className="w-5 h-[2px] bg-[#B8860B]" />
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#072B1F]">
+              Modular Traders &bull; Karachi HQ
             </span>
           </div>
 
