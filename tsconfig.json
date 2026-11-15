@@ -8,8 +8,7 @@
     "skipLibCheck": true,
     "noEmit": true,
     "allowJs": true,
-    "resolveJsonModule": true,
-    "types": ["node"]
+    "resolveJsonModule": true
   },
   "include": ["api/**/*"]
 }

@@ -76,15 +76,15 @@ export default function Navbar({ onOpenQuote }) {
             {/* Right: Signature Pill Button */}
             <div className="hidden sm:flex items-center gap-3">
               {/* Signature Dark Green Pill with Circular Gold Arrow Icon */}
-              <button
-                onClick={onOpenQuote}
+              <Link
+                to="/contact"
                 className="group bg-[#072B1F] hover:bg-[#0D3E2D] text-white pl-4 pr-1.5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-2.5 transition shadow-sm active:scale-95 cursor-pointer"
               >
                 <span>Request a Quote</span>
                 <span className="w-6 h-6 rounded-full bg-[#CFA744] text-[#072B1F] flex items-center justify-center transition-transform group-hover:rotate-45 font-bold">
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </span>
-              </button>
+              </Link>
             </div>
 
             {/* Mobile Toggle Button */}
@@ -136,16 +136,14 @@ export default function Navbar({ onOpenQuote }) {
                 ))}
 
                 <div className="pt-2 flex flex-col gap-2.5">
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      onOpenQuote();
-                    }}
+                  <Link
+                    to="/contact"
+                    onClick={() => setMobileMenuOpen(false)}
                     className="w-full bg-[#072B1F] hover:bg-[#155437] text-white font-bold py-3.5 px-4 rounded-xl text-xs uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm transition active:scale-98"
                   >
                     <span>Request a Quote</span>
                     <ArrowUpRight className="w-4 h-4 text-[#CFA744]" />
-                  </button>
+                  </Link>
 
                   <a
                     href={`https://wa.me/${siteConfig.contact.phones.whatsappClean}`}

@@ -95,8 +95,8 @@ app.use(
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
-// API Health & Status Endpoint
-app.get('/api/health', (_req: Request, res: Response) => {
+// API Health & Status Endpoint (supporting both /api/health and /health)
+const handleHealth = (_req: Request, res: Response) => {
   res.json({
     status: 'ok',
     service: 'Modular Traders and Brokerage Serverless API',
@@ -104,9 +104,11 @@ app.get('/api/health', (_req: Request, res: Response) => {
     version: '2.0.0',
     env: process.env.NODE_ENV || 'production',
   });
-});
+};
+app.get('/api/health', handleHealth);
+app.get('/health', handleHealth);
 
-app.get('/api', (_req: Request, res: Response) => {
+const handleRootApi = (_req: Request, res: Response) => {
   res.json({
     name: 'Modular Traders & Brokerage B2B Commodity API',
     endpoints: {
@@ -117,13 +119,22 @@ app.get('/api', (_req: Request, res: Response) => {
       settings: '/api/settings',
     },
   });
-});
+};
+app.get('/api', handleRootApi);
+app.get('/', handleRootApi);
 
-// Mount Routes
+// Mount Routes (supporting both /api/* and stripped /* on Vercel)
 app.use('/api/auth', authRouter);
+app.use('/auth', authRouter);
+
 app.use('/api/products', productsRouter);
+app.use('/products', productsRouter);
+
 app.use('/api/enquiries', enquiriesRouter);
+app.use('/enquiries', enquiriesRouter);
+
 app.use('/api/settings', settingsRouter);
+app.use('/settings', settingsRouter);
 
 // Global Error Handler
 app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
