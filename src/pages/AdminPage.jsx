@@ -38,6 +38,7 @@ import {
   Bell,
   Loader2,
   Download,
+  RefreshCw,
 } from 'lucide-react';
 import { productRepository, useProducts } from '@/repositories/productRepository';
 import { inquiryRepository, useInquiries } from '@/repositories/inquiryRepository';
@@ -102,6 +103,23 @@ export default function AdminPage({ defaultTab }) {
   const [inquiryStatusFilter, setInquiryStatusFilter] = useState('All');
   const [selectedInquiry, setSelectedInquiry] = useState(null);
   const [selectedInquiryIds, setSelectedInquiryIds] = useState([]);
+  const [isSyncingSupabase, setIsSyncingSupabase] = useState(false);
+  const [syncMessage, setSyncMessage] = useState('');
+
+  const handleSyncSupabase = async () => {
+    setIsSyncingSupabase(true);
+    setSyncMessage('');
+    try {
+      await refreshInquiries();
+      setSyncMessage('Synced live from Supabase!');
+      setTimeout(() => setSyncMessage(''), 4000);
+    } catch (err) {
+      setSyncMessage(`Sync notice: ${err.message}`);
+      setTimeout(() => setSyncMessage(''), 5000);
+    } finally {
+      setIsSyncingSupabase(false);
+    }
+  };
 
   // Admin Email & Inquiry Notification Settings
   const { settings, refresh: refreshSettings } = useAdminSettings();
@@ -939,14 +957,33 @@ export default function AdminPage({ defaultTab }) {
 
               {/* Action Buttons: Excel Download + Bulk Delete */}
               <div className="flex flex-wrap items-center justify-between lg:justify-end gap-2.5">
-                <span className="text-xs font-mono text-slate-500 mr-1">
-                  Total: <strong className="text-[#072B1F]">{inquiries.length}</strong>
-                  {selectedInquiryIds.length > 0 && (
-                    <span className="ml-2 text-[#155437] font-bold">
-                      ({selectedInquiryIds.length} selected)
+                <div className="flex items-center gap-2 mr-1">
+                  <span className="text-xs font-mono text-slate-500">
+                    Total: <strong className="text-[#072B1F]">{inquiries.length}</strong>
+                    {selectedInquiryIds.length > 0 && (
+                      <span className="ml-2 text-[#155437] font-bold">
+                        ({selectedInquiryIds.length} selected)
+                      </span>
+                    )}
+                  </span>
+
+                  <button
+                    type="button"
+                    onClick={handleSyncSupabase}
+                    disabled={isSyncingSupabase}
+                    className="bg-emerald-50 hover:bg-emerald-100 text-[#072B1F] border border-emerald-200 px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-1.5 transition cursor-pointer"
+                    title="Sync inquiries live from Supabase"
+                  >
+                    <RefreshCw className={`w-3.5 h-3.5 text-[#155437] ${isSyncingSupabase ? 'animate-spin' : ''}`} />
+                    <span>{isSyncingSupabase ? 'Syncing...' : 'Sync Supabase'}</span>
+                  </button>
+
+                  {syncMessage && (
+                    <span className="text-[11px] font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200 animate-fade-in">
+                      {syncMessage}
                     </span>
                   )}
-                </span>
+                </div>
 
                 {selectedInquiryIds.length > 0 && (
                   <button

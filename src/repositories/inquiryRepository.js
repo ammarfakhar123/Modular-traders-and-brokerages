@@ -75,54 +75,90 @@ export const inquiryRepository = {
    * Fetch all inquiries sorted by most recent
    */
   async getAll() {
-    // 1. Direct Supabase PostgREST Fetch (Most reliable, zero middleware)
+    const key = 'sb_publishable_xbiw1aaBHyGTh8vpTiHxSw_JHfLVHk8';
+    const supabaseUrl = 'https://ptjwbwxwemwmhbogwaeh.supabase.co';
+    let diagnosticInfo = { timestamp: new Date().toISOString(), attempts: [] };
+
+    // Strategy 1: Direct Supabase PostgREST with apikey only
     try {
-      const restRes = await fetch(
-        'https://ptjwbwxwemwmhbogwaeh.supabase.co/rest/v1/inquiries?select=*',
-        {
-          headers: {
-            apikey: 'sb_publishable_xbiw1aaBHyGTh8vpTiHxSw_JHfLVHk8',
-          },
-        }
-      );
+      const restRes = await fetch(`${supabaseUrl}/rest/v1/inquiries?select=*`, {
+        cache: 'no-store',
+        headers: {
+          apikey: key,
+        },
+      });
+      diagnosticInfo.attempts.push({ strat: 'PostgREST_ApiKeyOnly', status: restRes.status, ok: restRes.ok });
       if (restRes.ok) {
         const rows = await restRes.json();
-        if (Array.isArray(rows) && rows.length > 0) {
+        if (Array.isArray(rows)) {
           const normalized = rows.map(normalizeInquiryRow).filter(Boolean);
           normalized.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
           saveStoredInquiries(normalized);
+          if (typeof window !== 'undefined') window.__modular_diagnostic = diagnosticInfo;
           return normalized;
         }
       }
-    } catch (restErr) {
-      console.warn('[inquiryRepository] Direct Supabase REST fetch notice:', restErr);
+    } catch (err) {
+      diagnosticInfo.attempts.push({ strat: 'PostgREST_ApiKeyOnly', error: err.message });
     }
 
-    // 2. Try serverless backend API
+    // Strategy 2: Direct Supabase PostgREST Fetch with apikey + Bearer token
+    try {
+      const restRes = await fetch(`${supabaseUrl}/rest/v1/inquiries?select=*`, {
+        cache: 'no-store',
+        headers: {
+          apikey: key,
+          Authorization: `Bearer ${key}`,
+        },
+      });
+      diagnosticInfo.attempts.push({ strat: 'PostgREST_Bearer', status: restRes.status, ok: restRes.ok });
+      if (restRes.ok) {
+        const rows = await restRes.json();
+        if (Array.isArray(rows)) {
+          const normalized = rows.map(normalizeInquiryRow).filter(Boolean);
+          normalized.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
+          saveStoredInquiries(normalized);
+          if (typeof window !== 'undefined') window.__modular_diagnostic = diagnosticInfo;
+          return normalized;
+        }
+      }
+    } catch (err) {
+      diagnosticInfo.attempts.push({ strat: 'PostgREST_Bearer', error: err.message });
+    }
+
+    // Strategy 3: Serverless backend API (/api/enquiries)
     try {
       const res = await apiClient.enquiries.getAll();
+      diagnosticInfo.attempts.push({ strat: 'Vercel_API', count: res?.data?.length || 0 });
       if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
         saveStoredInquiries(res.data);
+        if (typeof window !== 'undefined') window.__modular_diagnostic = diagnosticInfo;
         return res.data;
       }
     } catch (apiErr) {
-      console.warn('[inquiryRepository] Server API fetch notice:', apiErr.message);
+      diagnosticInfo.attempts.push({ strat: 'Vercel_API', error: apiErr.message });
     }
 
-    // 3. Supabase SDK Client fallback
+    // Strategy 4: Supabase SDK Client fallback
     try {
       const { data: dbData, error } = await supabase.from('inquiries').select('*');
-      if (!error && Array.isArray(dbData) && dbData.length > 0) {
+      diagnosticInfo.attempts.push({ strat: 'Supabase_SDK', count: dbData?.length || 0, error: error?.message });
+      if (!error && Array.isArray(dbData)) {
         const normalized = dbData.map(normalizeInquiryRow).filter(Boolean);
         normalized.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
         saveStoredInquiries(normalized);
+        if (typeof window !== 'undefined') window.__modular_diagnostic = diagnosticInfo;
         return normalized;
       }
     } catch (dbErr) {
-      console.warn('[inquiryRepository] Supabase direct read notice:', dbErr);
+      diagnosticInfo.attempts.push({ strat: 'Supabase_SDK', error: dbErr.message });
     }
 
-    // 4. Browser storage fallback
+    if (typeof window !== 'undefined') {
+      window.__modular_diagnostic = diagnosticInfo;
+    }
+
+    // Strategy 5: Browser storage fallback
     const list = getStoredInquiries();
     return [...list].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   },
