@@ -78,7 +78,7 @@ export const inquiryRepository = {
     // 1. Try serverless backend API
     try {
       const res = await apiClient.enquiries.getAll();
-      if (res?.data && Array.isArray(res.data)) {
+      if (res?.data && Array.isArray(res.data) && res.data.length > 0) {
         saveStoredInquiries(res.data);
         return res.data;
       }
@@ -90,11 +90,11 @@ export const inquiryRepository = {
     try {
       const { data: dbData, error } = await supabase
         .from('inquiries')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .select('*');
 
       if (!error && Array.isArray(dbData) && dbData.length > 0) {
         const normalized = dbData.map(normalizeInquiryRow).filter(Boolean);
+        normalized.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
         saveStoredInquiries(normalized);
         return normalized;
       }

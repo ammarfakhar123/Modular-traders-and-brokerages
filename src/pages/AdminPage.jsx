@@ -417,12 +417,16 @@ export default function AdminPage({ defaultTab }) {
 
   // Filter Inquiries
   const filteredInquiries = inquiries.filter((inq) => {
+    if (!inq) return false;
     const matchesStatus = inquiryStatusFilter === 'All' || inq.status === inquiryStatusFilter;
+    const q = (inquirySearch || '').toLowerCase();
     const matchesSearch =
-      inq.fullName?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
-      inq.companyName?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
-      inq.productName?.toLowerCase().includes(inquirySearch.toLowerCase()) ||
-      inq.destinationPort?.toLowerCase().includes(inquirySearch.toLowerCase());
+      !q ||
+      (inq.fullName || '').toLowerCase().includes(q) ||
+      (inq.companyName || '').toLowerCase().includes(q) ||
+      (inq.productName || '').toLowerCase().includes(q) ||
+      (inq.destinationPort || '').toLowerCase().includes(q) ||
+      (inq.id || '').toLowerCase().includes(q);
     return matchesStatus && matchesSearch;
   });
 
