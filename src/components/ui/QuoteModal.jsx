@@ -47,6 +47,7 @@ export default function QuoteModal({ isOpen, onClose, preselectedProduct = null 
         volumeMT: formData.quantityMT,
         incoterms: formData.tradeTerm,
         packaging: formData.packaging,
+        inquiryType: 'RFQ',
         notes: formData.notes,
       });
 

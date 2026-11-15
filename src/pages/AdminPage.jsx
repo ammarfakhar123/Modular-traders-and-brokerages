@@ -181,7 +181,7 @@ export default function AdminPage({ defaultTab }) {
     if (res.ok) {
       setSettingsFeedback({
         type: 'success',
-        text: `Test email dispatched to ${adminReceivingEmail.trim()}! If this is your first time using this email, check your inbox/spam for the one-time FormSubmit activation link.`,
+        text: `Test email dispatched to ${adminReceivingEmail.trim()} via Resend! Please check your business inbox (and spam folder) for the verification message.`,
       });
     } else {
       setSettingsFeedback({

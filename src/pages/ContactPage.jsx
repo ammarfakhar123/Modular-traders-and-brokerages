@@ -61,11 +61,12 @@ export default function ContactPage() {
         phone: formData.phone,
         country: formData.country,
         destinationPort: formData.country,
-        productName: `${formData.productOfInterest} (${formData.inquiryType})`,
+        productName: formData.productOfInterest || 'Pakistani Rice Export',
         volumeMT: formData.orderQuantity || 'Not Specified',
-        incoterms: 'Standard',
-        packaging: 'Standard Export',
-        notes: `Inquiry Type: ${formData.inquiryType}\nProduct: ${formData.productOfInterest}\nEst. Quantity: ${formData.orderQuantity || 'N/A'}\nMessage: ${formData.message}`,
+        incoterms: 'FOB Karachi / CIF',
+        packaging: 'Standard Export 50kg Bags',
+        inquiryType: 'Contact',
+        notes: `Inquiry Type: ${formData.inquiryType || 'General Trade'}\nProduct: ${formData.productOfInterest}\nEst. Quantity: ${formData.orderQuantity || 'N/A'}\n\nClient Message:\n${formData.message}`,
       });
 
       setSubmitted(true);

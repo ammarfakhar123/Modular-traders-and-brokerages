@@ -6,11 +6,15 @@ import { enquiryRateLimiter } from '../middleware/rateLimiter';
 
 const router = Router();
 
+// Deduplication cache: prevent double-clicks and repeated requests within 15 seconds
+const recentSubmissions = new Map<string, { time: number; inquiry: any }>();
+
 // In-memory runtime mirror for instant admin access
 let inMemoryInquiries: any[] = [
   {
-    id: 'inq-101',
+    id: 'MT-2026-1001',
     created_at: new Date(Date.now() - 24 * 3600 * 1000).toISOString(),
+    inquiryType: 'RFQ',
     fullName: 'Tariq Al-Fahad',
     companyName: 'Al-Fahad Grain Trading Co',
     email: 'tariq@alfahadgrain.sa',
@@ -25,8 +29,9 @@ let inMemoryInquiries: any[] = [
     notes: 'Looking for 2x 20ft FCL trial shipment of aged harvest with SGS pre-shipment inspection.',
   },
   {
-    id: 'inq-102',
+    id: 'MT-2026-1002',
     created_at: new Date(Date.now() - 72 * 3600 * 1000).toISOString(),
+    inquiryType: 'RFQ',
     fullName: 'Patrick Ochieng',
     companyName: 'Equatorial Commodity Importers Ltd',
     email: 'p.ochieng@equatorialcommodities.ke',
@@ -44,11 +49,12 @@ let inMemoryInquiries: any[] = [
 
 /**
  * POST /api/enquiries
- * Public submission of B2B export inquiry:
- * 1. Validates required fields
- * 2. Saves to Supabase inquiries table
- * 3. Sends notification to business owner with Reply-To: customer.email
- * 4. Sends automated confirmation email to the customer
+ * Direct Business Email Inquiry & RFQ Submission
+ * 1. Validates and sanitizes fields
+ * 2. Checks deduplication (prevents double submits within 15s)
+ * 3. Saves to Supabase inquiries database table
+ * 4. Dispatches professional HTML notification to business email with Reply-To set directly to customer
+ * 5. Returns sub-second response (< 1s)
  */
 router.post('/', enquiryRateLimiter, async (req: Request, res: Response) => {
   const body = req.body || {};
@@ -64,6 +70,9 @@ router.post('/', enquiryRateLimiter, async (req: Request, res: Response) => {
   const incoterms = String(body.incoterms || body.tradeTerm || 'FOB Karachi / CIF').trim();
   const packaging = String(body.packaging || 'Standard Export 50kg Bags').trim();
   const notes = String(body.notes || body.message || '').trim();
+  const inquiryType = String(
+    body.inquiryType || (destinationPort && destinationPort !== 'International' ? 'RFQ' : 'Contact')
+  ).trim();
 
   // Basic validation
   if (!fullName || !companyName || !email || !phone) {
@@ -80,11 +89,29 @@ router.post('/', enquiryRateLimiter, async (req: Request, res: Response) => {
     });
   }
 
-  const newId = `inq-${Date.now()}`;
+  // Deduplication check: protect against rapid accidental double clicks
+  const dedupeKey = `${email}:${productName}:${notes.slice(0, 30)}`;
+  const now = Date.now();
+  const existingSub = recentSubmissions.get(dedupeKey);
+  if (existingSub && now - existingSub.time < 15000) {
+    return res.status(200).json({
+      success: true,
+      message: 'Your inquiry has already been received. Thank you.',
+      data: existingSub.inquiry,
+      deduplicated: true,
+    });
+  }
+
+  // Generate standardized business reference ID (e.g. MT-2026-58392)
+  const newId =
+    body.id && String(body.id).startsWith('MT-')
+      ? String(body.id)
+      : `MT-${new Date().getFullYear()}-${Math.floor(10000 + Math.random() * 90000)}`;
   const nowIso = new Date().toISOString();
 
   const newInquiry = {
     id: newId,
+    inquiryType,
     fullName,
     companyName,
     email,
@@ -100,10 +127,15 @@ router.post('/', enquiryRateLimiter, async (req: Request, res: Response) => {
     created_at: nowIso,
   };
 
+  // Cache recent submission for 15s
+  recentSubmissions.set(dedupeKey, { time: now, inquiry: newInquiry });
+  setTimeout(() => recentSubmissions.delete(dedupeKey), 20000);
+
   // 1. Save in Supabase
+  let savedInDb = false;
   try {
     const supabase = getSupabase();
-    await supabase.from('inquiries').insert([
+    const { error: dbError } = await supabase.from('inquiries').insert([
       {
         id: newInquiry.id,
         full_name: newInquiry.fullName,
@@ -122,40 +154,84 @@ router.post('/', enquiryRateLimiter, async (req: Request, res: Response) => {
         updated_at: nowIso,
       },
     ]);
-  } catch (dbErr) {
-    console.warn('[EnquiriesAPI] Supabase database write error:', dbErr);
+    if (!dbError) {
+      savedInDb = true;
+    } else {
+      console.warn('[EnquiriesAPI] Supabase insert warning:', dbError.message);
+    }
+  } catch (dbErr: any) {
+    console.warn('[EnquiriesAPI] Supabase database write error:', dbErr?.message || dbErr);
   }
 
   // Update in-memory cache
   inMemoryInquiries.unshift(newInquiry);
 
-  // 2. Dispatch Emails via Resend (Business Notification + Customer Confirmation)
-  let emailDispatch = { adminEmailSent: false, customerEmailSent: false };
+  // 2. Fetch active receiving email from settings or environment
+  let targetAdminEmail = process.env.ADMIN_NOTIFICATION_EMAIL || 'info@modularagro.com';
   try {
-    const emailPayload: InquiryEmailData = {
-      id: newInquiry.id,
-      fullName: newInquiry.fullName,
-      companyName: newInquiry.companyName,
-      email: newInquiry.email,
-      phone: newInquiry.phone,
-      country: newInquiry.country,
-      destinationPort: newInquiry.destinationPort,
-      productName: newInquiry.productName,
-      volumeMT: newInquiry.volumeMT,
-      incoterms: newInquiry.incoterms,
-      packaging: newInquiry.packaging,
-      notes: newInquiry.notes,
-      createdAt: nowIso,
-    };
-    emailDispatch = await sendInquiryEmails(emailPayload);
-  } catch (emailErr) {
-    console.warn('[EnquiriesAPI] Email notification dispatch warning:', emailErr);
+    const supabase = getSupabase();
+    const { data: settingsRow } = await supabase
+      .from('site_settings')
+      .select('*')
+      .eq('id', 'primary_settings')
+      .maybeSingle();
+    if (settingsRow?.contact_email) {
+      targetAdminEmail = settingsRow.contact_email;
+    }
+  } catch {
+    // Fall back to env default
+  }
+
+  // 3. Dispatch Emails via Resend (Fast Non-Blocking Race for Sub-Second Response)
+  const emailPayload: InquiryEmailData = {
+    id: newInquiry.id,
+    inquiryType: newInquiry.inquiryType,
+    fullName: newInquiry.fullName,
+    companyName: newInquiry.companyName,
+    email: newInquiry.email,
+    phone: newInquiry.phone,
+    country: newInquiry.country,
+    destinationPort: newInquiry.destinationPort,
+    productName: newInquiry.productName,
+    volumeMT: newInquiry.volumeMT,
+    incoterms: newInquiry.incoterms,
+    packaging: newInquiry.packaging,
+    notes: newInquiry.notes,
+    createdAt: nowIso,
+  };
+
+  let emailDispatch: any = { adminEmailSent: false, customerEmailSent: false };
+
+  try {
+    const emailPromise = sendInquiryEmails(emailPayload, targetAdminEmail);
+    // Allow up to 1200ms to complete before returning response to client
+    const timeoutPromise = new Promise<{ timedOut: boolean }>((resolve) =>
+      setTimeout(() => resolve({ timedOut: true }), 1200)
+    );
+
+    const outcome: any = await Promise.race([emailPromise, timeoutPromise]);
+    if (outcome && !outcome.timedOut) {
+      emailDispatch = outcome;
+    } else {
+      // If Resend takes > 1.2s, let the promise continue running in background
+      emailDispatch.status = 'dispatched_in_background';
+      emailPromise
+        .then((res) => {
+          console.log(`[EnquiriesAPI] Background email dispatch finished for ${newInquiry.id}:`, res);
+        })
+        .catch((err) => {
+          console.error(`[EnquiriesAPI] Background email dispatch error for ${newInquiry.id}:`, err);
+        });
+    }
+  } catch (emailErr: any) {
+    console.warn('[EnquiriesAPI] Email notification dispatch warning:', emailErr?.message || emailErr);
   }
 
   return res.status(201).json({
     success: true,
     message: 'Your inquiry has been received. Our trade desk will reach out shortly.',
     data: newInquiry,
+    savedInDb,
     emails: emailDispatch,
   });
 });

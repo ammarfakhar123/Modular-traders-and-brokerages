@@ -26,7 +26,7 @@ async function request(endpoint, options = {}) {
   };
 
   const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
-  const timeoutId = controller ? setTimeout(() => controller.abort(), 2500) : null;
+  const timeoutId = controller ? setTimeout(() => controller.abort(), 10000) : null;
 
   try {
     const res = await fetch(`${API_BASE}${endpoint}`, {
