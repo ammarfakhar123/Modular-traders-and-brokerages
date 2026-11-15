@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import nodemailer from 'nodemailer';
 
 const SUPABASE_URL =
   process.env.SUPABASE_URL ||
@@ -26,6 +27,30 @@ const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
 const BREVO_SENDER_EMAIL =
   process.env.BREVO_SENDER_EMAIL || process.env.ADMIN_NOTIFICATION_EMAIL || 'info@modularagro.com';
 const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || 'Modular Traders Website';
+
+// Direct Business SMTP Configuration (e.g. Spacemail / Custom Private Email)
+const SMTP_HOST = process.env.SMTP_HOST || process.env.MAIL_HOST || 'mail.spacemail.com';
+const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10);
+const SMTP_USER = process.env.SMTP_USER || process.env.ADMIN_NOTIFICATION_EMAIL || 'info@modularagro.com';
+const SMTP_PASS = process.env.SMTP_PASS || process.env.SMTP_PASSWORD || process.env.MAIL_PASSWORD || '';
+const SMTP_SECURE = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : SMTP_PORT === 465;
+
+function getSmtpTransporter() {
+  if (!SMTP_PASS) return null;
+  return nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_SECURE,
+    auth: {
+      user: SMTP_USER,
+      pass: SMTP_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+}
+
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
 const RESEND_FROM_EMAIL =
   process.env.RESEND_FROM_EMAIL || 'Modular Traders Website <website@modularagro.com>';
@@ -66,7 +91,31 @@ export default async function handler(req, res) {
       </div>
     `;
 
-    // Try Brevo
+    let lastError = null;
+
+    // 1. Try Direct SMTP if configured
+    const smtpTransporter = getSmtpTransporter();
+    if (smtpTransporter) {
+      try {
+        await smtpTransporter.sendMail({
+          from: `"Modular Traders System" <${SMTP_USER}>`,
+          to: targetEmail,
+          replyTo: targetEmail,
+          subject: testSubject,
+          html: testHtml,
+        });
+        return res.status(200).json({
+          success: true,
+          provider: 'SMTP (Spacemail)',
+          message: `Test email sent to ${targetEmail} via Direct SMTP.`,
+        });
+      } catch (err) {
+        lastError = `SMTP Error: ${err.message}`;
+        console.warn('SMTP test email error:', err.message);
+      }
+    }
+
+    // 2. Try Brevo
     if (BREVO_API_KEY) {
       try {
         const brevoRes = await fetch('https://api.brevo.com/v3/smtp/email', {
@@ -85,19 +134,24 @@ export default async function handler(req, res) {
           }),
         });
 
+        const brevoData = await brevoRes.json().catch(() => ({}));
         if (brevoRes.ok) {
           return res.status(200).json({
             success: true,
             provider: 'Brevo',
             message: `Test email sent to ${targetEmail} via Brevo.`,
           });
+        } else {
+          lastError = brevoData?.message || `Brevo HTTP ${brevoRes.status}`;
+          console.warn('Brevo test email error:', lastError);
         }
       } catch (err) {
+        lastError = `Brevo Exception: ${err.message}`;
         console.warn('Brevo test email error:', err.message);
       }
     }
 
-    // Try Resend Fallback
+    // 3. Try Resend Fallback
     if (RESEND_API_KEY) {
       try {
         const resendRes = await fetch('https://api.resend.com/emails', {
@@ -113,22 +167,25 @@ export default async function handler(req, res) {
             html: testHtml,
           }),
         });
+        const resendData = await resendRes.json().catch(() => ({}));
         if (resendRes.ok) {
           return res.status(200).json({
             success: true,
             provider: 'Resend',
             message: `Test email sent to ${targetEmail} via Resend.`,
           });
+        } else {
+          lastError = resendData?.message || `Resend HTTP ${resendRes.status}`;
         }
       } catch (err) {
+        lastError = `Resend Exception: ${err.message}`;
         console.warn('Resend test email error:', err.message);
       }
     }
 
-    return res.status(200).json({
-      success: true,
-      message: `Test processed. Please ensure BREVO_API_KEY is configured in Vercel environment variables.`,
-      targetEmail,
+    return res.status(400).json({
+      success: false,
+      error: lastError || 'No email service responded successfully. Check Brevo Authorised IPs or configure SMTP.',
     });
   }
 

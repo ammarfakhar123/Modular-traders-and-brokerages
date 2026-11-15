@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import nodemailer from 'nodemailer';
 
 // Supabase Configuration
 const SUPABASE_URL =
@@ -28,6 +29,29 @@ const BREVO_API_KEY = process.env.BREVO_API_KEY || '';
 const BREVO_SENDER_EMAIL =
   process.env.BREVO_SENDER_EMAIL || process.env.ADMIN_NOTIFICATION_EMAIL || 'info@modularagro.com';
 const BREVO_SENDER_NAME = process.env.BREVO_SENDER_NAME || 'Modular Traders Website';
+
+// Direct Business SMTP Configuration (e.g. Spacemail / Custom Private Email)
+const SMTP_HOST = process.env.SMTP_HOST || process.env.MAIL_HOST || 'mail.spacemail.com';
+const SMTP_PORT = parseInt(process.env.SMTP_PORT || '465', 10);
+const SMTP_USER = process.env.SMTP_USER || process.env.ADMIN_NOTIFICATION_EMAIL || 'info@modularagro.com';
+const SMTP_PASS = process.env.SMTP_PASS || process.env.SMTP_PASSWORD || process.env.MAIL_PASSWORD || '';
+const SMTP_SECURE = process.env.SMTP_SECURE ? process.env.SMTP_SECURE === 'true' : SMTP_PORT === 465;
+
+function getSmtpTransporter() {
+  if (!SMTP_PASS) return null;
+  return nodemailer.createTransport({
+    host: SMTP_HOST,
+    port: SMTP_PORT,
+    secure: SMTP_SECURE,
+    auth: {
+      user: SMTP_USER,
+      pass: SMTP_PASS,
+    },
+    tls: {
+      rejectUnauthorized: false,
+    },
+  });
+}
 
 // Resend Fallback Configuration
 const RESEND_API_KEY = process.env.RESEND_API_KEY || '';
@@ -492,14 +516,46 @@ export default async function handler(req, res) {
       }
     } catch {}
 
-    // Dispatch Emails via Brevo (with Resend fallback)
-    const emailResult = { brevoSent: false, resendSent: false, errors: [] };
+    // Dispatch Emails via SMTP, Brevo, or Resend
+    const emailResult = { smtpSent: false, brevoSent: false, resendSent: false, errors: [] };
     const adminSubject = `[RFQ New Inquiry] ${newInquiry.productName} - ${newInquiry.companyName || newInquiry.fullName} (${newInquiry.country})`;
     const adminHtml = buildAdminNotificationHtml(newInquiry);
     const customerSubject = `Modular Traders & Brokerage: Confirmation of Rice Export Inquiry [${newInquiry.id}]`;
     const customerHtml = buildCustomerConfirmationHtml(newInquiry);
 
-    if (BREVO_API_KEY) {
+    // 1. Direct Business SMTP (Spacemail / Custom Private Email)
+    const smtpTransporter = getSmtpTransporter();
+    if (smtpTransporter) {
+      try {
+        await smtpTransporter.sendMail({
+          from: `"Modular Traders Website" <${SMTP_USER}>`,
+          to: targetAdminEmail,
+          replyTo: `"${newInquiry.fullName}" <${newInquiry.email}>`,
+          subject: adminSubject,
+          html: adminHtml,
+        });
+        emailResult.smtpSent = true;
+
+        try {
+          await smtpTransporter.sendMail({
+            from: `"Modular Traders & Brokerage" <${SMTP_USER}>`,
+            to: newInquiry.email,
+            replyTo: targetAdminEmail,
+            subject: customerSubject,
+            html: customerHtml,
+          });
+          emailResult.customerSent = true;
+        } catch (custErr) {
+          console.warn('[Enquiries] SMTP customer confirmation notice:', custErr.message);
+        }
+      } catch (smtpErr) {
+        console.warn('[Enquiries] SMTP admin email failed:', smtpErr.message);
+        emailResult.errors.push(`SMTP: ${smtpErr.message}`);
+      }
+    }
+
+    // 2. Brevo (Sendinblue) REST API v3
+    if (!emailResult.smtpSent && BREVO_API_KEY) {
       try {
         await sendViaBrevo({
           toEmail: targetAdminEmail,
@@ -529,12 +585,12 @@ export default async function handler(req, res) {
         console.warn('[Enquiries] Brevo admin email failed:', brevoErr.message);
         emailResult.errors.push(`Brevo: ${brevoErr.message}`);
       }
-    } else {
+    } else if (!emailResult.smtpSent && !BREVO_API_KEY) {
       emailResult.errors.push('BREVO_API_KEY not configured in Vercel environment variables');
     }
 
-    // If Brevo failed or not configured, try Resend
-    if (!emailResult.brevoSent && RESEND_API_KEY) {
+    // 3. Resend Fallback
+    if (!emailResult.smtpSent && !emailResult.brevoSent && RESEND_API_KEY) {
       try {
         await sendViaResend({
           toEmail: targetAdminEmail,
