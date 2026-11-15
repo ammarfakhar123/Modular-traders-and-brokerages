@@ -320,23 +320,30 @@ export default async function handler(req, res) {
 
   // 1. GET: Fetch inquiries
   if (req.method === 'GET') {
+    let supabaseError = null;
     try {
-      const { data, error } = await supabase
-        .from('inquiries')
-        .select('*')
-        .order('created_at', { ascending: false });
+      const { data, error } = await supabase.from('inquiries').select('*');
 
       if (!error && Array.isArray(data)) {
         const normalized = data.map(normalizeFromDb);
+        normalized.sort((a, b) => new Date(b.created_at || 0) - new Date(a.created_at || 0));
         return res.status(200).json({ success: true, count: normalized.length, data: normalized });
       }
+      if (error) {
+        supabaseError = error;
+        console.warn('[Enquiries] Supabase fetch error:', error.message);
+      }
     } catch (err) {
-      console.warn('[Enquiries] Supabase fetch warning:', err.message);
+      supabaseError = err;
+      console.warn('[Enquiries] Supabase fetch exception:', err.message);
     }
 
-    return res
-      .status(200)
-      .json({ success: true, count: inMemoryInquiries.length, data: inMemoryInquiries });
+    return res.status(200).json({
+      success: true,
+      count: inMemoryInquiries.length,
+      data: inMemoryInquiries,
+      warning: supabaseError ? supabaseError.message : 'Supabase returned 0 rows',
+    });
   }
 
   // 2. POST: Submit new inquiry
