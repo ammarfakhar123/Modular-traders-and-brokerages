@@ -2,16 +2,40 @@
   "framework": "vite",
   "rewrites": [
     {
+      "source": "/api/enquiries",
+      "destination": "/api/enquiries.js"
+    },
+    {
       "source": "/api/enquiries/:path*",
       "destination": "/api/enquiries.js"
+    },
+    {
+      "source": "/api/health",
+      "destination": "/api/health.js"
+    },
+    {
+      "source": "/api/health/:path*",
+      "destination": "/api/health.js"
+    },
+    {
+      "source": "/api/auth",
+      "destination": "/api/auth.js"
     },
     {
       "source": "/api/auth/:path*",
       "destination": "/api/auth.js"
     },
     {
+      "source": "/api/settings",
+      "destination": "/api/settings.js"
+    },
+    {
       "source": "/api/settings/:path*",
       "destination": "/api/settings.js"
+    },
+    {
+      "source": "/api/products",
+      "destination": "/api/products.js"
     },
     {
       "source": "/api/products/:path*",

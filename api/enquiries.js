@@ -341,7 +341,12 @@ export default async function handler(req, res) {
 
   // 2. POST: Submit new inquiry
   if (req.method === 'POST') {
-    const body = req.body || {};
+    let body = req.body || {};
+    if (typeof body === 'string') {
+      try {
+        body = JSON.parse(body);
+      } catch {}
+    }
     const fullName = String(body.fullName || body.buyerName || '').trim();
     const companyName = String(body.companyName || '').trim();
     const email = String(body.email || '').trim().toLowerCase();
