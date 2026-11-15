@@ -16,6 +16,12 @@ const SUPABASE_KEY =
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY, {
   auth: { persistSession: false, autoRefreshToken: false },
+  global: {
+    headers: {
+      apikey: SUPABASE_KEY,
+      Authorization: `Bearer ${SUPABASE_KEY}`,
+    },
+  },
 });
 
 // Brevo (Sendinblue) Configuration (300 Free Emails / Day)
