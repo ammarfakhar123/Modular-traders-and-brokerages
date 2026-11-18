@@ -26,61 +26,39 @@ export const siteConfig = {
   motto:
     "Cultivating Trust. Every shipment, document, and commercial conversation is built on integrity, transparency, and dependable trade execution.",
 
-  // 6 Core Values as specifically required
+  // 4 Core Values as specifically required
   coreValues: [
     {
-      id: "quality",
+      id: "integrity",
       number: "01",
-      title: "Quality",
-      summary: "Strict adherence to product standards.",
+      title: "Integrity",
       description:
-        "We prioritize rigorous quality standards at every stage of sourcing, ensuring rice varieties meet verified contract specifications and buyer expectations.",
-      icon: "Award",
-    },
-    {
-      id: "transparency",
-      number: "02",
-      title: "Transparency",
-      summary: "Honest and clear commercial discussions.",
-      description:
-        "Open, honest, and straightforward communication across contracts, pricing, sourcing origins, and trade coordination with zero hidden terms.",
-      icon: "FileCheck",
-    },
-    {
-      id: "trust",
-      number: "03",
-      title: "Trust",
-      summary: "The bedrock of commodity trading.",
-      description:
-        "True to our tagline 'Cultivating Trust', we believe enduring business is earned through consistency, ethical conduct, and honoring commitments.",
+        "We say what we ship and ship what we say. Specifications, prices and timelines are honest.",
       icon: "ShieldCheck",
     },
     {
-      id: "reliability",
-      number: "04",
-      title: "Reliability",
-      summary: "Dependable execution shipment after shipment.",
+      id: "quality",
+      number: "02",
+      title: "Quality",
       description:
-        "Committed dispatch schedules, proactive trade coordination, and dependable operational follow-through for every international consignment.",
+        "Grain quality is non-negotiable. Every lot is tested against the contract.",
+      icon: "Award",
+    },
+    {
+      id: "reliability",
+      number: "03",
+      title: "Reliability",
+      description:
+        "On-time loading, accurate documents and prompt answers, shipment after shipment.",
       icon: "Clock",
     },
     {
-      id: "customer-commitment",
-      number: "05",
-      title: "Customer Commitment",
-      summary: "Dedicated to buyer and supplier success.",
+      id: "partnership",
+      number: "04",
+      title: "Partnership",
       description:
-        "We understand buyer requirements in depth, providing responsive service and tailored trade solutions for global importers and distributors.",
+        "Mills, buyers and staff succeed together; we invest in long-term relationships.",
       icon: "HeartHandshake",
-    },
-    {
-      id: "long-term-partnerships",
-      number: "06",
-      title: "Long-Term Partnerships",
-      summary: "Building sustainable trade relationships.",
-      description:
-        "We focus on creating enduring, mutually beneficial commercial relationships rather than one-off transactional deals.",
-      icon: "Users",
     },
   ],
 

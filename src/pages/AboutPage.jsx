@@ -533,46 +533,63 @@ export default function AboutPage({ onOpenQuote }) {
         </section>
 
         {/* ========================================================
-            SECTION 6: Our Core Values (6 Specific Values)
+            SECTION 6: Our values (Exact 4 Core Values)
            ======================================================== */}
         <section className="mb-20 sm:mb-28">
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <span className="inline-block px-4 py-1 rounded-full text-xs font-semibold text-[#155437] bg-[#EAF5EF] border border-[#BDE3CF] mb-3">
-              Guiding Principles
-            </span>
-            <h2 className="font-sans text-3xl sm:text-4xl font-extrabold text-[#072B1F]">
-              Our Core Values
+          <div className="max-w-2xl mb-8 sm:mb-12">
+            <div className="flex items-center gap-2.5 mb-2.5 sm:mb-3">
+              <span className="w-5 sm:w-6 h-[2px] bg-[#B8860B]" />
+              <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#072B1F]">
+                Our Foundation &bull; Cultivating Trust
+              </span>
+            </div>
+
+            <h2 className="font-sans text-2xl xs:text-3xl sm:text-4xl font-extrabold tracking-[-0.03em] text-[#072B1F] leading-[1.18] mb-2.5 sm:mb-3">
+              Our values
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 mt-2">
-              The foundational pillars that govern our business conduct, partner relations, and commercial brokerage operations.
+
+            <p className="text-slate-600 text-xs sm:text-base leading-relaxed font-normal">
+              Four principles that guide how Modular Traders selects Pakistani rice millers, verifies grain quality, and serves international buyers.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {coreValues.map((val) => (
-              <div
-                key={val.id}
-                className="bg-white rounded-3xl p-7 border border-[#D5E5DC] shadow-sm hover:shadow-md transition flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="font-mono text-xs font-bold text-[#B8860B] bg-[#FAF8F3] px-2.5 py-1 rounded-full border border-[#EADBBD]">
-                      VALUE {val.number}
-                    </span>
-                    <span className="w-2 h-2 rounded-full bg-[#155437]" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {coreValues.map((val) => {
+              const Icon =
+                val.icon === 'ShieldCheck'
+                  ? ShieldCheck
+                  : val.icon === 'Award'
+                  ? Award
+                  : val.icon === 'Clock'
+                  ? Clock
+                  : HeartHandshake;
+
+              return (
+                <div
+                  key={val.number}
+                  className="bg-[#FAF8F3] rounded-2xl p-5 sm:p-6 border border-[#D5E5DC] hover:border-[#B8860B]/60 transition-all duration-200 flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="w-10 h-10 rounded-xl bg-white border border-[#D5E5DC] flex items-center justify-center text-[#155437]">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <span className="text-xs font-mono font-bold text-[#B8860B]">
+                        {val.number}
+                      </span>
+                    </div>
+
+                    <h3 className="font-sans text-base font-bold text-[#072B1F] mb-2">
+                      {val.title}
+                    </h3>
+
+                    <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                      {val.description || val.desc}
+                    </p>
                   </div>
-                  <h3 className="font-sans text-xl font-bold text-[#072B1F] mb-2">
-                    {val.title}
-                  </h3>
-                  <p className="text-xs font-mono text-[#155437] font-semibold mb-3">
-                    {val.summary}
-                  </p>
-                  <p className="text-slate-600 text-xs sm:text-sm leading-relaxed">
-                    {val.description}
-                  </p>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </section>
 

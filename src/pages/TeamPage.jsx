@@ -43,53 +43,30 @@ export default function TeamPage({ onOpenQuote }) {
           <span className="text-[#072B1F] font-bold">Leadership &amp; Trade Desk</span>
         </div>
 
-        {/* Hero Section with Side Image */}
+        {/* Hero Section (Clean Full-Width Banner without unnecessary side picture) */}
         <div className="relative rounded-3xl bg-white border border-[#D5E5DC] p-6 sm:p-10 lg:p-12 mb-12 sm:mb-16 shadow-[0_15px_45px_rgba(7,43,31,0.06)] overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            {/* Left Content */}
-            <div className="lg:col-span-7 space-y-4">
-              <div className="inline-block px-3.5 py-1.5 rounded-full bg-[#EAF5EF] border border-[#BDE3CF] text-[#072B1F] text-xs font-bold uppercase tracking-wider">
-                LEADERSHIP &amp; TRADE DESK
-              </div>
-
-              <h1 className="font-sans text-2xl xs:text-3xl sm:text-5xl font-extrabold text-[#072B1F] tracking-tight leading-[1.14]">
-                The Minds Driving <br />
-                <span className="text-[#155437]">Modular Traders &amp; Brokerage</span>
-              </h1>
-
-              <p className="text-slate-600 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
-                Based in Karachi, our leadership team combines European corporate finance acumen, accomplished legal deal-structuring, cross-border lead generation, and veteran Pakistani rice milling and export compliance.
-              </p>
-
-              <div className="flex flex-wrap items-center gap-3 pt-2 text-xs font-semibold text-[#072B1F]">
-                <div className="flex items-center gap-2 bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
-                  <Building2 className="w-3.5 h-3.5 text-[#155437]" />
-                  <span>Karachi, Pakistan</span>
-                </div>
-                <div className="flex items-center gap-2 bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
-                  <ShieldCheck className="w-3.5 h-3.5 text-[#B8860B]" />
-                  <span>Cultivating Trust</span>
-                </div>
-              </div>
+          <div className="max-w-3xl space-y-4">
+            <div className="inline-block px-3.5 py-1.5 rounded-full bg-[#EAF5EF] border border-[#BDE3CF] text-[#072B1F] text-xs font-bold uppercase tracking-wider">
+              LEADERSHIP &amp; TRADE DESK
             </div>
 
-            {/* Right Side Image Banner */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-[#D5E5DC] shadow-md bg-[#072B1F]">
-                <img
-                  src="/images/products/sindh-basmati.jpg"
-                  alt="Pakistani Agriculture & Rice Trade"
-                  className="w-full h-[220px] xs:h-[260px] sm:h-[300px] object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
-                <div className="absolute bottom-3 left-4 right-4 text-white">
-                  <span className="text-xs font-bold uppercase tracking-wider text-[#CFA744]">
-                    Trade &amp; Sourcing Desk
-                  </span>
-                  <p className="text-xs text-white/90">
-                    Karachi Port &amp; Mill Operations
-                  </p>
-                </div>
+            <h1 className="font-sans text-2xl xs:text-3xl sm:text-5xl font-extrabold text-[#072B1F] tracking-tight leading-[1.14]">
+              The Minds Driving <br />
+              <span className="text-[#155437]">Modular Traders &amp; Brokerage</span>
+            </h1>
+
+            <p className="text-slate-600 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
+              Based in Karachi, our leadership team combines European corporate finance acumen, accomplished legal deal-structuring, cross-border lead generation, and veteran Pakistani rice milling and export compliance.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3 pt-2 text-xs font-semibold text-[#072B1F]">
+              <div className="flex items-center gap-2 bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                <Building2 className="w-3.5 h-3.5 text-[#155437]" />
+                <span>Karachi, Pakistan</span>
+              </div>
+              <div className="flex items-center gap-2 bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#B8860B]" />
+                <span>Cultivating Trust</span>
               </div>
             </div>
           </div>
