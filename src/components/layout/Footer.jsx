@@ -104,6 +104,16 @@ export default function Footer({ onOpenQuote }) {
                 </Link>
               </li>
               <li>
+                <Link to="/processing" className="text-slate-600 hover:text-[#072B1F] transition">
+                  Rice Processing Range
+                </Link>
+              </li>
+              <li>
+                <Link to="/team" className="text-slate-600 hover:text-[#072B1F] transition">
+                  Leadership &amp; Team
+                </Link>
+              </li>
+              <li>
                 <Link to="/contact" className="text-slate-600 hover:text-[#072B1F] transition">
                   Contact Desk
                 </Link>

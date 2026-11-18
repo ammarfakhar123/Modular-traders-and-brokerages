@@ -15,6 +15,8 @@ import AboutPage from '@/pages/AboutPage';
 import ContactPage from '@/pages/ContactPage';
 import ProductsPage from '@/pages/ProductsPage';
 import ProductDetailPage from '@/pages/ProductDetailPage';
+import ProcessingPage from '@/pages/ProcessingPage';
+import TeamPage from '@/pages/TeamPage';
 import AdminPage from '@/pages/AdminPage';
 
 // Class Error Boundary to prevent blank screens
@@ -174,6 +176,14 @@ export default function App() {
                 <Route
                   path="/about"
                   element={<AboutPage onOpenQuote={() => handleOpenQuote(null)} />}
+                />
+                <Route
+                  path="/processing"
+                  element={<ProcessingPage onOpenQuote={() => handleOpenQuote(null)} />}
+                />
+                <Route
+                  path="/team"
+                  element={<TeamPage onOpenQuote={() => handleOpenQuote(null)} />}
                 />
                 <Route path="/contact" element={<ContactPage />} />
                 <Route
