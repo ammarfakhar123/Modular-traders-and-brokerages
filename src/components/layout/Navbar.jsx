@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, Menu, X, Sparkles } from 'lucide-react';
+import { ArrowUpRight, Menu, X } from 'lucide-react';
 import { siteConfig } from '@/config/site';
 
 export default function Navbar({ onOpenQuote }) {
@@ -37,34 +37,18 @@ export default function Navbar({ onOpenQuote }) {
         <div className="max-w-[1400px] mx-auto pointer-events-auto">
           <div
             className={`w-full bg-white/95 backdrop-blur-md rounded-full px-3.5 sm:px-6 py-2 sm:py-2.5 transition-all duration-300 flex items-center justify-between border ${
-              scrolled
+              scrolledf
                 ? 'shadow-[0_12px_35px_rgba(7,43,31,0.12)] border-[#D5E5DC]'
                 : 'shadow-[0_6px_25px_rgba(7,43,31,0.06)] border-[#D5E5DC]/80'
             }`}
           >
-            {/* Left: Brand Logo + Large Name + Prominent "Cultivating Trust" */}
-            <Link to="/" className="flex items-center gap-2.5 sm:gap-3.5 group shrink-0 py-0.5">
+            {/* Left: Original Brand Logo Enlarged (Full Name Included) */}
+            <Link to="/" className="flex items-center group shrink-0 py-0.5">
               <img
-                src="/brand/logo-symbol-transparent.png"
+                src="/brand/logo-full.png"
                 alt="Modular Traders and Brokerage"
-                className="h-10 sm:h-12 md:h-13 w-auto object-contain transition-transform group-hover:scale-105 shrink-0"
+                className="h-9 xs:h-10 sm:h-12 md:h-13 lg:h-[54px] w-auto object-contain transition-transform group-hover:scale-[1.02]"
               />
-              <div className="flex flex-col justify-center">
-                <div className="flex items-baseline gap-1 sm:gap-1.5 leading-none">
-                  <span className="font-serif font-black tracking-tight text-base sm:text-lg md:text-xl text-[#072B1F]">
-                    MODULAR TRADERS
-                  </span>
-                  <span className="text-[10px] sm:text-xs font-semibold text-slate-500 uppercase tracking-wider hidden xs:inline">
-                    &amp; BROKERAGE
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5 mt-0.5 sm:mt-1">
-                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-[#CFA744]" />
-                  <span className="text-xs sm:text-[13px] font-bold tracking-wide text-[#B8860B] font-sans">
-                    Cultivating Trust
-                  </span>
-                </div>
-              </div>
             </Link>
 
             {/* Center: Desktop Navigation Pills */}
@@ -136,22 +120,13 @@ export default function Navbar({ onOpenQuote }) {
               className="fixed top-[68px] sm:top-20 left-3 right-3 sm:left-4 sm:right-4 z-[490] bg-white rounded-3xl shadow-2xl border border-[#D5E5DC] p-5 sm:p-6 lg:hidden max-h-[85vh] overflow-y-auto"
             >
               <div className="flex flex-col space-y-3">
-                {/* Mobile Drawer Header with prominent logo and tagline */}
-                <div className="flex items-center gap-3 pb-4 border-b border-slate-100">
+                {/* Mobile Drawer Header with original logo */}
+                <div className="flex justify-center pb-3 border-b border-slate-100">
                   <img
-                    src="/brand/logo-symbol-transparent.png"
-                    alt="Modular Traders"
-                    className="h-11 w-auto object-contain"
+                    src="/brand/logo-full.png"
+                    alt="Modular Traders and Brokerage"
+                    className="h-10 sm:h-12 w-auto object-contain"
                   />
-                  <div>
-                    <h3 className="font-serif font-black text-base text-[#072B1F] leading-tight">
-                      MODULAR TRADERS
-                    </h3>
-                    <p className="text-xs font-bold text-[#B8860B] flex items-center gap-1 mt-0.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#CFA744]" />
-                      Cultivating Trust
-                    </p>
-                  </div>
                 </div>
 
                 {navLinks.map((link) => (

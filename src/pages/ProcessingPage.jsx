@@ -2,53 +2,40 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import {
-  Sparkles,
   CheckCircle2,
   ArrowRight,
   ArrowUpRight,
-  Layers,
-  Flame,
-  Droplets,
-  Eye,
-  ShieldCheck,
-  Award,
-  Globe2,
-  Wheat,
-  Sliders,
   Check,
 } from 'lucide-react';
 
 export default function ProcessingPage({ onOpenQuote }) {
   const [activeSellaTab, setActiveSellaTab] = useState('golden');
 
+  // Same consistent uniform styling for all 4 process types as requested by user
   const comparisonData = [
     {
       process: 'White Rice (Raw Milled)',
       color: 'Bright white, translucent',
       texture: 'Soft, aromatic, fluffy',
       markets: 'Retail & households worldwide, traditional Asian cuisine',
-      bgTag: 'bg-emerald-50 text-emerald-800 border-emerald-200',
     },
     {
       process: 'Steam Rice',
       color: 'Creamy white',
       texture: 'Firm, distinct separate grains',
       markets: 'Middle East, Europe, casual dining, biryani houses',
-      bgTag: 'bg-amber-50 text-amber-800 border-amber-200',
     },
     {
       process: 'Golden Sella Rice',
       color: 'Rich golden yellow',
       texture: 'Extremely firm, non-sticky',
       markets: 'GCC (Saudi Arabia, UAE), Iran, Africa, large catering, Kabsa/Mandi',
-      bgTag: 'bg-yellow-50 text-yellow-800 border-yellow-200',
     },
     {
       process: 'White Sella (Creamy)',
       color: 'Off-white / creamy',
       texture: 'Firm, separate, light appearance',
       markets: 'GCC, fine restaurants, premium catering, pulao & biryani',
-      bgTag: 'bg-slate-50 text-slate-800 border-slate-200',
     },
   ];
 
@@ -64,38 +51,57 @@ export default function ProcessingPage({ onOpenQuote }) {
           <span className="text-[#072B1F] font-bold">Rice Processing Range</span>
         </div>
 
-        {/* Hero Section */}
-        <div className="relative rounded-3xl bg-white border border-[#D5E5DC] p-6 sm:p-12 lg:p-14 mb-12 sm:mb-16 shadow-[0_15px_45px_rgba(7,43,31,0.06)] overflow-hidden">
-          <div className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-[#EAF5EF] blur-3xl pointer-events-none" />
-          <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-[#CFA744]/15 blur-3xl pointer-events-none" />
+        {/* Hero Section with Side Image */}
+        <div className="relative rounded-3xl bg-white border border-[#D5E5DC] p-6 sm:p-10 lg:p-12 mb-12 sm:mb-16 shadow-[0_15px_45px_rgba(7,43,31,0.06)] overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Left Content */}
+            <div className="lg:col-span-7 space-y-4">
+              <div className="inline-block px-3.5 py-1.5 rounded-full bg-[#EAF5EF] border border-[#BDE3CF] text-[#072B1F] text-xs font-bold uppercase tracking-wider">
+                OUR PROCESSING RANGE
+              </div>
 
-          <div className="relative z-10 max-w-3xl">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EAF5EF] border border-[#BDE3CF] text-[#072B1F] text-xs font-bold uppercase tracking-wider mb-4">
-              <Wheat className="w-3.5 h-3.5 text-[#B8860B]" />
-              <span>Section Introduction &bull; Export Range</span>
+              <h1 className="font-sans text-2xl xs:text-3xl sm:text-5xl font-extrabold text-[#072B1F] tracking-tight leading-[1.14]">
+                Export Rice Processing
+              </h1>
+
+              <p className="text-slate-700 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
+                At <strong>Modular Traders and Brokerage</strong>, every grain is processed to bring out its best. From fragrant white rice to robust parboiled sella, we offer a range of processing types to suit different cuisines, cooking styles and markets. Every lot is cleaned, graded and sorted to consistent export standards before it is packed.
+              </p>
+
+              <div className="flex flex-wrap gap-2 pt-2 text-xs font-semibold text-[#072B1F]">
+                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                  White Rice (Raw Milled)
+                </span>
+                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                  Steam Rice
+                </span>
+                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                  Golden &amp; White Sella
+                </span>
+                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                  Sortex Optical Cleaning
+                </span>
+              </div>
             </div>
 
-            <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-black text-[#072B1F] tracking-tight leading-[1.14] mb-4">
-              Our Processing Range
-            </h1>
-
-            <p className="text-slate-700 text-sm sm:text-base leading-relaxed mb-6 font-normal">
-              At <strong>Modular Traders and Brokerage</strong>, every grain is processed to bring out its best. From fragrant white rice to robust parboiled sella, we offer a range of processing types to suit different cuisines, cooking styles and markets. Every lot is cleaned, graded and sorted to consistent export standards before it is packed.
-            </p>
-
-            <div className="flex flex-wrap gap-2.5 text-xs font-semibold text-[#072B1F]">
-              <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
-                &bull; White Rice (Raw Milled)
-              </span>
-              <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
-                &bull; Steam Rice
-              </span>
-              <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
-                &bull; Golden Sella &amp; White Sella
-              </span>
-              <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
-                &bull; Sortex Optical Cleaning Standard
-              </span>
+            {/* Right Side Image Banner */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-[#D5E5DC] shadow-md bg-[#072B1F]">
+                <img
+                  src="/images/products/sella.jpg"
+                  alt="Pakistani Rice Processing Range"
+                  className="w-full h-[220px] xs:h-[260px] sm:h-[300px] object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-3 left-4 right-4 text-white">
+                  <span className="text-xs font-bold uppercase tracking-wider text-[#CFA744]">
+                    Milling &amp; Optical Sorting
+                  </span>
+                  <p className="text-xs text-white/90">
+                    White, Steam &amp; Parboiled Sella Export Lots
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -110,16 +116,16 @@ export default function ProcessingPage({ onOpenQuote }) {
                   <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#155437] bg-[#EAF5EF] px-3 py-1 rounded-full border border-[#BDE3CF]">
                     Processing Type 01
                   </span>
-                  <span className="text-xs text-slate-400 font-serif italic">
+                  <span className="text-xs text-slate-400 font-medium">
                     Raw / Natural Milled
                   </span>
                 </div>
 
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#072B1F]">
+                <h2 className="font-sans text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#072B1F]">
                   White Rice
                 </h2>
 
-                <p className="text-sm sm:text-base font-semibold text-[#B8860B] font-serif italic">
+                <p className="text-xs sm:text-sm font-semibold text-[#B8860B]">
                   Pure, aromatic and naturally elegant.
                 </p>
 
@@ -200,16 +206,16 @@ export default function ProcessingPage({ onOpenQuote }) {
                   <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#B8860B] bg-[#FFF9EB] px-3 py-1 rounded-full border border-[#CFA744]/40">
                     Processing Type 02
                   </span>
-                  <span className="text-xs text-slate-400 font-serif italic">
+                  <span className="text-xs text-slate-400 font-medium">
                     Paddy Steamed Prior to Milling
                   </span>
                 </div>
 
-                <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#072B1F]">
+                <h2 className="font-sans text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#072B1F]">
                   Steam Rice
                 </h2>
 
-                <p className="text-sm sm:text-base font-semibold text-[#B8860B] font-serif italic">
+                <p className="text-xs sm:text-sm font-semibold text-[#B8860B]">
                   Aged character, firmer grain, consistent results.
                 </p>
 
@@ -287,16 +293,16 @@ export default function ProcessingPage({ onOpenQuote }) {
                 <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#072B1F] bg-[#EAF5EF] px-3 py-1 rounded-full border border-[#BDE3CF]">
                   Processing Type 03
                 </span>
-                <span className="text-xs text-slate-400 font-serif italic">
+                <span className="text-xs text-slate-400 font-medium">
                   Hydrothermal Parboiling Treatment
                 </span>
               </div>
 
-              <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#072B1F]">
+              <h2 className="font-sans text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#072B1F]">
                 Parboiled Sella Rice
               </h2>
 
-              <p className="text-sm sm:text-base font-semibold text-[#B8860B] font-serif italic">
+              <p className="text-xs sm:text-sm font-semibold text-[#B8860B]">
                 Built for strength, made for every kitchen.
               </p>
 
@@ -334,7 +340,7 @@ export default function ProcessingPage({ onOpenQuote }) {
               </button>
             </div>
 
-            {/* Sub-Card Content */}
+            {/* Sub-Card Content (No bullet dots) */}
             {activeSellaTab === 'golden' ? (
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
@@ -342,12 +348,9 @@ export default function ProcessingPage({ onOpenQuote }) {
                 className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#FFFDF7] p-6 sm:p-8 rounded-2xl border border-[#CFA744]/40"
               >
                 <div className="lg:col-span-7 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#CFA744]" />
-                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#072B1F]">
-                      Golden Sella Rice
-                    </h3>
-                  </div>
+                  <h3 className="font-sans text-lg sm:text-xl font-bold text-[#072B1F]">
+                    Golden Sella Rice
+                  </h3>
 
                   <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
                     Golden Sella goes through a longer soak and a more intensive steaming. This gives the grain its rich golden-yellow colour and maximum firmness. It is the rice of choice where grains must stay perfectly separate, even in large batches and after long holding times.
@@ -404,12 +407,9 @@ export default function ProcessingPage({ onOpenQuote }) {
                 className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#F8FAF9] p-6 sm:p-8 rounded-2xl border border-[#BDE3CF]"
               >
                 <div className="lg:col-span-7 space-y-3">
-                  <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-[#155437]" />
-                    <h3 className="font-serif text-xl sm:text-2xl font-bold text-[#072B1F]">
-                      White Sella Rice (Creamy Sella)
-                    </h3>
-                  </div>
+                  <h3 className="font-sans text-lg sm:text-xl font-bold text-[#072B1F]">
+                    White Sella Rice (Creamy Sella)
+                  </h3>
 
                   <p className="text-xs sm:text-sm text-slate-600 leading-relaxed font-normal">
                     White Sella is parboiled with a lighter, controlled steaming. It keeps the strength and non-stick quality of sella and gives an off-white, creamy grain that looks closer to raw rice on the plate. It offers the best of both: sella's durability with a lighter appearance.
@@ -463,13 +463,13 @@ export default function ProcessingPage({ onOpenQuote }) {
           </section>
         </div>
 
-        {/* At a Glance Comparison Table */}
+        {/* At a Glance Comparison Table (Consistent uniform badge color across all rows) */}
         <section className="mb-16 sm:mb-20">
           <div className="mb-6">
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#155437]">
               Technical Matrix
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#072B1F] mt-1">
+            <h2 className="font-sans text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#072B1F] mt-1">
               At a Glance Comparison
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
@@ -500,7 +500,7 @@ export default function ProcessingPage({ onOpenQuote }) {
                   {comparisonData.map((row) => (
                     <tr key={row.process} className="hover:bg-[#FAF8F3]/60 transition-colors">
                       <td className="py-4 px-5 sm:px-6 font-bold text-[#072B1F] whitespace-nowrap">
-                        <span className={`inline-block px-2.5 py-1 rounded-lg border text-xs ${row.bgTag}`}>
+                        <span className="inline-block px-3 py-1 rounded-lg border text-xs bg-[#EAF5EF] text-[#072B1F] border-[#BDE3CF] font-semibold">
                           {row.process}
                         </span>
                       </td>
@@ -515,13 +515,13 @@ export default function ProcessingPage({ onOpenQuote }) {
           </div>
         </section>
 
-        {/* Quality & Finishing Options */}
+        {/* Quality & Finishing Options (Clean Step Badges instead of cheap icons) */}
         <section className="mb-16 sm:mb-20">
           <div className="mb-8">
             <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#B8860B]">
               Custom Milling Specifications
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#072B1F] mt-1">
+            <h2 className="font-sans text-xl sm:text-2xl lg:text-3xl font-extrabold text-[#072B1F] mt-1">
               Quality &amp; Finishing Options
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 mt-1 max-w-3xl leading-relaxed">
@@ -533,10 +533,10 @@ export default function ProcessingPage({ onOpenQuote }) {
             {/* Polish Level Card */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#D5E5DC] shadow-xs flex flex-col justify-between hover:border-[#CFA744] transition-all">
               <div className="space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#EAF5EF] border border-[#BDE3CF] flex items-center justify-center text-[#155437]">
-                  <Sliders className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-xl bg-[#FAF8F3] border border-[#D5E5DC] flex items-center justify-center text-[#072B1F] font-sans font-extrabold text-sm">
+                  01
                 </div>
-                <h3 className="font-serif text-xl font-bold text-[#072B1F]">
+                <h3 className="font-sans text-lg sm:text-xl font-bold text-[#072B1F]">
                   Polish Level
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -562,10 +562,10 @@ export default function ProcessingPage({ onOpenQuote }) {
             {/* Sortex Cleaning Card */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#D5E5DC] shadow-xs flex flex-col justify-between hover:border-[#155437] transition-all">
               <div className="space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#EAF5EF] border border-[#BDE3CF] flex items-center justify-center text-[#155437]">
-                  <Eye className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-xl bg-[#FAF8F3] border border-[#D5E5DC] flex items-center justify-center text-[#155437] font-sans font-extrabold text-sm">
+                  02
                 </div>
-                <h3 className="font-serif text-xl font-bold text-[#072B1F]">
+                <h3 className="font-sans text-lg sm:text-xl font-bold text-[#072B1F]">
                   Sortex Cleaning
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -598,10 +598,10 @@ export default function ProcessingPage({ onOpenQuote }) {
             {/* Organic & EU-Compliant Lots */}
             <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#D5E5DC] shadow-xs flex flex-col justify-between hover:border-[#CFA744] transition-all">
               <div className="space-y-4">
-                <div className="w-12 h-12 rounded-2xl bg-[#EAF5EF] border border-[#BDE3CF] flex items-center justify-center text-[#B8860B]">
-                  <ShieldCheck className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-xl bg-[#FAF8F3] border border-[#D5E5DC] flex items-center justify-center text-[#B8860B] font-sans font-extrabold text-sm">
+                  03
                 </div>
-                <h3 className="font-serif text-xl font-bold text-[#072B1F]">
+                <h3 className="font-sans text-lg sm:text-xl font-bold text-[#072B1F]">
                   EU-Compliant &amp; Organic
                 </h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
@@ -630,7 +630,7 @@ export default function ProcessingPage({ onOpenQuote }) {
               <span className="text-xs font-mono font-bold tracking-widest text-[#CFA744] uppercase">
                 Call to Action &bull; Export Milling Desk
               </span>
-              <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-white">
+              <h2 className="font-sans text-2xl sm:text-3xl font-extrabold tracking-tight text-white">
                 Looking for a Specific Processing Type or Polish Level?
               </h2>
               <p className="text-xs sm:text-sm text-white/80 leading-relaxed font-light">
