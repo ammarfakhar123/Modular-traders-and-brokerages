@@ -37,7 +37,7 @@ export default function Navbar({ onOpenQuote }) {
         <div className="max-w-[1400px] mx-auto pointer-events-auto">
           <div
             className={`w-full bg-white/95 backdrop-blur-md rounded-full px-3.5 sm:px-6 py-2 sm:py-2.5 transition-all duration-300 flex items-center justify-between border ${
-              scrolledf
+              scrolled
                 ? 'shadow-[0_12px_35px_rgba(7,43,31,0.12)] border-[#D5E5DC]'
                 : 'shadow-[0_6px_25px_rgba(7,43,31,0.06)] border-[#D5E5DC]/80'
             }`}
