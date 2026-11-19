@@ -32,47 +32,56 @@ export default function TeamPage({ onOpenQuote }) {
   ];
 
   return (
-    <div className="pt-24 sm:pt-28 pb-16 sm:pb-24 bg-[#FAF8F3] text-slate-800">
+    <div className="pt-20 sm:pt-24 pb-16 sm:pb-24 bg-[#FAF8F3] min-h-screen text-slate-800">
+      {/* ========================================================
+          1. TEAM HERO BANNER (Full-bleed matching Rice Varieties layout)
+         ======================================================== */}
+      <section className="bg-white py-12 sm:py-16 lg:py-20 mb-8 sm:mb-12 relative overflow-hidden border-b border-[#D5E5DC]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+          {/* Eyebrow */}
+          <div className="flex items-center justify-center gap-2.5 mb-3 sm:mb-4">
+            <span className="w-5 sm:w-6 h-[2px] bg-[#B8860B]" />
+            <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#072B1F]">
+              LEADERSHIP &amp; TRADE DESK &bull; MODULAR TRADERS AND BROKERAGE
+            </span>
+          </div>
+
+          {/* Heading in 2 Lines */}
+          <h1 className="font-sans text-2xl xs:text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#072B1F] tracking-tight mb-3 sm:mb-4 leading-tight">
+            The Minds Driving <br />
+            <span className="text-[#155437]">
+              Modular Traders &amp; Brokerage
+            </span>
+          </h1>
+
+          {/* Subtitle Paragraph */}
+          <p className="text-slate-600 text-xs sm:text-base max-w-3xl mx-auto leading-relaxed">
+            Based in <strong>Karachi, Pakistan</strong>, our leadership team combines European corporate finance acumen, accomplished legal deal-structuring, cross-border lead generation, and veteran Pakistani rice milling and export compliance.
+          </p>
+
+          {/* Badges */}
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-4 text-xs font-semibold text-[#072B1F]">
+            <div className="flex items-center gap-2 bg-[#FAF8F3] px-3.5 py-1.5 rounded-xl border border-[#D5E5DC]">
+              <Building2 className="w-3.5 h-3.5 text-[#155437]" />
+              <span>Karachi, Pakistan</span>
+            </div>
+            <div className="flex items-center gap-2 bg-[#FAF8F3] px-3.5 py-1.5 rounded-xl border border-[#D5E5DC]">
+              <ShieldCheck className="w-3.5 h-3.5 text-[#B8860B]" />
+              <span>Cultivating Trust</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Main Container */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
-        <div className="mb-6 flex items-center gap-2 text-xs text-slate-500 font-medium">
+        <div className="mb-8 flex items-center gap-2 text-xs text-slate-500 font-medium">
           <Link to="/" className="hover:text-[#072B1F] transition">
             Home
           </Link>
           <span>/</span>
           <span className="text-[#072B1F] font-bold">Leadership &amp; Trade Desk</span>
-        </div>
-
-        {/* Hero Section (Clean Centered Banner matching Products layout) */}
-        <div className="relative rounded-3xl bg-white border border-[#D5E5DC] p-8 sm:p-12 lg:p-16 mb-12 sm:mb-16 shadow-[0_15px_45px_rgba(7,43,31,0.06)] overflow-hidden text-center">
-          <div className="max-w-3xl mx-auto space-y-4">
-            <div className="flex items-center justify-center gap-2.5">
-              <span className="w-5 sm:w-6 h-[2px] bg-[#B8860B]" />
-              <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#072B1F]">
-                LEADERSHIP &amp; TRADE DESK &bull; MODULAR TRADERS
-              </span>
-            </div>
-
-            <h1 className="font-sans text-2xl xs:text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#072B1F] tracking-tight leading-[1.14]">
-              The Minds Driving <br />
-              <span className="text-[#155437]">Modular Traders &amp; Brokerage</span>
-            </h1>
-
-            <p className="text-slate-600 text-xs sm:text-sm md:text-base leading-relaxed font-normal mx-auto">
-              Based in Karachi, our leadership team combines European corporate finance acumen, accomplished legal deal-structuring, cross-border lead generation, and veteran Pakistani rice milling and export compliance.
-            </p>
-
-            <div className="flex flex-wrap items-center justify-center gap-3 pt-2 text-xs font-semibold text-[#072B1F]">
-              <div className="flex items-center gap-2 bg-[#FAF8F3] px-3.5 py-1.5 rounded-xl border border-[#D5E5DC]">
-                <Building2 className="w-3.5 h-3.5 text-[#155437]" />
-                <span>Karachi, Pakistan</span>
-              </div>
-              <div className="flex items-center gap-2 bg-[#FAF8F3] px-3.5 py-1.5 rounded-xl border border-[#D5E5DC]">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#B8860B]" />
-                <span>Cultivating Trust</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         {/* 4 Compact Team Member Profiles Grid */}
