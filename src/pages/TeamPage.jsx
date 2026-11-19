@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Mail, Building2, ShieldCheck, ArrowUpRight } from 'lucide-react';
+import { Mail, Building2, ShieldCheck, ArrowUpRight, Brain, BrainCircuit } from 'lucide-react';
 
 export default function TeamPage({ onOpenQuote }) {
   const teamMembers = [
@@ -43,30 +43,76 @@ export default function TeamPage({ onOpenQuote }) {
           <span className="text-[#072B1F] font-bold">Leadership &amp; Trade Desk</span>
         </div>
 
-        {/* Hero Section (Clean Full-Width Banner without unnecessary side picture) */}
+        {/* Hero Section with Brain / Minds Intelligence Card */}
         <div className="relative rounded-3xl bg-white border border-[#D5E5DC] p-6 sm:p-10 lg:p-12 mb-12 sm:mb-16 shadow-[0_15px_45px_rgba(7,43,31,0.06)] overflow-hidden">
-          <div className="max-w-3xl space-y-4">
-            <div className="inline-block px-3.5 py-1.5 rounded-full bg-[#EAF5EF] border border-[#BDE3CF] text-[#072B1F] text-xs font-bold uppercase tracking-wider">
-              LEADERSHIP &amp; TRADE DESK
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Left Content */}
+            <div className="lg:col-span-7 space-y-4">
+              <div className="inline-block px-3.5 py-1.5 rounded-full bg-[#EAF5EF] border border-[#BDE3CF] text-[#072B1F] text-xs font-bold uppercase tracking-wider">
+                LEADERSHIP &amp; TRADE DESK
+              </div>
+
+              <h1 className="font-sans text-2xl xs:text-3xl sm:text-5xl font-extrabold text-[#072B1F] tracking-tight leading-[1.14]">
+                The Minds Driving <br />
+                <span className="text-[#155437]">Modular Traders &amp; Brokerage</span>
+              </h1>
+
+              <p className="text-slate-600 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
+                Based in Karachi, our leadership team combines European corporate finance acumen, accomplished legal deal-structuring, cross-border lead generation, and veteran Pakistani rice milling and export compliance.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-3 pt-2 text-xs font-semibold text-[#072B1F]">
+                <div className="flex items-center gap-2 bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                  <Building2 className="w-3.5 h-3.5 text-[#155437]" />
+                  <span>Karachi, Pakistan</span>
+                </div>
+                <div className="flex items-center gap-2 bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#B8860B]" />
+                  <span>Cultivating Trust</span>
+                </div>
+              </div>
             </div>
 
-            <h1 className="font-sans text-2xl xs:text-3xl sm:text-5xl font-extrabold text-[#072B1F] tracking-tight leading-[1.14]">
-              The Minds Driving <br />
-              <span className="text-[#155437]">Modular Traders &amp; Brokerage</span>
-            </h1>
+            {/* Right Side: Group of Brains / Collective Minds Showcase Card */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="relative w-full max-w-sm rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#FAF8F3] via-white to-[#EAF5EF] border border-[#D5E5DC] p-6 sm:p-7 shadow-xs text-center overflow-hidden">
+                {/* Subtle Decorative Aura */}
+                <div className="absolute -top-10 -right-10 w-28 h-28 rounded-full bg-[#155437]/5 blur-2xl pointer-events-none" />
+                <div className="absolute -bottom-10 -left-10 w-28 h-28 rounded-full bg-[#CFA744]/10 blur-2xl pointer-events-none" />
 
-            <p className="text-slate-600 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
-              Based in Karachi, our leadership team combines European corporate finance acumen, accomplished legal deal-structuring, cross-border lead generation, and veteran Pakistani rice milling and export compliance.
-            </p>
+                {/* Group of Brains Cluster */}
+                <div className="relative flex items-center justify-center gap-2.5 sm:gap-3 py-3">
+                  {/* Left Satellite Brain */}
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white border border-[#D5E5DC] shadow-xs flex items-center justify-center text-[#155437] transition-transform hover:scale-105">
+                    <Brain className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </div>
 
-            <div className="flex flex-wrap items-center gap-3 pt-2 text-xs font-semibold text-[#072B1F]">
-              <div className="flex items-center gap-2 bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
-                <Building2 className="w-3.5 h-3.5 text-[#155437]" />
-                <span>Karachi, Pakistan</span>
-              </div>
-              <div className="flex items-center gap-2 bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
-                <ShieldCheck className="w-3.5 h-3.5 text-[#B8860B]" />
-                <span>Cultivating Trust</span>
+                  {/* Center Main Brain (Highlighted with Gold Ring) */}
+                  <div className="relative">
+                    <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-3xl bg-[#072B1F] border-2 border-[#CFA744] shadow-md flex items-center justify-center text-[#CFA744] transition-transform hover:scale-105">
+                      <BrainCircuit className="w-8 h-8 sm:w-9 sm:h-9" />
+                    </div>
+                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#CFA744] border-2 border-white" />
+                  </div>
+
+                  {/* Right Satellite Brain */}
+                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white border border-[#D5E5DC] shadow-xs flex items-center justify-center text-[#155437] transition-transform hover:scale-105">
+                    <Brain className="w-5 h-5 sm:w-6 sm:h-6" />
+                  </div>
+                </div>
+
+                {/* Descriptive Captions */}
+                <div className="space-y-1 mt-2">
+                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#B8860B] block">
+                    Strategic Trade Minds
+                  </span>
+                  <h3 className="text-sm sm:text-base font-bold text-[#072B1F]">
+                    Collective Trade Intelligence
+                  </h3>
+                  <p className="text-xs text-slate-500 leading-relaxed max-w-xs mx-auto">
+                    Corporate finance, international law, sourcing verification &amp; Pakistani milling expertise in one desk.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
