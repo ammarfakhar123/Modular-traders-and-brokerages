@@ -36,7 +36,7 @@ export default function Navbar({ onOpenQuote }) {
       <header className="fixed top-2.5 sm:top-4 left-0 right-0 z-[500] px-2.5 sm:px-6 pointer-events-none">
         <div className="max-w-[1400px] mx-auto pointer-events-auto">
           <div
-            className={`w-full bg-white/95 backdrop-blur-md rounded-full px-3.5 sm:px-6 py-2 sm:py-2.5 transition-all duration-300 flex items-center justify-between border ${
+            className={`w-full bg-white/95 backdrop-blur-md rounded-full px-3.5 sm:px-6 py-1.5 sm:py-2 transition-all duration-300 flex items-center justify-between border ${
               scrolled
                 ? 'shadow-[0_12px_35px_rgba(7,43,31,0.12)] border-[#D5E5DC]'
                 : 'shadow-[0_6px_25px_rgba(7,43,31,0.06)] border-[#D5E5DC]/80'
@@ -47,7 +47,7 @@ export default function Navbar({ onOpenQuote }) {
               <img
                 src="/brand/logo-full.png"
                 alt="Modular Traders and Brokerage"
-                className="h-10 xs:h-11 sm:h-13 md:h-14 lg:h-[62px] w-auto object-contain transition-transform group-hover:scale-[1.02]"
+                className="h-11 xs:h-12 sm:h-14 md:h-16 lg:h-[72px] w-auto object-contain transition-transform group-hover:scale-[1.02]"
               />
             </Link>
 
@@ -125,7 +125,7 @@ export default function Navbar({ onOpenQuote }) {
                   <img
                     src="/brand/logo-full.png"
                     alt="Modular Traders and Brokerage"
-                    className="h-10 sm:h-12 w-auto object-contain"
+                    className="h-11 sm:h-13 w-auto object-contain"
                   />
                 </div>
 

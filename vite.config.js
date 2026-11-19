@@ -25,6 +25,19 @@ function serverlessDevPlugin() {
             }
 
             if (handlerModule && handlerModule.default) {
+              if (!res.status) {
+                res.status = function(code) {
+                  res.statusCode = code;
+                  return res;
+                };
+              }
+              if (!res.json) {
+                res.json = function(data) {
+                  res.setHeader('Content-Type', 'application/json');
+                  res.end(JSON.stringify(data));
+                  return res;
+                };
+              }
               return handlerModule.default(req, res);
             }
             next();
