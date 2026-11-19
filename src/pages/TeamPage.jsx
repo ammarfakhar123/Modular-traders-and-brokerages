@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { Mail, Building2, ShieldCheck, ArrowUpRight, Brain, BrainCircuit } from 'lucide-react';
+import { Mail, Building2, ShieldCheck, ArrowUpRight } from 'lucide-react';
 
 export default function TeamPage({ onOpenQuote }) {
   const teamMembers = [
@@ -73,44 +73,21 @@ export default function TeamPage({ onOpenQuote }) {
               </div>
             </div>
 
-            {/* Right Side: Group of Brains / Collective Minds Showcase Card */}
+            {/* Right Side: Professional Team Minds Showcase Card */}
             <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-full max-w-sm rounded-2xl sm:rounded-3xl bg-gradient-to-br from-[#FAF8F3] via-white to-[#EAF5EF] border border-[#D5E5DC] p-6 sm:p-7 shadow-xs text-center overflow-hidden">
-                {/* Subtle Decorative Aura */}
-                <div className="absolute -top-10 -right-10 w-28 h-28 rounded-full bg-[#155437]/5 blur-2xl pointer-events-none" />
-                <div className="absolute -bottom-10 -left-10 w-28 h-28 rounded-full bg-[#CFA744]/10 blur-2xl pointer-events-none" />
-
-                {/* Group of Brains Cluster */}
-                <div className="relative flex items-center justify-center gap-2.5 sm:gap-3 py-3">
-                  {/* Left Satellite Brain */}
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white border border-[#D5E5DC] shadow-xs flex items-center justify-center text-[#155437] transition-transform hover:scale-105">
-                    <Brain className="w-5 h-5 sm:w-6 sm:h-6" />
-                  </div>
-
-                  {/* Center Main Brain (Highlighted with Gold Ring) */}
-                  <div className="relative">
-                    <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-3xl bg-[#072B1F] border-2 border-[#CFA744] shadow-md flex items-center justify-center text-[#CFA744] transition-transform hover:scale-105">
-                      <BrainCircuit className="w-8 h-8 sm:w-9 sm:h-9" />
-                    </div>
-                    <span className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-[#CFA744] border-2 border-white" />
-                  </div>
-
-                  {/* Right Satellite Brain */}
-                  <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white border border-[#D5E5DC] shadow-xs flex items-center justify-center text-[#155437] transition-transform hover:scale-105">
-                    <Brain className="w-5 h-5 sm:w-6 sm:h-6" />
-                  </div>
-                </div>
-
-                {/* Descriptive Captions */}
-                <div className="space-y-1 mt-2">
-                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#B8860B] block">
-                    Strategic Trade Minds
+              <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-[#D5E5DC] shadow-[0_10px_30px_rgba(7,43,31,0.08)] bg-[#072B1F]">
+                <img
+                  src="/images/team-minds.jpg"
+                  alt="Modular Traders Strategic Leadership and Trade Minds"
+                  className="w-full h-[220px] xs:h-[260px] sm:h-[300px] object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-3 left-4 right-4 text-white">
+                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#CFA744] block">
+                    Strategic Trade Desk
                   </span>
-                  <h3 className="text-sm sm:text-base font-bold text-[#072B1F]">
-                    Collective Trade Intelligence
-                  </h3>
-                  <p className="text-xs text-slate-500 leading-relaxed max-w-xs mx-auto">
-                    Corporate finance, international law, sourcing verification &amp; Pakistani milling expertise in one desk.
+                  <p className="text-xs text-white/90 font-medium">
+                    Multidisciplinary Leadership &bull; Global Commodity Execution
                   </p>
                 </div>
               </div>
