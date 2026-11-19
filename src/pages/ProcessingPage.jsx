@@ -17,25 +17,21 @@ export default function ProcessingPage({ onOpenQuote }) {
       process: 'White Rice (Raw Milled)',
       color: 'Bright white, translucent',
       texture: 'Soft, aromatic, fluffy',
-      markets: 'Retail & households worldwide, traditional Asian cuisine',
     },
     {
       process: 'Steam Rice',
       color: 'Creamy white',
       texture: 'Firm, distinct separate grains',
-      markets: 'Middle East, Europe, casual dining, biryani houses',
     },
     {
       process: 'Golden Sella Rice',
       color: 'Rich golden yellow',
       texture: 'Extremely firm, non-sticky',
-      markets: 'GCC (Saudi Arabia, UAE), Iran, Africa, large catering, Kabsa/Mandi',
     },
     {
       process: 'White Sella (Creamy)',
       color: 'Off-white / creamy',
       texture: 'Firm, separate, light appearance',
-      markets: 'GCC, fine restaurants, premium catering, pulao & biryani',
     },
   ];
 
@@ -51,34 +47,60 @@ export default function ProcessingPage({ onOpenQuote }) {
           <span className="text-[#072B1F] font-bold">Rice Processing Range</span>
         </div>
 
-        {/* Hero Section (Clean Full-Width Banner) */}
+        {/* Hero Section with Right-Side Image Showcase Card */}
         <div className="relative rounded-3xl bg-white border border-[#D5E5DC] p-6 sm:p-10 lg:p-12 mb-12 sm:mb-16 shadow-[0_15px_45px_rgba(7,43,31,0.06)] overflow-hidden">
-          <div className="max-w-3xl space-y-4">
-            <div className="inline-block px-3.5 py-1.5 rounded-full bg-[#EAF5EF] border border-[#BDE3CF] text-[#072B1F] text-xs font-bold uppercase tracking-wider">
-              OUR PROCESSING RANGE
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Left Content */}
+            <div className="lg:col-span-7 space-y-4">
+              <div className="inline-block px-3.5 py-1.5 rounded-full bg-[#EAF5EF] border border-[#BDE3CF] text-[#072B1F] text-xs font-bold uppercase tracking-wider">
+                OUR PROCESSING RANGE
+              </div>
+
+              <h1 className="font-sans text-2xl xs:text-3xl sm:text-5xl font-extrabold text-[#072B1F] tracking-tight leading-[1.14]">
+                Export Rice Processing
+              </h1>
+
+              <p className="text-slate-700 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
+                At <strong>Modular Traders and Brokerage</strong>, every grain is processed to bring out its best. From fragrant white rice to robust parboiled sella, we offer a range of processing types to suit different cuisines, cooking styles and markets. Every lot is cleaned, graded and sorted to consistent export standards before it is packed.
+              </p>
+
+              <div className="flex flex-wrap gap-2 pt-2 text-xs font-semibold text-[#072B1F]">
+                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                  White Rice (Raw Milled)
+                </span>
+                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                  Steam Rice
+                </span>
+                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                  Golden &amp; White Sella
+                </span>
+                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                  Sortex Optical Cleaning
+                </span>
+                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                  EU Compliant Pesticide Residue
+                </span>
+              </div>
             </div>
 
-            <h1 className="font-sans text-2xl xs:text-3xl sm:text-5xl font-extrabold text-[#072B1F] tracking-tight leading-[1.14]">
-              Export Rice Processing
-            </h1>
-
-            <p className="text-slate-700 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
-              At <strong>Modular Traders and Brokerage</strong>, every grain is processed to bring out its best. From fragrant white rice to robust parboiled sella, we offer a range of processing types to suit different cuisines, cooking styles and markets. Every lot is cleaned, graded and sorted to consistent export standards before it is packed.
-            </p>
-
-            <div className="flex flex-wrap gap-2 pt-2 text-xs font-semibold text-[#072B1F]">
-              <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
-                White Rice (Raw Milled)
-              </span>
-              <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
-                Steam Rice
-              </span>
-              <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
-                Golden &amp; White Sella
-              </span>
-              <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
-                Sortex Optical Cleaning
-              </span>
+            {/* Right Side Image Showcase Card */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div className="relative w-full rounded-2xl sm:rounded-3xl overflow-hidden border border-[#D5E5DC] shadow-[0_10px_30px_rgba(7,43,31,0.08)] bg-[#072B1F]">
+                <img
+                  src="/images/products/super-kernel.jpg"
+                  alt="Pakistani Rice Milling & Export Processing"
+                  className="w-full h-[220px] xs:h-[260px] sm:h-[300px] object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
+                <div className="absolute bottom-3 left-4 right-4 text-white">
+                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#CFA744] block">
+                    Export Milling &amp; Optical Sorting
+                  </span>
+                  <p className="text-xs text-white/90 font-medium">
+                    White, Steam &amp; Parboiled Sella Lots
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -135,8 +157,8 @@ export default function ProcessingPage({ onOpenQuote }) {
                 </div>
               </div>
 
-              {/* Module 1 Right Column: Ideal For & Varieties */}
-              <div className="lg:col-span-5 bg-[#FAF8F3] rounded-2xl p-5 sm:p-6 border border-[#D5E5DC] space-y-4">
+              {/* Module 1 Right Column: Ideal For */}
+              <div className="lg:col-span-5 bg-[#FAF8F3] rounded-2xl p-5 sm:p-6 border border-[#D5E5DC] flex flex-col justify-between space-y-4">
                 <div>
                   <h4 className="text-xs font-bold uppercase tracking-wider text-[#072B1F] mb-1.5">
                     Ideal For
@@ -144,24 +166,6 @@ export default function ProcessingPage({ onOpenQuote }) {
                   <p className="text-xs text-slate-600 leading-relaxed">
                     Everyday home cooking, pulao, steamed rice and retail packs, wherever aroma and softness matter most.
                   </p>
-                </div>
-
-                <div className="pt-2 border-t border-[#D5E5DC]">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#072B1F] mb-2">
-                    Available Varieties in White Process
-                  </h4>
-                  <div className="flex flex-wrap gap-1.5">
-                    {['1121 Basmati', 'Super Kernel Basmati', 'PK-386', 'IRRI-6', 'IRRI-9'].map(
-                      (v) => (
-                        <span
-                          key={v}
-                          className="text-[11px] font-semibold bg-white text-[#072B1F] px-2.5 py-1 rounded-lg border border-[#D5E5DC]"
-                        >
-                          {v}
-                        </span>
-                      )
-                    )}
-                  </div>
                 </div>
 
                 <button
@@ -225,8 +229,8 @@ export default function ProcessingPage({ onOpenQuote }) {
                 </div>
               </div>
 
-              {/* Module 2 Right Column: Ideal For & Varieties */}
-              <div className="lg:col-span-5 bg-[#FAF8F3] rounded-2xl p-5 sm:p-6 border border-[#D5E5DC] space-y-4">
+              {/* Module 2 Right Column: Ideal For */}
+              <div className="lg:col-span-5 bg-[#FAF8F3] rounded-2xl p-5 sm:p-6 border border-[#D5E5DC] flex flex-col justify-between space-y-4">
                 <div>
                   <h4 className="text-xs font-bold uppercase tracking-wider text-[#072B1F] mb-1.5">
                     Ideal For
@@ -234,22 +238,6 @@ export default function ProcessingPage({ onOpenQuote }) {
                   <p className="text-xs text-slate-600 leading-relaxed">
                     Biryani, pulao, restaurants and households that want long, separate grains with dependable results.
                   </p>
-                </div>
-
-                <div className="pt-2 border-t border-[#D5E5DC]">
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#072B1F] mb-2">
-                    Available Varieties in Steam Process
-                  </h4>
-                  <div className="flex flex-wrap gap-1.5">
-                    {['1121 Steam', '1509 Steam', 'Super Kernel Steam', 'PK-386 Steam'].map((v) => (
-                      <span
-                        key={v}
-                        className="text-[11px] font-semibold bg-white text-[#072B1F] px-2.5 py-1 rounded-lg border border-[#D5E5DC]"
-                      >
-                        {v}
-                      </span>
-                    ))}
-                  </div>
                 </div>
 
                 <button
@@ -358,21 +346,13 @@ export default function ProcessingPage({ onOpenQuote }) {
                   </div>
                 </div>
 
-                <div className="lg:col-span-5 bg-white p-5 rounded-xl border border-[#CFA744]/30 space-y-3">
+                <div className="lg:col-span-5 bg-white p-5 rounded-xl border border-[#CFA744]/30 flex flex-col justify-center">
                   <div>
                     <h4 className="text-xs font-bold uppercase tracking-wider text-[#072B1F] mb-1">
                       Ideal For
                     </h4>
                     <p className="text-xs text-slate-600 leading-relaxed">
                       Kabsa, mandi, biryani, hotels, catering and large-scale food service.
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#072B1F] mb-1">
-                      Primary Export Markets
-                    </h4>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      GCC (Saudi Arabia, UAE, Oman, Kuwait), Iran, Iraq, East and West Africa.
                     </p>
                   </div>
                 </div>
@@ -417,21 +397,13 @@ export default function ProcessingPage({ onOpenQuote }) {
                   </div>
                 </div>
 
-                <div className="lg:col-span-5 bg-white p-5 rounded-xl border border-[#BDE3CF] space-y-3">
+                <div className="lg:col-span-5 bg-white p-5 rounded-xl border border-[#BDE3CF] flex flex-col justify-center">
                   <div>
                     <h4 className="text-xs font-bold uppercase tracking-wider text-[#072B1F] mb-1">
                       Ideal For
                     </h4>
                     <p className="text-xs text-slate-600 leading-relaxed">
                       Restaurants, biryani, pulao and markets that want sella performance with a whiter appearance.
-                    </p>
-                  </div>
-                  <div>
-                    <h4 className="text-xs font-bold uppercase tracking-wider text-[#072B1F] mb-1">
-                      Primary Export Markets
-                    </h4>
-                    <p className="text-xs text-slate-600 leading-relaxed">
-                      GCC fine-dining, European food service, high-volume restaurants.
                     </p>
                   </div>
                 </div>
@@ -450,7 +422,7 @@ export default function ProcessingPage({ onOpenQuote }) {
               At a Glance Comparison
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
-              Quick visual comparison across raw colour, cooked texture, and international destination markets.
+              Quick visual comparison across raw colour and cooked texture.
             </p>
           </div>
 
@@ -468,9 +440,6 @@ export default function ProcessingPage({ onOpenQuote }) {
                     <th className="py-4 px-5 sm:px-6 uppercase tracking-wider text-xs">
                       Cooked Texture
                     </th>
-                    <th className="py-4 px-5 sm:px-6 uppercase tracking-wider text-xs">
-                      Typical Markets
-                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#D5E5DC]/60 font-medium text-slate-700">
@@ -483,7 +452,6 @@ export default function ProcessingPage({ onOpenQuote }) {
                       </td>
                       <td className="py-4 px-5 sm:px-6">{row.color}</td>
                       <td className="py-4 px-5 sm:px-6">{row.texture}</td>
-                      <td className="py-4 px-5 sm:px-6">{row.markets}</td>
                     </tr>
                   ))}
                 </tbody>
