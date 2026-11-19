@@ -43,28 +43,31 @@ export default function TeamPage({ onOpenQuote }) {
           <span className="text-[#072B1F] font-bold">Leadership &amp; Trade Desk</span>
         </div>
 
-        {/* Hero Section (Clean Full-Width Banner) */}
-        <div className="relative rounded-3xl bg-white border border-[#D5E5DC] p-6 sm:p-10 lg:p-12 mb-12 sm:mb-16 shadow-[0_15px_45px_rgba(7,43,31,0.06)] overflow-hidden">
-          <div className="max-w-3xl space-y-4">
-            <div className="inline-block px-3.5 py-1.5 rounded-full bg-[#EAF5EF] border border-[#BDE3CF] text-[#072B1F] text-xs font-bold uppercase tracking-wider">
-              LEADERSHIP &amp; TRADE DESK
+        {/* Hero Section (Clean Centered Banner matching Products layout) */}
+        <div className="relative rounded-3xl bg-white border border-[#D5E5DC] p-8 sm:p-12 lg:p-16 mb-12 sm:mb-16 shadow-[0_15px_45px_rgba(7,43,31,0.06)] overflow-hidden text-center">
+          <div className="max-w-3xl mx-auto space-y-4">
+            <div className="flex items-center justify-center gap-2.5">
+              <span className="w-5 sm:w-6 h-[2px] bg-[#B8860B]" />
+              <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#072B1F]">
+                LEADERSHIP &amp; TRADE DESK &bull; MODULAR TRADERS
+              </span>
             </div>
 
-            <h1 className="font-sans text-2xl xs:text-3xl sm:text-5xl font-extrabold text-[#072B1F] tracking-tight leading-[1.14]">
+            <h1 className="font-sans text-2xl xs:text-3xl sm:text-5xl lg:text-6xl font-extrabold text-[#072B1F] tracking-tight leading-[1.14]">
               The Minds Driving <br />
               <span className="text-[#155437]">Modular Traders &amp; Brokerage</span>
             </h1>
 
-            <p className="text-slate-600 text-xs sm:text-sm md:text-base leading-relaxed font-normal">
+            <p className="text-slate-600 text-xs sm:text-sm md:text-base leading-relaxed font-normal mx-auto">
               Based in Karachi, our leadership team combines European corporate finance acumen, accomplished legal deal-structuring, cross-border lead generation, and veteran Pakistani rice milling and export compliance.
             </p>
 
-            <div className="flex flex-wrap items-center gap-3 pt-2 text-xs font-semibold text-[#072B1F]">
-              <div className="flex items-center gap-2 bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+            <div className="flex flex-wrap items-center justify-center gap-3 pt-2 text-xs font-semibold text-[#072B1F]">
+              <div className="flex items-center gap-2 bg-[#FAF8F3] px-3.5 py-1.5 rounded-xl border border-[#D5E5DC]">
                 <Building2 className="w-3.5 h-3.5 text-[#155437]" />
                 <span>Karachi, Pakistan</span>
               </div>
-              <div className="flex items-center gap-2 bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+              <div className="flex items-center gap-2 bg-[#FAF8F3] px-3.5 py-1.5 rounded-xl border border-[#D5E5DC]">
                 <ShieldCheck className="w-3.5 h-3.5 text-[#B8860B]" />
                 <span>Cultivating Trust</span>
               </div>
