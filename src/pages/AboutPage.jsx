@@ -117,7 +117,7 @@ export default function AboutPage({ onOpenQuote }) {
                 <div className="flex items-center gap-2 sm:gap-2.5">
                   <span className="w-4 sm:w-6 h-[2px] bg-[#B8860B] shrink-0" />
                   <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-[0.2em] text-[#072B1F] whitespace-nowrap">
-                    About Us &bull; Modular Traders
+                    About Us
                   </span>
                 </div>
 
@@ -435,7 +435,7 @@ export default function AboutPage({ onOpenQuote }) {
                     </p>
                   </div>
                   <div className="pt-4 mt-4 border-t border-slate-100 flex items-center text-[11px] font-mono font-bold text-[#155437]">
-                    <span>Modular Traders Scope &bull; Service Pillar</span>
+                    <span>Operational Scope &bull; Service Pillar</span>
                   </div>
                 </div>
               ))}
@@ -474,7 +474,7 @@ export default function AboutPage({ onOpenQuote }) {
                   </p>
                 </div>
                 <div className="pt-4 mt-4 border-t border-slate-100 flex items-center text-[11px] font-mono font-bold text-[#155437]">
-                  <span>Modular Traders Scope &bull; Service Pillar</span>
+                  <span>Operational Scope &bull; Service Pillar</span>
                 </div>
               </div>
             ))}
@@ -549,7 +549,7 @@ export default function AboutPage({ onOpenQuote }) {
             </h2>
 
             <p className="text-slate-600 text-xs sm:text-base leading-relaxed font-normal">
-              Four principles that guide how Modular Traders selects Pakistani rice millers, verifies grain quality, and serves international buyers.
+              Four principles that guide how Modular Traders and Brokerage selects Pakistani rice millers, verifies grain quality, and serves international buyers.
             </p>
           </div>
 

@@ -96,7 +96,7 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
           <div className="flex items-center justify-center gap-2 sm:gap-2.5 mb-3 sm:mb-4 px-2">
             <span className="w-4 sm:w-6 h-[2px] bg-[#B8860B] shrink-0" />
             <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-[0.2em] text-[#072B1F] whitespace-nowrap">
-              Export Catalog &bull; Modular Traders
+              Export Catalog
             </span>
           </div>
 
@@ -539,7 +539,7 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
 
                   <a
                     href={`https://wa.me/${siteConfig.contact.phones.whatsappClean}?text=${encodeURIComponent(
-                      'Hello Modular Traders, I would like to inquire about Global Cross-Border Sourcing & Brokerage services.'
+                      'Hello Modular Traders and Brokerage, I would like to inquire about Global Cross-Border Sourcing & Brokerage services.'
                     )}`}
                     target="_blank"
                     rel="noreferrer"
