@@ -39,10 +39,10 @@ export default function TeamPage({ onOpenQuote }) {
       <section className="bg-white py-12 sm:py-16 lg:py-20 mb-8 sm:mb-12 relative overflow-hidden border-b border-[#D5E5DC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           {/* Eyebrow */}
-          <div className="flex items-center justify-center gap-2.5 mb-3 sm:mb-4">
-            <span className="w-5 sm:w-6 h-[2px] bg-[#B8860B]" />
-            <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#072B1F]">
-              LEADERSHIP &amp; TRADE DESK &bull; MODULAR TRADERS AND BROKERAGE
+          <div className="flex items-center justify-center gap-2 sm:gap-2.5 mb-3 sm:mb-4 px-2">
+            <span className="w-4 sm:w-6 h-[2px] bg-[#B8860B] shrink-0" />
+            <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-[0.2em] text-[#072B1F] whitespace-nowrap">
+              LEADERSHIP &amp; TRADE DESK
             </span>
           </div>
 
@@ -121,9 +121,9 @@ export default function TeamPage({ onOpenQuote }) {
                 <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
                   <a
                     href={`mailto:${member.email}`}
-                    className="inline-flex items-center gap-2 text-xs font-bold text-[#072B1F] hover:text-[#B8860B] transition"
+                    className="inline-flex items-center gap-2 text-xs font-bold text-[#072B1F] hover:text-[#B8860B] transition break-all"
                   >
-                    <div className="w-7 h-7 rounded-full bg-[#EAF5EF] text-[#155437] flex items-center justify-center">
+                    <div className="w-7 h-7 rounded-full bg-[#EAF5EF] text-[#155437] flex items-center justify-center shrink-0">
                       <Mail className="w-3.5 h-3.5" />
                     </div>
                     <span>{member.email}</span>

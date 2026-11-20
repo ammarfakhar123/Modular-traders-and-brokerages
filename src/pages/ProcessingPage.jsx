@@ -48,11 +48,12 @@ export default function ProcessingPage({ onOpenQuote }) {
         </div>
 
         {/* Hero Section with Right-Side Image Showcase Card */}
-        <div className="relative rounded-3xl bg-white border border-[#D5E5DC] p-6 sm:p-10 lg:p-12 mb-12 sm:mb-16 shadow-[0_15px_45px_rgba(7,43,31,0.06)] overflow-hidden">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+        <div className="relative rounded-2xl xs:rounded-3xl bg-white border border-[#D5E5DC] p-5 xs:p-6 sm:p-10 lg:p-12 mb-10 sm:mb-16 shadow-[0_15px_45px_rgba(7,43,31,0.06)] overflow-hidden">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center">
             {/* Left Content */}
             <div className="lg:col-span-7 space-y-4">
-              <div className="inline-block px-3.5 py-1.5 rounded-full bg-[#EAF5EF] border border-[#BDE3CF] text-[#072B1F] text-xs font-bold uppercase tracking-wider">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EAF5EF] border border-[#BDE3CF] text-[#072B1F] text-[11px] sm:text-xs font-bold uppercase tracking-wider">
+                <span className="w-2 h-2 rounded-full bg-[#155437]" />
                 OUR PROCESSING RANGE
               </div>
 
@@ -64,20 +65,20 @@ export default function ProcessingPage({ onOpenQuote }) {
                 At <strong>Modular Traders and Brokerage</strong>, every grain is processed to bring out its best. From fragrant white rice to robust parboiled sella, we offer a range of processing types to suit different cuisines, cooking styles and markets. Every lot is cleaned, graded and sorted to consistent export standards before it is packed.
               </p>
 
-              <div className="flex flex-wrap gap-2 pt-2 text-xs font-semibold text-[#072B1F]">
-                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+              <div className="flex flex-wrap gap-1.5 xs:gap-2 pt-2 text-[11px] xs:text-xs font-semibold text-[#072B1F]">
+                <span className="bg-[#FAF8F3] px-2.5 xs:px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
                   White Rice (Raw Milled)
                 </span>
-                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                <span className="bg-[#FAF8F3] px-2.5 xs:px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
                   Steam Rice
                 </span>
-                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                <span className="bg-[#FAF8F3] px-2.5 xs:px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
                   Golden &amp; White Sella
                 </span>
-                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                <span className="bg-[#FAF8F3] px-2.5 xs:px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
                   Sortex Optical Cleaning
                 </span>
-                <span className="bg-[#FAF8F3] px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
+                <span className="bg-[#FAF8F3] px-2.5 xs:px-3 py-1.5 rounded-xl border border-[#D5E5DC]">
                   EU Compliant Pesticide Residue
                 </span>
               </div>
@@ -89,14 +90,14 @@ export default function ProcessingPage({ onOpenQuote }) {
                 <img
                   src="/images/products/super-kernel.jpg"
                   alt="Pakistani Rice Milling & Export Processing"
-                  className="w-full h-[220px] xs:h-[260px] sm:h-[300px] object-cover"
+                  className="w-full h-[200px] xs:h-[240px] sm:h-[280px] lg:h-[300px] object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent pointer-events-none" />
-                <div className="absolute bottom-3 left-4 right-4 text-white">
-                  <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-[#CFA744] block">
+                <div className="absolute bottom-3 left-3 sm:left-4 right-3 sm:right-4 text-white">
+                  <span className="text-[10px] xs:text-[11px] font-mono font-bold uppercase tracking-wider text-[#CFA744] block">
                     Export Milling &amp; Optical Sorting
                   </span>
-                  <p className="text-xs text-white/90 font-medium">
+                  <p className="text-[11px] xs:text-xs text-white/90 font-medium">
                     White, Steam &amp; Parboiled Sella Lots
                   </p>
                 </div>
@@ -281,10 +282,10 @@ export default function ProcessingPage({ onOpenQuote }) {
             </div>
 
             {/* Interactive Tab Switcher for Golden Sella vs White Sella */}
-            <div className="flex items-center gap-3 mb-6 border-b border-[#D5E5DC] pb-4">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-6 border-b border-[#D5E5DC] pb-4">
               <button
                 onClick={() => setActiveSellaTab('golden')}
-                className={`px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                   activeSellaTab === 'golden'
                     ? 'bg-[#CFA744] text-[#072B1F] shadow-sm'
                     : 'bg-[#FAF8F3] text-slate-600 hover:text-[#072B1F] border border-[#D5E5DC]'
@@ -295,7 +296,7 @@ export default function ProcessingPage({ onOpenQuote }) {
 
               <button
                 onClick={() => setActiveSellaTab('white')}
-                className={`px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+                className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-bold transition-all cursor-pointer ${
                   activeSellaTab === 'white'
                     ? 'bg-[#072B1F] text-white shadow-sm'
                     : 'bg-[#FAF8F3] text-slate-600 hover:text-[#072B1F] border border-[#D5E5DC]'
@@ -310,7 +311,7 @@ export default function ProcessingPage({ onOpenQuote }) {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#FFFDF7] p-6 sm:p-8 rounded-2xl border border-[#CFA744]/40"
+                className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#FFFDF7] p-5 xs:p-6 sm:p-8 rounded-2xl border border-[#CFA744]/40"
               >
                 <div className="lg:col-span-7 space-y-3">
                   <h3 className="font-sans text-lg sm:text-xl font-bold text-[#072B1F]">
@@ -361,7 +362,7 @@ export default function ProcessingPage({ onOpenQuote }) {
               <motion.div
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#F8FAF9] p-6 sm:p-8 rounded-2xl border border-[#BDE3CF]"
+                className="grid grid-cols-1 lg:grid-cols-12 gap-6 bg-[#F8FAF9] p-5 xs:p-6 sm:p-8 rounded-2xl border border-[#BDE3CF]"
               >
                 <div className="lg:col-span-7 space-y-3">
                   <h3 className="font-sans text-lg sm:text-xl font-bold text-[#072B1F]">
@@ -426,9 +427,13 @@ export default function ProcessingPage({ onOpenQuote }) {
             </p>
           </div>
 
-          <div className="bg-white rounded-3xl border border-[#D5E5DC] overflow-hidden shadow-[0_10px_35px_rgba(7,43,31,0.05)]">
+          <div className="bg-white rounded-2xl sm:rounded-3xl border border-[#D5E5DC] overflow-hidden shadow-[0_10px_35px_rgba(7,43,31,0.05)]">
+            <div className="sm:hidden text-center text-[10px] font-mono text-slate-500 py-2 bg-[#FAF8F3] border-b border-[#D5E5DC] flex items-center justify-center gap-1.5">
+              <span>⇄</span>
+              <span>Swipe horizontally to view full matrix</span>
+            </div>
             <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse text-xs sm:text-sm">
+              <table className="w-full text-left border-collapse text-xs sm:text-sm min-w-[500px]">
                 <thead>
                   <tr className="bg-[#FAF8F3] border-b border-[#D5E5DC] text-[#072B1F] font-bold">
                     <th className="py-4 px-5 sm:px-6 uppercase tracking-wider text-xs">
@@ -474,9 +479,9 @@ export default function ProcessingPage({ onOpenQuote }) {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-6">
             {/* Polish Level Card */}
-            <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#D5E5DC] shadow-xs flex flex-col justify-between hover:border-[#CFA744] transition-all">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-7 border border-[#D5E5DC] shadow-xs flex flex-col justify-between hover:border-[#CFA744] transition-all">
               <div className="space-y-4">
                 <div className="w-10 h-10 rounded-xl bg-[#FAF8F3] border border-[#D5E5DC] flex items-center justify-center text-[#072B1F] font-sans font-extrabold text-sm">
                   01
@@ -505,7 +510,7 @@ export default function ProcessingPage({ onOpenQuote }) {
             </div>
 
             {/* Sortex Cleaning Card */}
-            <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#D5E5DC] shadow-xs flex flex-col justify-between hover:border-[#155437] transition-all">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-7 border border-[#D5E5DC] shadow-xs flex flex-col justify-between hover:border-[#155437] transition-all">
               <div className="space-y-4">
                 <div className="w-10 h-10 rounded-xl bg-[#FAF8F3] border border-[#D5E5DC] flex items-center justify-center text-[#155437] font-sans font-extrabold text-sm">
                   02
@@ -541,7 +546,7 @@ export default function ProcessingPage({ onOpenQuote }) {
             </div>
 
             {/* Organic & EU-Compliant Lots */}
-            <div className="bg-white rounded-3xl p-6 sm:p-7 border border-[#D5E5DC] shadow-xs flex flex-col justify-between hover:border-[#CFA744] transition-all">
+            <div className="bg-white rounded-2xl sm:rounded-3xl p-5 sm:p-7 border border-[#D5E5DC] shadow-xs flex flex-col justify-between hover:border-[#CFA744] transition-all">
               <div className="space-y-4">
                 <div className="w-10 h-10 rounded-xl bg-[#FAF8F3] border border-[#D5E5DC] flex items-center justify-center text-[#B8860B] font-sans font-extrabold text-sm">
                   03

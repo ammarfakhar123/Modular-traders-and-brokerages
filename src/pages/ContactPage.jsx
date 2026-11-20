@@ -93,9 +93,9 @@ export default function ContactPage() {
             1. CONTACT PAGE HEADING
            ======================================================== */}
         <div className="text-center max-w-3xl mx-auto mb-14 sm:mb-20">
-          <div className="flex items-center justify-center gap-2.5 mb-4">
-            <span className="w-6 h-[2px] bg-[#B8860B]" />
-            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-[0.2em] text-[#072B1F]">
+          <div className="flex items-center justify-center gap-2 sm:gap-2.5 mb-4 px-2">
+            <span className="w-4 sm:w-6 h-[2px] bg-[#B8860B] shrink-0" />
+            <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-[0.2em] text-[#072B1F] whitespace-nowrap">
               Direct Contact Desk &bull; Karachi Headquarters
             </span>
           </div>

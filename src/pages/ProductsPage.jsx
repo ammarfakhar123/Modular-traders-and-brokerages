@@ -93,10 +93,10 @@ export default function ProductsPage({ onOpenQuoteWithProduct }) {
          ======================================================== */}
       <section className="bg-white py-12 sm:py-16 lg:py-20 mb-8 sm:mb-12 relative overflow-hidden border-b border-[#D5E5DC]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-          <div className="flex items-center justify-center gap-2.5 mb-3 sm:mb-4">
-            <span className="w-5 sm:w-6 h-[2px] bg-[#B8860B]" />
-            <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#072B1F]">
-              Export Catalog &bull; Modular Traders and Brokerage
+          <div className="flex items-center justify-center gap-2 sm:gap-2.5 mb-3 sm:mb-4 px-2">
+            <span className="w-4 sm:w-6 h-[2px] bg-[#B8860B] shrink-0" />
+            <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-[0.2em] text-[#072B1F] whitespace-nowrap">
+              Export Catalog &bull; Modular Traders
             </span>
           </div>
 

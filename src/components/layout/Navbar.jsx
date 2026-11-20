@@ -117,16 +117,29 @@ export default function Navbar({ onOpenQuote }) {
               initial={{ opacity: 0, y: -12, scale: 0.98 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -12, scale: 0.98 }}
-              className="fixed top-[68px] sm:top-20 left-3 right-3 sm:left-4 sm:right-4 z-[490] bg-white rounded-3xl shadow-2xl border border-[#D5E5DC] p-5 sm:p-6 lg:hidden max-h-[85vh] overflow-y-auto"
+              className="fixed top-[78px] xs:top-[82px] sm:top-[88px] left-3 right-3 sm:left-4 sm:right-4 z-[490] bg-white rounded-3xl shadow-2xl border border-[#D5E5DC] p-5 sm:p-6 lg:hidden max-h-[85vh] overflow-y-auto"
             >
               <div className="flex flex-col space-y-3">
-                {/* Mobile Drawer Header with original logo */}
-                <div className="flex justify-center pb-3 border-b border-slate-100">
-                  <img
-                    src="/brand/logo-full.png"
-                    alt="Modular Traders and Brokerage"
-                    className="h-12 sm:h-14 w-auto object-contain"
-                  />
+                {/* Mobile Drawer Header with prominent logo and close button */}
+                <div className="flex items-center justify-between pb-3.5 border-b border-slate-100">
+                  <Link
+                    to="/"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center group py-0.5"
+                  >
+                    <img
+                      src="/brand/logo-full.png"
+                      alt="Modular Traders and Brokerage"
+                      className="h-9 xs:h-10 sm:h-12 w-auto object-contain"
+                    />
+                  </Link>
+                  <button
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="p-1.5 rounded-full text-slate-500 hover:text-slate-800 hover:bg-slate-100 transition cursor-pointer"
+                    aria-label="Close menu"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
                 </div>
 
                 {navLinks.map((link) => (

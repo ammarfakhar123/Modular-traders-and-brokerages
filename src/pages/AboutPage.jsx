@@ -114,10 +114,10 @@ export default function AboutPage({ onOpenQuote }) {
               {/* Left Column: Authentic Business Introduction */}
               <div className="lg:col-span-7 space-y-4 sm:space-y-6">
                 {/* Eyebrow Label */}
-                <div className="flex items-center gap-2.5">
-                  <span className="w-5 sm:w-6 h-[2px] bg-[#B8860B]" />
-                  <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#072B1F]">
-                    About Us &bull; Modular Traders and Brokerage
+                <div className="flex items-center gap-2 sm:gap-2.5">
+                  <span className="w-4 sm:w-6 h-[2px] bg-[#B8860B] shrink-0" />
+                  <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-[0.2em] text-[#072B1F] whitespace-nowrap">
+                    About Us &bull; Modular Traders
                   </span>
                 </div>
 
@@ -537,9 +537,9 @@ export default function AboutPage({ onOpenQuote }) {
            ======================================================== */}
         <section className="mb-20 sm:mb-28">
           <div className="max-w-2xl mb-8 sm:mb-12">
-            <div className="flex items-center gap-2.5 mb-2.5 sm:mb-3">
-              <span className="w-5 sm:w-6 h-[2px] bg-[#B8860B]" />
-              <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-[0.18em] sm:tracking-[0.2em] text-[#072B1F]">
+            <div className="flex items-center gap-2 sm:gap-2.5 mb-2.5 sm:mb-3">
+              <span className="w-4 sm:w-6 h-[2px] bg-[#B8860B] shrink-0" />
+              <span className="text-[10px] xs:text-[11px] sm:text-xs font-bold uppercase tracking-wider sm:tracking-[0.2em] text-[#072B1F] whitespace-nowrap">
                 Our Foundation &bull; Cultivating Trust
               </span>
             </div>
